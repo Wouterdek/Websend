@@ -1,7 +1,6 @@
 package Waterflames.websend;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -9,7 +8,6 @@ public class PosterThread extends Thread
 {
 	Settings settings;
 	Server server;
-	Logger logger;
 	String[] args;
 	Player player;
 	String playerName;
@@ -20,7 +18,6 @@ public class PosterThread extends Thread
 	{
 		settings = Main.settings;
 		server = Main.bukkitServer;
-		logger = Main.logger;
 	}
 
 	public void setVariables(String[] newArgs, Player newPlayer, boolean isResponseArg)
@@ -63,7 +60,7 @@ public class PosterThread extends Thread
 		}
 		catch (Exception ex)
 		{
-			logger.log(Level.SEVERE, "An error occured while trying to do a bukkit -> php connection. (POST)", ex);
+			Main.logger.log(Level.SEVERE, "An error occured while trying to do a bukkit -> php connection. (POST)", ex);
 		}
 	}
 }

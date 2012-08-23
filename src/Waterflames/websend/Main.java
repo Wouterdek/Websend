@@ -2,7 +2,9 @@ package Waterflames.websend;
 
 import Waterflames.websend.script.ScriptManager;
 import Waterflames.websend.server.CommunicationServer;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
@@ -77,7 +79,7 @@ public class Main extends JavaPlugin
 		}
 		catch (IOException ex)
 		{
-			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			Main.logger.log(Level.SEVERE, null, ex);
 		}
 
 		// Setup scripts

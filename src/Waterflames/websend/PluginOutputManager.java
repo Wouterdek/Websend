@@ -1,7 +1,5 @@
 package Waterflames.websend;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +7,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.PluginLoggerListener;
@@ -68,7 +65,7 @@ public class PluginOutputManager
 			public void println(String x)
 			{
 				Throwable t = new Throwable();
-				super.println("Class " + t.getStackTrace()[1].getClassName() + " sais: " + x);
+				super.println("Class " + t.getStackTrace()[1].getClassName() + " says: " + x);
 			}
 		};
 		System.setOut(newOutput);
@@ -81,7 +78,7 @@ public class PluginOutputManager
 			@Override
 			public void publish(LogRecord record)
 			{
-				record.setMessage("Class " + record.getSourceClassName() + " sais: " + record.getMessage());
+				record.setMessage("Class " + record.getSourceClassName() + " says: " + record.getMessage());
 			}
 
 			@Override

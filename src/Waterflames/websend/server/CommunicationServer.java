@@ -8,8 +8,8 @@
 package Waterflames.websend.server;
 
 import Waterflames.websend.Main;
-import Waterflames.websend.TrustedHosts;
 import Waterflames.websend.PacketHandler;
+import Waterflames.websend.TrustedHosts;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,7 +17,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CommunicationServer extends Thread
 {
@@ -43,7 +42,7 @@ public class CommunicationServer extends Thread
 		}
 		catch (IOException ex)
 		{
-			Logger.getLogger(CommunicationServer.class.getName()).log(Level.SEVERE, null, ex);
+			Main.logger.log(Level.SEVERE, null, ex);
 		}
 	}
 

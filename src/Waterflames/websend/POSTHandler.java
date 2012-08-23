@@ -11,7 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -24,13 +23,11 @@ public class POSTHandler
 	String pass;
 	String[] apacheAuthParts;
 	Server server;
-	Logger logger;
 	Settings settings;
 	boolean closed = false;
 
 	public POSTHandler()
 	{
-		logger = Main.logger;
 		settings = Main.settings;
 		server = Main.bukkitServer;
 		pass = settings.getPassword();
@@ -39,7 +36,7 @@ public class POSTHandler
 		String urlString = settings.getURL();
 		if (urlString == null || "".equals(urlString.trim()))
 		{
-			logger.log(Level.SEVERE, "No url was found. Please check your configuration file.");
+			Main.logger.log(Level.SEVERE, "No url was found. Please check your configuration file.");
 			return;
 		}
 		try
@@ -54,7 +51,7 @@ public class POSTHandler
 		}
 		catch (MalformedURLException ex)
 		{
-			logger.log(Level.SEVERE, "Websend: Error while parsing URL: " + urlString, ex);
+			Main.logger.log(Level.SEVERE, "Websend: Error while parsing URL: " + urlString, ex);
 		}
 
 		// Reponse url
@@ -67,7 +64,7 @@ public class POSTHandler
 			}
 			catch (MalformedURLException ex)
 			{
-				logger.log(Level.SEVERE, "Websend: Error while parsing response URL: " + urlString, ex);
+				Main.logger.log(Level.SEVERE, "Websend: Error while parsing response URL: " + urlString, ex);
 			}
 		}
 	}
@@ -80,7 +77,7 @@ public class POSTHandler
 		}
 		catch (MalformedURLException ex)
 		{
-			logger.log(Level.SEVERE, "Websend: Error while parsing URL: " + urlArg, ex);
+			Main.logger.log(Level.SEVERE, "Websend: Error while parsing URL: " + urlArg, ex);
 		}
 	}
 
@@ -230,7 +227,7 @@ public class POSTHandler
 		}
 		catch (NoSuchAlgorithmException ex)
 		{
-			logger.info("Websend: Failed to hash password to MD5");
+			Main.logger.info("Websend: Failed to hash password to MD5");
 		}
 		md.update(input.getBytes());
 		BigInteger bigInt = new BigInteger(1, md.digest());

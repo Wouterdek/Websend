@@ -2,16 +2,9 @@ package Waterflames.websend;
 
 import java.io.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ConfigHandler
 {
-	Logger logger;
-
-	public ConfigHandler()
-	{
-		this.logger = Main.logger;
-	}
 
 	public Settings loadSettings() throws FileNotFoundException, IOException
 	{
@@ -51,8 +44,8 @@ public class ConfigHandler
 		}
 		catch (IOException ex)
 		{
-			logger.info("Websend failed to create a new configuration file.");
-			logger.log(Level.SEVERE, null, ex);
+			Main.logger.info("Websend failed to create a new configuration file.");
+			Main.logger.log(Level.SEVERE, null, ex);
 		}
 
 		// Fill file
@@ -109,12 +102,12 @@ public class ConfigHandler
 					convertedValue = Integer.parseInt(value.trim());
 					if (convertedValue == Main.port)
 					{
-						logger.log(Level.WARNING, "Websend error: You are trying to host websend on the server port!");
+						Main.logger.log(Level.WARNING, "Websend error: You are trying to host websend on the server port!");
 					}
 				}
 				catch (Exception ex)
 				{
-					logger.log(Level.SEVERE, "Websend failed to parse your new port value:" + value, ex);
+					Main.logger.log(Level.SEVERE, "Websend failed to parse your new port value:" + value, ex);
 					return;
 				}
 				settings.setPort(convertedValue);
@@ -155,8 +148,8 @@ public class ConfigHandler
 			}
 			else
 			{
-				logger.info("WEBSEND ERROR: Error while parsing config file.");
-				logger.info("Invalid line: " + line);
+				Main.logger.info("WEBSEND ERROR: Error while parsing config file.");
+				Main.logger.info("Invalid line: " + line);
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package Waterflames.websend;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -13,13 +12,11 @@ public class CommandParser
 {
 	// <editor-fold defaultstate="collapsed" desc="VARIABLES AND CONSTRUCTOR">
 	Settings settings;
-	Logger logger;
 	Server server;
 	boolean debugMode;
 
 	public CommandParser()
 	{
-		logger = Main.logger;
 		settings = Main.settings;
 		server = Main.bukkitServer;
 	}
@@ -33,7 +30,7 @@ public class CommandParser
 		{ // check split sign
 			if (debugMode)
 			{
-				logger.info("Websend: ';' found");
+				Main.logger.info("Websend: ';' found");
 			}
 			String[] lineArray = line.split(";"); // split line into seperate
 													// command lines
@@ -51,7 +48,7 @@ public class CommandParser
 				{
 					if (debugMode)
 					{
-						logger.log(Level.WARNING, "Websend: No command or output tag found!");
+						Main.logger.log(Level.WARNING, "Websend: No command or output tag found!");
 					}
 				}
 			}
@@ -60,7 +57,7 @@ public class CommandParser
 		{
 			if (debugMode)
 			{
-				logger.log(Level.WARNING, "Websend: No ; found.");
+				Main.logger.log(Level.WARNING, "Websend: No ; found.");
 			}
 		}
 	}
@@ -72,7 +69,7 @@ public class CommandParser
 	{
 		if (debugMode)
 		{
-			logger.info("Websend: A command line was found.");
+			Main.logger.info("Websend: A command line was found.");
 		}
 		String splittedLine[];
 		splittedLine = line.split("/Command/"); // split command line into
@@ -100,8 +97,8 @@ public class CommandParser
 		}
 		else
 		{
-			logger.info("Websend ERROR: While parsing php output, websend found");
-			logger.info("an error on output line " + line + ": Invalid command.");
+			Main.logger.info("Websend ERROR: While parsing php output, websend found");
+			Main.logger.info("an error on output line " + line + ": Invalid command.");
 		}
 	}
 
@@ -112,7 +109,7 @@ public class CommandParser
 	{
 		if (debugMode)
 		{
-			logger.info("Websend: An output line was found.");
+			Main.logger.info("Websend: An output line was found.");
 		}
 		String splittedLine[];
 		splittedLine = line.split("/Output/"); // split command line into
@@ -145,7 +142,7 @@ public class CommandParser
 		String newURL = line.split("SetResponseURL:")[1];
 		if (debugMode)
 		{
-			logger.info("Websend: Changed ResponseURL to " + newURL);
+			Main.logger.info("Websend: Changed ResponseURL to " + newURL);
 		}
 		settings.setResponseURL(newURL);
 	}
@@ -157,12 +154,12 @@ public class CommandParser
 	{
 		if (player == null)
 		{
-			logger.info("Websend: ExecutePlayerCommand is used in a wrong context.");
+			Main.logger.info("Websend: ExecutePlayerCommand is used in a wrong context.");
 		}
 		String[] commandArray = line.split("ExecutePlayerCommand:");
 		if (debugMode)
 		{
-			logger.info("Websend: An ExecutePlayerCommand was found: '" + commandArray + "'");
+			Main.logger.info("Websend: An ExecutePlayerCommand was found: '" + commandArray + "'");
 		}
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Task(commandArray, player)
 		{
@@ -176,7 +173,7 @@ public class CommandParser
 				{
 					if (player == null)
 					{
-						logger.info("Command dispatching from terminal is not allowed. Try again in-game.");
+						Main.logger.info("Command dispatching from terminal is not allowed. Try again in-game.");
 					}
 					else if (!player.getServer().dispatchCommand(player, commandArray[1]))
 					{ // execute command and check for succes.
@@ -185,7 +182,7 @@ public class CommandParser
 				}
 				catch (Exception ex)
 				{
-					logger.info("An error has occured, are you trying to execute a player command from console?");
+					Main.logger.info("An error has occured, are you trying to execute a player command from console?");
 				}
 			}
 
@@ -201,7 +198,7 @@ public class CommandParser
 		String[] commandArray = line.split("ExecutePlayerCommand-");
 		if (debugMode)
 		{
-			logger.info("Websend: An ExecutePlayerCommand was found: '" + commandArray + "'");
+			Main.logger.info("Websend: An ExecutePlayerCommand was found: '" + commandArray + "'");
 		}
 
 		Object[] taskArgs = new Object[] { commandArray };
@@ -214,7 +211,7 @@ public class CommandParser
 				Player fakePlayer = server.getPlayer(argArray[0].trim());
 				if (!server.dispatchCommand(fakePlayer, argArray[1]))
 				{ // execute command and check for succes.
-					logger.info("Command dispatching failed: '" + argArray[1] + "'"); // error
+					Main.logger.info("Command dispatching failed: '" + argArray[1] + "'"); // error
 				}
 			}
 		});
@@ -245,7 +242,7 @@ public class CommandParser
 		String[] commandArray = line.split("ExecuteConsoleCommand:");
 		if (debugMode)
 		{
-			logger.info("Websend: An ExecuteConsoleCommand was found: '" + commandArray + "'");
+			Main.logger.info("Websend: An ExecuteConsoleCommand was found: '" + commandArray + "'");
 		}
 
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.plugin, new Task(commandArray, player)
@@ -264,7 +261,7 @@ public class CommandParser
 					}
 					else
 					{
-						logger.info("Command dispatching failed: '" + commandArray[1] + "'"); // error
+						Main.logger.info("Command dispatching failed: '" + commandArray[1] + "'"); // error
 					}
 				}
 			}
@@ -273,36 +270,33 @@ public class CommandParser
 
 	// </editor-fold>
 
-	// <editor-fold defaultstate="collapsed"
-	// desc="onExecuteConsoleCommandAndReturn">
-	private void onExecuteConsoleCommandAndReturn(String line)
-	{
-		// split line into command and variables
-		String[] commandArray = line.split("ExecuteConsoleCommandAndReturn-");
-		if (debugMode)
-		{
-			logger.info("Websend: An ExecuteConsoleCommandAndReturn was found: '" + commandArray + "'");
-		}
-		Plugin plugin = null;
-		if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit"))
-		{
-			// TODO: implement bukkit listening.
-		}
-		else
-		{
-			plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
-			if (plugin == null)
-			{
-				logger.info("ERROR: An invalid plugin name was provided.");
-				return;
-			}
-		}
-	}
+        //<editor-fold defaultstate="collapsed" desc="onExecuteConsoleCommandAndReturn">
+        private void onExecuteConsoleCommandAndReturn(String line)
+        {
+            // split line into command and variables
+            String[] commandArray = line.split("ExecuteConsoleCommandAndReturn-");
+            if (debugMode)
+            {
+                Main.logger.info("Websend: An ExecuteConsoleCommandAndReturn was found: '" + commandArray + "'");
+            }
+            Plugin plugin = null;
+            if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit"))
+            {
+                // TODO: implement bukkit listening.
+            }
+            else
+            {
+                plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
+                if (plugin == null)
+                {
+                    Main.logger.info("ERROR: An invalid plugin name was provided.");
+                    return;
+                }
+            }
+        }
+        //</editor-fold>
 
-	// </editor-fold>
-
-	// <editor-fold defaultstate="collapsed"
-	// desc="onExecuteBukkitCommandAndReturn">
+	// <editor-fold defaultstate="collapsed" desc="onExecuteBukkitCommandAndReturn">
 	private void onExecuteBukkitCommandAndReturn(String line)
 	{
 		String commandArray[];
@@ -310,7 +304,7 @@ public class CommandParser
 		commandArray = line.split("ExecuteBukkitCommandAndReturn-");
 		if (debugMode)
 		{
-			logger.info("Websend: An ExecuteBukkitCommandAndReturn was found: '" + commandArray + "'");
+			Main.logger.info("Websend: An ExecuteBukkitCommandAndReturn was found: '" + commandArray + "'");
 		}
 		String argArray[] = commandArray[1].split("-");
 		Player fakePlayer = server.getPlayer(argArray[0].trim());
@@ -325,7 +319,7 @@ public class CommandParser
 			plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
 			if (plugin == null)
 			{
-				logger.info("ERROR: An invalid plugin name was provided.");
+				Main.logger.info("ERROR: An invalid plugin name was provided.");
 				return;
 			}
 		}
@@ -340,7 +334,7 @@ public class CommandParser
 	private void onPrintToConsole(String line)
 	{
 		String text = line.replaceFirst("PrintToConsole:", "");
-		logger.info(text);
+		Main.logger.info(text);
 	}
 
 	// </editor-fold>
@@ -350,8 +344,8 @@ public class CommandParser
 	{
 		if (player == null)
 		{
-			logger.log(Level.WARNING, "Websend: No player to print text to. Use 'PrintToPlayer-playername: text' to sent text in this context.");
-			logger.log(Level.WARNING, line.replaceFirst("PrintToConsole:", ""));
+			Main.logger.log(Level.WARNING, "Websend: No player to print text to. Use 'PrintToPlayer-playername: text' to sent text in this context.");
+			Main.logger.log(Level.WARNING, line.replaceFirst("PrintToConsole:", ""));
 		}
 		else
 		{
@@ -373,19 +367,19 @@ public class CommandParser
 		{
 			if (debugMode)
 			{
-				logger.info("Websend: Player 'console'? Using PrintToConsole instead.");
+				Main.logger.info("Websend: Player 'console'? Using PrintToConsole instead.");
 			}
-			logger.info(commandDataArray[1]);
+			Main.logger.info(commandDataArray[1]);
 		}
 		else if (currentPlayer == null)
 		{
-			logger.log(Level.WARNING, "Websend: No player '" + playerName + "' found on PrintToPlayer.");
+			Main.logger.log(Level.WARNING, "Websend: No player '" + playerName + "' found on PrintToPlayer.");
 		}
 		else if (!currentPlayer.isOnline())
 		{
 			if (debugMode)
 			{
-				logger.info("Websend: Player '" + playerName + "' is offline. Ignoring PrintToPlayer");
+				Main.logger.info("Websend: Player '" + playerName + "' is offline. Ignoring PrintToPlayer");
 			}
 		}
 		else

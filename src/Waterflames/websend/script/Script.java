@@ -4,7 +4,6 @@ import Waterflames.websend.Main;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Script
 {
@@ -24,7 +23,7 @@ public class Script
 		{
 			if (main == null)
 			{
-				Logger.getLogger(Script.class.getName()).log(Level.SEVERE, "No main class found for " + name + "!");
+				Main.logger.log(Level.SEVERE, "No main class found for " + name + "!");
 			}
 			if (main != null)
 			{
@@ -40,11 +39,11 @@ public class Script
 		}
 		catch (NoSuchMethodException ex)
 		{
-			Logger.getLogger(Script.class.getName()).log(Level.SEVERE, "The '" + name + "' script doesn't contain a run method!");
+			Main.logger.log(Level.SEVERE, "The '" + name + "' script doesn't contain a run method!");
 		}
 		catch (Exception ex)
 		{
-			Logger.getLogger(Script.class.getName()).log(Level.SEVERE, null, ex);
+			Main.logger.log(Level.SEVERE, null, ex);
 		}
 	}
 

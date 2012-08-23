@@ -8,7 +8,6 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
@@ -187,7 +186,7 @@ public class ScriptManager
 		}
 		catch (IOException ex)
 		{
-			Logger.getLogger(ScriptManager.class.getName()).log(Level.SEVERE, null, ex);
+			Main.logger.log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
@@ -231,13 +230,9 @@ public class ScriptManager
 
 			return true;
 		}
-		catch (MalformedURLException ex)
+		catch (MalformedURLException | ClassNotFoundException e)
 		{
-			Logger.getLogger(ScriptManager.class.getName()).log(Level.SEVERE, "Error while loading classes into the JVM!", ex);
-		}
-		catch (ClassNotFoundException ex)
-		{
-			Logger.getLogger(ScriptManager.class.getName()).log(Level.SEVERE, "Error while loading classes into the JVM!", ex);
+			Main.logger.log(Level.SEVERE, "Error while loading classes into the JVM!", e);
 		}
 		return false;
 	}
