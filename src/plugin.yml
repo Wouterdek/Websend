@@ -1,0 +1,25 @@
+name: Websend
+main: Waterflames.websend.Main
+version: 2.0
+description: Plug-in to enable variables-transfer to the interwebs and backwards.
+author: Waterflames
+commands:
+   websend:
+      description: Starts communication.
+      usage: |
+              /<command> <arguments>
+   ws:
+      description: Starts communication.
+      usage: |
+              /<command> <arguments>
+   wsScripts:
+      description: Starts communication.
+      usage: |
+              /<command> <arguments>
+permissions:
+    websend:
+        description: Allows you to use websend
+        default: op
+    websend.scripts:
+        description: Allows you to perform /wsScripts
+        default: op
