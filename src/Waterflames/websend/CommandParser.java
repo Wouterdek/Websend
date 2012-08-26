@@ -369,7 +369,11 @@ public class CommandParser
 			{
 				Main.logger.info("Websend: Player 'console'? Using PrintToConsole instead.");
 			}
-			Main.logger.info(commandDataArray[1]);
+                        String message = "";
+                        for(int i = 0;i<commandDataArray.length;i++){
+                            message = message + commandDataArray[i];
+                        }
+                        Main.logger.info(message);
 		}
 		else if (currentPlayer == null)
 		{
@@ -384,7 +388,11 @@ public class CommandParser
 		}
 		else
 		{
-			currentPlayer.sendMessage(parseColor(commandDataArray[1]));
+                        String message = "";
+                        for(int i = 0;i<commandDataArray.length;i++){
+                                message = message + commandDataArray[i];
+                        }
+                        currentPlayer.sendMessage(parseColor(message));
 		}
 	}
 
