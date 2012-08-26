@@ -5,7 +5,7 @@
 		var $port;
 		var $stream;
 
-		public function __construct($host, $port)
+		public function __construct($host, $port = 4445) 
 		{
 			$this->host = $host;
 			$this->port = $port;
