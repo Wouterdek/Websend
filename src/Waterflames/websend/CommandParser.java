@@ -296,15 +296,15 @@ public class CommandParser
         }
         //</editor-fold>
 
-	// <editor-fold defaultstate="collapsed" desc="onExecuteBukkitCommandAndReturn">
-	private void onExecuteBukkitCommandAndReturn(String line)
+	// <editor-fold defaultstate="collapsed" desc="onExecutePlayerCommandAndReturn">
+	private void onExecutePlayerCommandAndReturn(String line)
 	{
 		String commandArray[];
 		// split line into command and variables
-		commandArray = line.split("ExecuteBukkitCommandAndReturn-");
+		commandArray = line.split("ExecutePlayerCommandAndReturn-");
 		if (debugMode)
 		{
-			Main.logger.info("Websend: An ExecuteBukkitCommandAndReturn was found: '" + commandArray + "'");
+			Main.logger.info("Websend: An ExecutePlayerCommandAndReturn was found: '" + commandArray + "'");
 		}
 		String argArray[] = commandArray[1].split("-");
 		Player fakePlayer = server.getPlayer(argArray[0].trim());

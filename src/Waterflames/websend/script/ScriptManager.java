@@ -226,7 +226,7 @@ public class ScriptManager
 			catch (IOException e)
 			{
 				e.printStackTrace();
-			}
+			} 
 
 			return true;
 		}
