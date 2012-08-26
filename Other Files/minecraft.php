@@ -21,14 +21,23 @@ if($receivedMD5 != "" && $args[0] != "")
             print('/Output/PrintToPlayer:This command will show different possible colors;');
             // use /Chatcolor-red: to set the text of a sentence to red.
             // Other colors are:
-            print("/Chatcolor-red:This is red;");
-            print("/Chatcolor-green:This is green;");
-            print("/Chatcolor-blue:This is blue;");
-            print("/Chatcolor-yellow:This is yellow;");
-            print("/Chatcolor-white:This is white;");
-            print("/Chatcolor-purple:This is purple;");
-            print("/Chatcolor-gray:This is gray;");
-            print("/Chatcolor-gray:These are /Chatcolor-blue:multiple colors/Chatcolor-red: in one/Chatcolor-purple: sentence;");
+            print("&aThis is green;");
+            print("&bThis is light blue;");
+            print("&cThis is red;");
+            print("&dThis is pink;");
+            print("&eThis is yellow;");
+            print("&fThis is white;");
+            print("&1This is dark blue;");
+            print("&2This is dark green;");
+            print("&3This is aqua;");
+            print("&4This is dark red;");
+            print("&5This is purple;");
+            print("&6This is gold;");
+            print("&7This is grey;");
+            print("&8This is dark grey;");
+            print("&9This is blue;");
+            print("&0This is black;");
+            print("&7These are &1multiple colors &cin one &5sentence;");
         }
         elseif($args[0] == "timeset") //script 2
         {
