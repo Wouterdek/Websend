@@ -30,29 +30,40 @@ public class POSTHandler
 	{
 		settings = Main.settings;
 		server = Main.bukkitServer;
-		pass = settings.getPassword();
+	}
+        
+        /*
+         *  Seperate variable setup function to check init before actually doing POST.
+         */
+        public boolean setupVariables(){
+                boolean success = true;
+            	pass = settings.getPassword();
 
-		// Main url
-		String urlString = settings.getURL();
-		if (urlString == null || "".equals(urlString.trim()))
-		{
-			Main.logger.log(Level.SEVERE, "No url was found. Please check your configuration file.");
-			return;
-		}
-		try
-		{
-			if (urlString.contains("@"))
-			{
-				String[] urlParts = urlString.split("@");
-				urlParts[0] = urlParts[0].replace("http://", "");
-				apacheAuthParts = urlParts[0].split(":");
-			}
-			url = new URL(urlString);
-		}
-		catch (MalformedURLException ex)
-		{
-			Main.logger.log(Level.SEVERE, "Websend: Error while parsing URL: " + urlString, ex);
-		}
+		// Main url - set if it isn't set already.
+                if(url == null){
+                        String urlString = settings.getURL();
+                        if (urlString == null || "".equals(urlString.trim()))
+                        {
+                                Main.logger.log(Level.SEVERE, "No url was found. Please check your configuration file.");
+                                success = false;
+                        }else{
+                                try
+                                {
+                                        if (urlString.contains("@"))
+                                        {
+                                                String[] urlParts = urlString.split("@");
+                                                urlParts[0] = urlParts[0].replace("http://", "");
+                                                apacheAuthParts = urlParts[0].split(":");
+                                        }
+                                        url = new URL(urlString);
+                                }
+                                catch (MalformedURLException ex)
+                                {
+                                        Main.logger.log(Level.SEVERE, "Error while parsing URL: " + urlString, ex);
+                                        success = false;
+                                }
+                        }
+                }
 
 		// Reponse url
 		if (settings.getResponseURL() != null)
@@ -64,25 +75,31 @@ public class POSTHandler
 			}
 			catch (MalformedURLException ex)
 			{
-				Main.logger.log(Level.SEVERE, "Websend: Error while parsing response URL: " + urlString, ex);
+				Main.logger.log(Level.SEVERE, "Error while parsing response URL: " + responseURLString, ex);
 			}
 		}
-	}
+                return success;
+        }
 
-	public void setURL(String urlArg)
+	public boolean setURL(String urlArg)
 	{
 		try
 		{
 			url = new URL(urlArg);
+                        return true;
 		}
 		catch (MalformedURLException ex)
 		{
-			Main.logger.log(Level.SEVERE, "Websend: Error while parsing URL: " + urlArg, ex);
+			Main.logger.log(Level.SEVERE, "Error while parsing URL: " + urlArg, ex);
+                        return false;
 		}
 	}
 
 	public void sendPOST(String args[], Player player, String playerNameArg, boolean isResponse) throws Exception
 	{
+                if(url == null){                    
+                    return;
+                }
 		String argsEncoded[] = new String[args.length];
 		for (int i = 0; i < args.length; i++)
 		{
@@ -90,6 +107,9 @@ public class POSTHandler
 		}
 
 		URLConnection con = url.openConnection();
+                //Timeout to ensure error on infinitely loading pages. 10 seconds enough?
+                con.setConnectTimeout(10000);
+                con.setReadTimeout(10000);
 		con.setRequestProperty("Host", Main.bukkitServer.getIp());
 		con.setRequestProperty("User-Agent", Main.plugin.getDescription().getFullName());
 		if (apacheAuthParts != null)
@@ -227,7 +247,8 @@ public class POSTHandler
 		}
 		catch (NoSuchAlgorithmException ex)
 		{
-			Main.logger.info("Websend: Failed to hash password to MD5");
+			Main.logger.info("Failed to hash password to MD5");
+                        return "";
 		}
 		md.update(input.getBytes());
 		BigInteger bigInt = new BigInteger(1, md.digest());

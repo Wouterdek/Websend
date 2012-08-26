@@ -55,6 +55,8 @@ public class ConfigHandler
 		writer.println("#Help: SALT: adds a salt to the hashed password when sending over bukkit -> php connection.");
 		writer.println("PASS=YourPassHere");
 		writer.println("#Optional settings. Remove the '#' to use.");
+                writer.println("#URL=yoururl.com/page.php");
+                writer.println("#WEBLISTENER_ACTIVE=false/true");
 		writer.println("#ALTPORT=1234");
 		writer.println("#DEBUG_WEBSEND=false/true");
 		writer.println("#SALT=abc123");
@@ -102,7 +104,7 @@ public class ConfigHandler
 					convertedValue = Integer.parseInt(value.trim());
 					if (convertedValue == Main.port)
 					{
-						Main.logger.log(Level.WARNING, "Websend error: You are trying to host websend on the server port!");
+						Main.logger.log(Level.WARNING, "You are trying to host Websend on the minecraft server port! Choose a different port.");
 					}
 				}
 				catch (Exception ex)

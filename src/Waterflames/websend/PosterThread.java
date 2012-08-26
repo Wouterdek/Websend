@@ -1,5 +1,6 @@
 package Waterflames.websend;
 
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -43,10 +44,17 @@ public class PosterThread extends Thread
 	public void run()
 	{
 		POSTHandler postHandler = new POSTHandler();
+                
+                //If this.url is setup, replace url in posthandler.
 		if (url != null)
 		{
 			postHandler.setURL(url);
 		}
+                
+                if(!postHandler.setupVariables()){
+                        return;
+                }
+                
 		try
 		{
 			if (player == null && playerName != null)
@@ -58,6 +66,9 @@ public class PosterThread extends Thread
 				postHandler.sendPOST(args, player, null, isResponse);
 			}
 		}
+                catch (SocketTimeoutException ex){
+                    Main.logger.log(Level.SEVERE, "The page took too long to respond! (loading time > 10 seconds)", ex);
+                }
 		catch (Exception ex)
 		{
 			Main.logger.log(Level.SEVERE, "An error occured while trying to do a bukkit -> php connection. (POST)", ex);
