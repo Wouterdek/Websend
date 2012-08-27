@@ -18,9 +18,8 @@ if($receivedMD5 != "" && $args[0] != "")
         if($args[0] == "checkcolors") //script 1
         {
             print('/Output/PrintToPlayer:Example script from php.;');
-            print('/Output/PrintToPlayer:This command will show different possible colors;');
-            // use /Chatcolor-red: to set the text of a sentence to red.
-            // Other colors are:
+            print('/Output/PrintToPlayer:This command will show all possible colors;');
+            // use minecraft color codes to color the text
             print("&aThis is green;");
             print("&bThis is light blue;");
             print("&cThis is red;");
