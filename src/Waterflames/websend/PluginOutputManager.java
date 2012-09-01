@@ -37,7 +37,6 @@ public class PluginOutputManager
 
 	public static void registerLoggerListener()
 	{
-		PluginLogger pl = (PluginLogger) Main.logger;
 		try
 		{
 			PluginLogger.registerGlobalListener(new PluginLoggerListener()
@@ -51,7 +50,7 @@ public class PluginOutputManager
 		}
 		catch (Exception ex)
 		{
-			Main.logger.log(Level.INFO, "Default craftbukkit detected, plugin output capturing will not work.");
+			Main.getMainLogger().log(Level.INFO, "Default craftbukkit detected, plugin output capturing will not work.");
 		}
 	}
 
@@ -91,7 +90,8 @@ public class PluginOutputManager
 			{
 			}
 		};
-
+                
+                //May give problems with openJDK
 		Logger.getLogger(loggerName).addHandler(handler);
 	}
 }

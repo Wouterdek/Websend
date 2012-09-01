@@ -7,19 +7,11 @@ import org.bukkit.entity.Player;
 
 public class PosterThread extends Thread
 {
-	Settings settings;
-	Server server;
 	String[] args;
 	Player player;
 	String playerName;
 	String url;
 	boolean isResponse;
-
-	public PosterThread()
-	{
-		settings = Main.settings;
-		server = Main.bukkitServer;
-	}
 
 	public void setVariables(String[] newArgs, Player newPlayer, boolean isResponseArg)
 	{
@@ -67,11 +59,11 @@ public class PosterThread extends Thread
 			}
 		}
                 catch (SocketTimeoutException ex){
-                    Main.logger.log(Level.SEVERE, "The page took too long to respond! (loading time > 10 seconds)", ex);
+                        Main.getMainLogger().log(Level.SEVERE, "The page took too long to respond! (loading time > 10 seconds)", ex);
                 }
 		catch (Exception ex)
 		{
-			Main.logger.log(Level.SEVERE, "An error occured while trying to do a bukkit -> php connection. (POST)", ex);
+			Main.getMainLogger().log(Level.SEVERE, "An error occured while trying to do a bukkit -> php connection. (POST)", ex);
 		}
 	}
 }

@@ -23,7 +23,7 @@ public class Script
 		{
 			if (main == null)
 			{
-				Main.logger.log(Level.SEVERE, "No main class found for " + name + "!");
+				Main.getMainLogger().log(Level.SEVERE, "No main class found for " + name + "!");
 			}
 			if (main != null)
 			{
@@ -34,16 +34,16 @@ public class Script
 		{
 			if (ex.getCause() != null)
 			{
-				Main.logger.log(Level.SEVERE, "The '" + name + "' script failed to run", ex.getCause());
+				Main.getMainLogger().log(Level.SEVERE, "The '" + name + "' script failed to run", ex.getCause());
 			}
 		}
 		catch (NoSuchMethodException ex)
 		{
-			Main.logger.log(Level.SEVERE, "The '" + name + "' script doesn't contain a run method!");
+			Main.getMainLogger().log(Level.SEVERE, "The '" + name + "' script doesn't contain a run method!");
 		}
 		catch (Exception ex)
 		{
-			Main.logger.log(Level.SEVERE, null, ex);
+			Main.getMainLogger().log(Level.SEVERE, null, ex);
 		}
 	}
 

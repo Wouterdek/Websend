@@ -3,6 +3,7 @@ package Waterflames.websend;
 import java.io.*;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 public class TrustedHosts
 {
@@ -37,7 +38,9 @@ public class TrustedHosts
 
 	static void writeDefaultFile(File trustedFile) throws IOException
 	{
-		trustedFile.createNewFile();
+                if(!trustedFile.createNewFile()){
+                        Main.getMainLogger().log(Level.WARNING, "Failed to make trusted hosts file.");
+                }
 		PrintWriter writer = new PrintWriter(new FileWriter(trustedFile));
 		writer.println("#Put your trusted domains in this file.");
 		writer.println("#Trusted domains can connect to websend via php->websend.");

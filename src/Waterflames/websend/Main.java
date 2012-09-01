@@ -17,14 +17,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin
 {
-	public static Settings settings;
-	public static Logger logger;
-	public static Server bukkitServer;
-	public static Main plugin;
-	public static File scriptsDir;
-	public static int port;
-	public static ScriptManager scriptManager;
-	public static CommunicationServer server;
+	private static Settings settings;
+	private static Logger logger;
+	private static Server bukkitServer;
+	private static Main plugin;
+	private static File scriptsDir;
+	private static int port;
+	private static ScriptManager scriptManager;
+	private static CommunicationServer server;
 
 	@Override
 	public File getDataFolder()
@@ -34,7 +34,9 @@ public class Main extends JavaPlugin
 		File websendDir = new File(pluginDir, "Websend");
 		if (!websendDir.exists())
 		{
-			websendDir.mkdir();
+                        if(!websendDir.mkdir()){
+                                Main.logger.log(Level.WARNING, "Failed to create directory.");
+                        }
 		}
 		return websendDir;
 	}
@@ -91,8 +93,9 @@ public class Main extends JavaPlugin
 		}
 		else
 		{
-			scriptsDir.mkdir();
-			new File(scriptsDir, "compiled").mkdir();
+			if(!new File(scriptsDir, "compiled").mkdirs()){
+                                Main.logger.log(Level.WARNING, "Failed to make scripts directory.");
+                        }
 		}
 
 		if (needsSetup)
@@ -232,4 +235,36 @@ public class Main extends JavaPlugin
 		}
 		return false;
 	}
+
+        public static Server getBukkitServer() {
+                return bukkitServer;
+        }
+
+        public static Main getInstance() {
+                return plugin;
+        }
+
+        public static int getPort() {
+                return port;
+        }
+
+        public static ScriptManager getScriptManager() {
+                return scriptManager;
+        }
+
+        public static File getScriptsDir() {
+                return scriptsDir;
+        }
+
+        public static CommunicationServer getCommunicationServer() {
+                return server;
+        }
+
+        public static Settings getSettings() {
+                return settings;
+        }
+
+        public static Logger getMainLogger() {
+                return logger;
+        }
 }

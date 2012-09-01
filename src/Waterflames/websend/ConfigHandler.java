@@ -32,20 +32,22 @@ public class ConfigHandler
 	public void generateConfig()
 	{
 		// File declaration
-		File websendDir = Main.plugin.getDataFolder();
+		File websendDir = Main.getInstance().getDataFolder();
 		File configFile = new File(websendDir, "config.txt");
 
 		// Prepare file
 		PrintWriter writer = null;
 		try
 		{
-			configFile.createNewFile();
+                        if(!configFile.createNewFile()){
+                            Main.getMainLogger().log(Level.WARNING, "Could not create new config file.");
+                        }
 			writer = new PrintWriter(new FileWriter(configFile));
 		}
 		catch (IOException ex)
 		{
-			Main.logger.info("Websend failed to create a new configuration file.");
-			Main.logger.log(Level.SEVERE, null, ex);
+			Main.getMainLogger().info("Websend failed to create a new configuration file.");
+			Main.getMainLogger().log(Level.SEVERE, null, ex);
 		}
 
 		// Fill file
@@ -66,7 +68,7 @@ public class ConfigHandler
 	private BufferedReader openFile() throws FileNotFoundException
 	{
 		// File declaration
-		File folder = Main.plugin.getDataFolder();
+		File folder = Main.getInstance().getDataFolder();
 		File configFile = new File(folder, "config.txt");
 
 		// Reader opening
@@ -102,14 +104,14 @@ public class ConfigHandler
 				try
 				{
 					convertedValue = Integer.parseInt(value.trim());
-					if (convertedValue == Main.port)
+					if (convertedValue == Main.getSettings().getPort())
 					{
-						Main.logger.log(Level.WARNING, "You are trying to host Websend on the minecraft server port! Choose a different port.");
+						Main.getMainLogger().log(Level.WARNING, "You are trying to host Websend on the minecraft server port! Choose a different port.");
 					}
 				}
 				catch (Exception ex)
 				{
-					Main.logger.log(Level.SEVERE, "Websend failed to parse your new port value:" + value, ex);
+					Main.getMainLogger().log(Level.SEVERE, "Websend failed to parse your new port value:" + value, ex);
 					return;
 				}
 				settings.setPort(convertedValue);
@@ -150,8 +152,8 @@ public class ConfigHandler
 			}
 			else
 			{
-				Main.logger.info("WEBSEND ERROR: Error while parsing config file.");
-				Main.logger.info("Invalid line: " + line);
+				Main.getMainLogger().info("WEBSEND ERROR: Error while parsing config file.");
+				Main.getMainLogger().info("Invalid line: " + line);
 			}
 		}
 	}

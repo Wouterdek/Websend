@@ -24,12 +24,11 @@ public class POSTHandler
 	String[] apacheAuthParts;
 	Server server;
 	Settings settings;
-	boolean closed = false;
 
 	public POSTHandler()
 	{
-		settings = Main.settings;
-		server = Main.bukkitServer;
+		settings = Main.getSettings();
+		server = Main.getBukkitServer();
 	}
         
         /*
@@ -44,7 +43,7 @@ public class POSTHandler
                         String urlString = settings.getURL();
                         if (urlString == null || "".equals(urlString.trim()))
                         {
-                                Main.logger.log(Level.SEVERE, "No url was found. Please check your configuration file.");
+                                Main.getMainLogger().log(Level.SEVERE, "No url was found. Please check your configuration file.");
                                 success = false;
                         }else{
                                 try
@@ -59,7 +58,7 @@ public class POSTHandler
                                 }
                                 catch (MalformedURLException ex)
                                 {
-                                        Main.logger.log(Level.SEVERE, "Error while parsing URL: " + urlString, ex);
+                                        Main.getMainLogger().log(Level.SEVERE, "Error while parsing URL: " + urlString, ex);
                                         success = false;
                                 }
                         }
@@ -75,7 +74,7 @@ public class POSTHandler
 			}
 			catch (MalformedURLException ex)
 			{
-				Main.logger.log(Level.SEVERE, "Error while parsing response URL: " + responseURLString, ex);
+				Main.getMainLogger().log(Level.SEVERE, "Error while parsing response URL: " + responseURLString, ex);
 			}
 		}
                 return success;
@@ -90,7 +89,7 @@ public class POSTHandler
 		}
 		catch (MalformedURLException ex)
 		{
-			Main.logger.log(Level.SEVERE, "Error while parsing URL: " + urlArg, ex);
+			Main.getMainLogger().log(Level.SEVERE, "Error while parsing URL: " + urlArg, ex);
                         return false;
 		}
 	}
@@ -110,8 +109,8 @@ public class POSTHandler
                 //Timeout to ensure error on infinitely loading pages. 10 seconds enough?
                 con.setConnectTimeout(10000);
                 con.setReadTimeout(10000);
-		con.setRequestProperty("Host", Main.bukkitServer.getIp());
-		con.setRequestProperty("User-Agent", Main.plugin.getDescription().getFullName());
+		con.setRequestProperty("Host", Main.getBukkitServer().getIp());
+		con.setRequestProperty("User-Agent", Main.getInstance().getDescription().getFullName());
 		if (apacheAuthParts != null)
 		{
 			con.setRequestProperty("Authorization", "Basic " + Base64.encode(apacheAuthParts[0] + ":" + apacheAuthParts[1]));
@@ -233,11 +232,6 @@ public class POSTHandler
 		out.write("onlineMode=" + URLEncoder.encode(String.valueOf(server.getOnlineMode()), "UTF-8") + "&");
 	}
 
-	public void close()
-	{
-		closed = true;
-	}
-
 	private String hash(String input)
 	{
 		MessageDigest md = null;
@@ -247,7 +241,7 @@ public class POSTHandler
 		}
 		catch (NoSuchAlgorithmException ex)
 		{
-			Main.logger.info("Failed to hash password to MD5");
+			Main.getMainLogger().info("Failed to hash password to MD5");
                         return "";
 		}
 		md.update(input.getBytes());

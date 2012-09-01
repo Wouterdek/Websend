@@ -21,8 +21,8 @@ public class ScriptManager
 
 	public ScriptManager()
 	{
-		scriptsDir = Waterflames.websend.Main.scriptsDir;
-		compiledDir = new File(Waterflames.websend.Main.scriptsDir, "compiled");
+		scriptsDir = Waterflames.websend.Main.getScriptsDir();
+		compiledDir = new File(Waterflames.websend.Main.getScriptsDir(), "compiled");
 		scripts = new HashMap<String, Script>();
 	}
 
@@ -30,30 +30,30 @@ public class ScriptManager
 
 	public void invokeScript(String name)
 	{
-		if (Main.settings.isDebugMode())
+		if (Main.getSettings().isDebugMode())
 		{
-			Main.logger.log(Level.WARNING, "Searching script: " + name);
+			Main.getMainLogger().log(Level.WARNING, "Searching script: " + name);
 		}
 		Script script = scripts.get(name);
 		if (script != null)
 		{
-			if (Main.settings.isDebugMode())
+			if (Main.getSettings().isDebugMode())
 			{
-				Main.logger.log(Level.WARNING, "Found script, invoking main method.");
+				Main.getMainLogger().log(Level.WARNING, "Found script, invoking main method.");
 			}
 			script.invoke();
 		}
 		else
 		{
-			Main.logger.info("No script with name: " + name);
+			Main.getMainLogger().info("No script with name: " + name);
 		}
 	}
 
 	public void clearScripts()
 	{
-		if (Main.settings.isDebugMode())
+		if (Main.getSettings().isDebugMode())
 		{
-			Main.logger.log(Level.WARNING, "Cleared scripts map.");
+			Main.getMainLogger().log(Level.WARNING, "Cleared scripts map.");
 		}
 		scripts.clear();
 	}
@@ -68,27 +68,27 @@ public class ScriptManager
 	{
 		if (!scripts.containsKey(scriptName))
 		{
-			Main.logger.log(Level.WARNING, "'" + scriptName + "' was not found and therefore can't be reloaded.");
+			Main.getMainLogger().log(Level.WARNING, "'" + scriptName + "' was not found and therefore can't be reloaded.");
 			return;
 		}
 		scripts.remove(scriptName);
-		scripts.put(scriptName, loadScriptFromDir(new File(Main.scriptsDir, scriptName)));
+		scripts.put(scriptName, loadScriptFromDir(new File(Main.getScriptsDir(), scriptName)));
 	}
 
 	public void loadScripts()
 	{
-		if (Main.settings.isDebugMode())
+		if (Main.getSettings().isDebugMode())
 		{
-			Main.logger.log(Level.WARNING, "Loading scripts");
+			Main.getMainLogger().log(Level.WARNING, "Loading scripts");
 		}
 		File[] directories = scriptsDir.listFiles(new DirectoryFilter());
 		for (File cur : directories)
 		{
 			if (!cur.getName().equals("compiled"))
 			{
-				if (Main.settings.isDebugMode())
+				if (Main.getSettings().isDebugMode())
 				{
-					Main.logger.log(Level.WARNING, "Loading script: " + cur.getName());
+					Main.getMainLogger().log(Level.WARNING, "Loading script: " + cur.getName());
 				}
 				Script newScript = loadScriptFromDir(cur);
 				scripts.put(newScript.name, newScript);
@@ -118,12 +118,11 @@ public class ScriptManager
 		File[] javas = directory.listFiles(new JavaFileFilter());
 		if (!compileClasses(scriptName, javas))
 		{
-			Main.logger.log(Level.SEVERE, "Failed to compile script " + scriptName + "!");
+			Main.getMainLogger().log(Level.SEVERE, "Failed to compile script " + scriptName + "!");
 			return null;
 		}
 
 		File compiledFilesDir = new File(compiledDir, scriptName);
-		File[] classes = compiledFilesDir.listFiles(new ClassFileFilter());
 
 		loadClasses(script);
 
@@ -157,15 +156,15 @@ public class ScriptManager
 		}
 		catch (Exception ex)
 		{
-			Main.logger.log(Level.WARNING, "Failed to load script info for: " + script.name, ex);
+			Main.getMainLogger().log(Level.WARNING, "Failed to load script info for: " + script.name, ex);
 		}
 	}
 
 	private boolean compileClasses(String name, File[] javaFiles)
 	{
-		if (Main.settings.isDebugMode())
+		if (Main.getSettings().isDebugMode())
 		{
-			Main.logger.log(Level.WARNING, "Compiling classes");
+			Main.getMainLogger().log(Level.WARNING, "Compiling classes");
 		}
 		try
 		{
@@ -177,7 +176,9 @@ public class ScriptManager
 			String dir = compiledFilesDir.getCanonicalPath();
 			if (!compiledFilesDir.exists())
 			{
-				compiledFilesDir.mkdirs();
+				if(!compiledFilesDir.mkdirs()){
+                                        Main.getMainLogger().log(Level.WARNING, "Failed to make compiled scripts directory.");
+                                }
 			}
 
 			boolean succes = jc.getTask(null, sjfm, null, Arrays.asList(new String[] { "-d", dir }), null, javas).call();
@@ -186,23 +187,23 @@ public class ScriptManager
 		}
 		catch (IOException ex)
 		{
-			Main.logger.log(Level.SEVERE, null, ex);
+			Main.getMainLogger().log(Level.SEVERE, null, ex);
 			return false;
 		}
 	}
 
 	private boolean loadClasses(Script container)
 	{
-		if (Main.settings.isDebugMode())
+		if (Main.getSettings().isDebugMode())
 		{
-			Main.logger.log(Level.WARNING, "Loading classes into JVM");
+			Main.getMainLogger().log(Level.WARNING, "Loading classes into JVM");
 		}
 		try
 		{
 			File scriptDir = new File(compiledDir, container.name);
 			if (!scriptDir.exists())
 			{
-				Main.logger.log(Level.WARNING, "Invalid script! No compiled files dir found!");
+				Main.getMainLogger().log(Level.WARNING, "Invalid script! No compiled files dir found!");
 				return false;
 			}
 
@@ -232,7 +233,7 @@ public class ScriptManager
 		}
 		catch (MalformedURLException | ClassNotFoundException e)
 		{
-			Main.logger.log(Level.SEVERE, "Error while loading classes into the JVM!", e);
+			Main.getMainLogger().log(Level.SEVERE, "Error while loading classes into the JVM!", e);
 		}
 		return false;
 	}

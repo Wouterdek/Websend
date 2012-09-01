@@ -1,18 +1,6 @@
-1. bukkit -> php
-   - Added /Output/PrintToConsole:message /Output/PrintToPlayer:message /Output/PrintToPlayer-playerName:message and /Output/Broadcast:message
-   - ExecuteBukkitCommand has been replaced with ExecutePlayerCommand. Finally!
-   - Added ExecuteScript:scriptname. See point 3 for details.
-   - Added onlinePlayersIP[]. Contains ips of players specified in onlinePlayers[]
-2. php -> bukkit -> php
-   Completely rewritten. Use the supplied Websend.php as a php api for your php -> bukkit scripts. 
-   Syntax of older versions will NOT work with this version.
-   This version also has a limited implementation of output returing. Read more here: http://dev.bukkit.org/server-mods/websend/pages/plugin-output-capturing-beta/
-   (Note: I have had some trouble with using this because the unpack function used in the readByte() function stopped working after a while. 
-   Report if you have the same problem. Please contact me if you know a solution.)
-3. Websend Java scripts (NOT javascript!)
-   New feature. Allows you to write scripts in Java. These will be compiled and loaded into the JVM on server start.
-   These scripts are callable via php scripts.
-4. Trusted Hosts
-   This acts as a whitelist for connections. Default allows all connections. To change, edit trusted.txt
-
-There may be more things that I already forgot about.
+- Removed /ChatColor command. You can now use the Minecraft chat color codes. All colors work now.
+- Fixed some errors in Websend.php: Broadcast() now works.
+- Fixed /ExecutePlayerCommand
+- PHP > Bukkit should work better now. No more (or fewer) EOFExceptions.
+- Fixed colors causing PrintToPlayer messages to be incomplete
+and some minor tweaks.

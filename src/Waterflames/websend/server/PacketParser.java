@@ -14,8 +14,8 @@ public class PacketParser
 	{
 		String command = readString(in);
 		String playerStr = readString(in);
-		Player player = Main.plugin.getServer().getPlayer(playerStr);
-		if (player != null && Main.plugin.getServer().dispatchCommand(player, command))
+		Player player = Main.getBukkitServer().getPlayer(playerStr);
+		if (player != null && Main.getBukkitServer().dispatchCommand(player, command))
 		{
 			out.writeInt(1);
 		}
@@ -29,7 +29,7 @@ public class PacketParser
 	public static void parseDoCommandAsConsole(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String command = readString(in);
-		boolean success = Main.plugin.getServer().dispatchCommand(Main.plugin.getServer().getConsoleSender(), command);
+		boolean success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
 		if (success)
 		{
 			out.writeInt(1);
@@ -44,20 +44,20 @@ public class PacketParser
 	public static void parseDoScript(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String scriptName = readString(in);
-		Main.scriptManager.invokeScript(scriptName);
+		Main.getScriptManager().invokeScript(scriptName);
 	}
 
 	public static void parseWriteOutputToConsole(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String message = readString(in);
-		Main.logger.info(message);
+		Main.getMainLogger().info(message);
 	}
 
 	public static void parseWriteOutputToPlayer(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String message = readString(in);
 		String playerStr = readString(in);
-		Player player = Main.plugin.getServer().getPlayer(playerStr);
+		Player player = Main.getInstance().getServer().getPlayer(playerStr);
 		if (player != null)
 		{
 			out.writeInt(1);
@@ -73,13 +73,13 @@ public class PacketParser
 	public static void parseBroadcast(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String message = readString(in);
-		Main.plugin.getServer().broadcastMessage(message);
+		Main.getBukkitServer().broadcastMessage(message);
 	}
 
 	public static boolean parsePasswordPacket(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String inPass = readString(in);
-		return inPass.equals(Main.settings.getPassword());
+		return inPass.equals(Main.getSettings().getPassword());
 	}
 
 	public static void parseStartPluginOutputRecording(DataInputStream in, DataOutputStream out) throws IOException
@@ -103,13 +103,13 @@ public class PacketParser
 	private static String readString(DataInputStream in) throws IOException
 	{
 		int stringSize = in.readInt();
-		String buf = "";
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < stringSize; i++)
 		{
-			buf = buf + in.readChar();
+			buffer.append(in.readChar());
 		}
 
-		return buf;
+		return buffer.toString();
 	}
 
 	private static void writeString(DataOutputStream out, String string) throws IOException
