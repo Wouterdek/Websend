@@ -231,7 +231,7 @@ public class ScriptManager
 
 			return true;
 		}
-		catch (MalformedURLException | ClassNotFoundException e)
+		catch (Exception e)
 		{
 			Main.getMainLogger().log(Level.SEVERE, "Error while loading classes into the JVM!", e);
 		}
