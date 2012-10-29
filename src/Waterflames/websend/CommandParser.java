@@ -292,7 +292,7 @@ public class CommandParser
                     Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
                     return;
                 }
-                //TODO: Implement or remove.
+                // TODO: Implement or remove.
             }
         }
         //</editor-fold>
@@ -364,6 +364,7 @@ public class CommandParser
 		String commandData = line.replace("PrintToPlayer-", "");
 		String[] commandDataArray = commandData.split(":");
 		String playerName = commandDataArray[0];
+		String message = commandDataArray[1];
 		Player currentPlayer = server.getPlayer(playerName);
 		if ("console".equals(playerName))
 		{
@@ -371,7 +372,7 @@ public class CommandParser
 			{
 				Main.getMainLogger().info("Websend: Player 'console'? Using PrintToConsole instead.");
 			}
-                        Main.getMainLogger().info(Util.stringArrayToString(commandDataArray));
+            Main.getMainLogger().info(Util.stringArrayToString(commandDataArray));
 		}
 		else if (currentPlayer == null)
 		{
@@ -386,7 +387,7 @@ public class CommandParser
 		}
 		else
 		{
-                        currentPlayer.sendMessage(parseColor(Util.stringArrayToString(commandDataArray)));
+			currentPlayer.sendMessage(parseColor(message));
 		}
 	}
 

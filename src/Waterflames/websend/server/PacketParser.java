@@ -6,6 +6,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class PacketParser
@@ -73,7 +75,7 @@ public class PacketParser
 	public static void parseBroadcast(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String message = readString(in);
-		Main.getBukkitServer().broadcastMessage(message);
+		Main.getBukkitServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
 	}
 
 	public static boolean parsePasswordPacket(DataInputStream in, DataOutputStream out) throws IOException

@@ -2,7 +2,6 @@ package Waterflames.websend.script;
 
 import Waterflames.websend.Main;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -122,7 +121,7 @@ public class ScriptManager
 			return null;
 		}
 
-		File compiledFilesDir = new File(compiledDir, scriptName);
+		//File compiledFilesDir = new File(compiledDir, scriptName);
 
 		loadClasses(script);
 

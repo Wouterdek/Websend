@@ -2,7 +2,6 @@ package Waterflames.websend;
 
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class PosterThread extends Thread

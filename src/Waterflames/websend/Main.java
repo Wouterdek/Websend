@@ -5,6 +5,7 @@ import Waterflames.websend.server.CommunicationServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
@@ -267,4 +268,11 @@ public class Main extends JavaPlugin
         public static Logger getMainLogger() {
                 return logger;
         }
+
+		@Override
+		public List<String> onTabComplete(CommandSender arg0, Command arg1,
+				String arg2, String[] arg3) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 }
