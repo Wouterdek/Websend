@@ -11,7 +11,6 @@ import waterflames.mcpeserver.server.NetworkManager;
 public class Main {
     public static NetworkManager netManager;
     public static void main(String[] args) {
-        System.setProperty("java.net.preferIPv4Stack", "true");
         Main.log("Minecraft Pocket Edition - Standalone Server v0.1");
         Main.log("Starting server. (UDP port 19132)");
         netManager = new NetworkManager();
