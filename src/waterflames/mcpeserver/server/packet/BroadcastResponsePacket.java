@@ -3,7 +3,6 @@ package waterflames.mcpeserver.server.packet;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import waterflames.mcpeserver.Util;
 import waterflames.mcpeserver.server.PacketHandler;
 
 public class BroadcastResponsePacket extends Packet{
