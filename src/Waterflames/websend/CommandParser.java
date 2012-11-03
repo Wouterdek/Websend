@@ -372,7 +372,7 @@ public class CommandParser
 			{
 				Main.getMainLogger().info("Websend: Player 'console'? Using PrintToConsole instead.");
 			}
-            Main.getMainLogger().info(Util.stringArrayToString(commandDataArray));
+            //Main.getMainLogger().info(Util.stringArrayToString(commandDataArray));
 		}
 		else if (currentPlayer == null)
 		{
