@@ -268,11 +268,8 @@ public class Main extends JavaPlugin
         public static Logger getMainLogger() {
                 return logger;
         }
-
-		@Override
-		public List<String> onTabComplete(CommandSender arg0, Command arg1,
-				String arg2, String[] arg3) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+                return null;
+	}
 }
