@@ -236,7 +236,7 @@ public class POSTHandler
 	{
 		try
 		{
-                        MessageDigest md = MessageDigest.getInstance(Main.getSettings().getHashingAlgoritm());
+                        MessageDigest md = MessageDigest.getInstance(Main.getSettings().getHashingAlgorithm());
                         md.update(input.getBytes());
                         BigInteger bigInt = new BigInteger(1, md.digest());
                         String result = bigInt.toString(16);
@@ -247,7 +247,7 @@ public class POSTHandler
 		}
 		catch (Exception ex)
 		{
-			Main.getMainLogger().info("Failed to hash password to "+Main.getSettings().getHashingAlgoritm());
+			Main.getMainLogger().info("Failed to hash password to "+Main.getSettings().getHashingAlgorithm());
                         return "";
 		}
 	}

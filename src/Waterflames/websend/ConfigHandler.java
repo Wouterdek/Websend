@@ -151,16 +151,16 @@ public class ConfigHandler
 			{
 				String value = line.replaceFirst("SALT=", "");
 				settings.setSalt(value);
-			}if (line.startsWith("HASH_ALGORITM=")){
-                                String value = line.replaceFirst("HASH_ALGORITM=", "");
+			}if (line.startsWith("HASH_ALGORITHM=")){
+                                String value = line.replaceFirst("HASH_ALGORITHM=", "");
                                 try
                                 {
                                         MessageDigest md = MessageDigest.getInstance(value);
-                                        settings.setHashingAlgoritm(value);
+                                        settings.setHashingAlgorithm(value);
                                 }
                                 catch (NoSuchAlgorithmException ex)
                                 {
-                                        Main.getMainLogger().info("Hashing algorith '"+value+"' is not available on this machine. Reverting to MD5");
+                                        Main.getMainLogger().info("Hashing algorithm '"+value+"' is not available on this machine. Reverting to MD5");
                                 }
                         }
 			else

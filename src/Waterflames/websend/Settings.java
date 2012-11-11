@@ -5,7 +5,7 @@ public class Settings
 	private String responseURL;
 	private String password;
 	private String salt = "";
-	private String algoritm = "MD5";
+	private String algorithm = "MD5";
 	private int port;
 	private boolean debugMode;
 	private boolean serverActive;
@@ -56,8 +56,8 @@ public class Settings
 		return salt;
 	}
         
-        public String getHashingAlgoritm() {
-                return this.algoritm;
+        public String getHashingAlgorithm() {
+                return this.algorithm;
         }
 
 	public boolean isServerActive()
@@ -100,7 +100,7 @@ public class Settings
 		this.serverActive = serverActive;
 	}
         
-        public void setHashingAlgoritm(String algoritm) {
-                this.algoritm = algoritm;
+        public void setHashingAlgorithm(String algorithm) {
+                this.algorithm = algorithm;
         }
 }
