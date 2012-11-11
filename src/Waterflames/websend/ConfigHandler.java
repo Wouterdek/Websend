@@ -98,13 +98,13 @@ public class ConfigHandler
 				settings.setPassword(value);
 			}
 			else if (line.startsWith("ALTPORT="))
-			{
+                        {
 				String value = line.replaceFirst("ALTPORT=", "");
 				int convertedValue = 0;
 				try
 				{
 					convertedValue = Integer.parseInt(value.trim());
-					if (convertedValue == Main.getSettings().getPort())
+					if (convertedValue == Main.getBukkitServer().getPort())
 					{
 						Main.getMainLogger().log(Level.WARNING, "You are trying to host Websend on the minecraft server port! Choose a different port.");
 					}
