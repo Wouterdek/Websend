@@ -1,6 +1,8 @@
 package Waterflames.websend;
 
 import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 
 public class ConfigHandler
@@ -149,7 +151,18 @@ public class ConfigHandler
 			{
 				String value = line.replaceFirst("SALT=", "");
 				settings.setSalt(value);
-			}
+			}if (line.startsWith("HASH_ALGORITM=")){
+                                String value = line.replaceFirst("HASH_ALGORITM=", "");
+                                try
+                                {
+                                        MessageDigest md = MessageDigest.getInstance(value);
+                                        settings.setHashingAlgoritm(value);
+                                }
+                                catch (NoSuchAlgorithmException ex)
+                                {
+                                        Main.getMainLogger().info("Hashing algorith '"+value+"' is not available on this machine. Reverting to MD5");
+                                }
+                        }
 			else
 			{
 				Main.getMainLogger().info("WEBSEND ERROR: Error while parsing config file.");

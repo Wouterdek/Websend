@@ -234,23 +234,21 @@ public class POSTHandler
 
 	private String hash(String input)
 	{
-		MessageDigest md = null;
 		try
 		{
-			md = MessageDigest.getInstance("MD5");
+                        MessageDigest md = MessageDigest.getInstance(Main.getSettings().getHashingAlgoritm());
+                        md.update(input.getBytes());
+                        BigInteger bigInt = new BigInteger(1, md.digest());
+                        String result = bigInt.toString(16);
+                        if ((result.length() % 2) != 0) {
+                            result = "0" + result;
+                        }
+                        return result;
 		}
-		catch (NoSuchAlgorithmException ex)
+		catch (Exception ex)
 		{
-			Main.getMainLogger().info("Failed to hash password to MD5");
+			Main.getMainLogger().info("Failed to hash password to "+Main.getSettings().getHashingAlgoritm());
                         return "";
 		}
-		md.update(input.getBytes());
-		BigInteger bigInt = new BigInteger(1, md.digest());
-		String result = bigInt.toString(16);
-		if ((result.length() % 2) != 0)
-		{
-			result = "0" + result;
-		}
-		return result;
 	}
 }
