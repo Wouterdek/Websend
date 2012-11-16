@@ -218,15 +218,16 @@ public class ScriptManager
 				}
 				container.addClass(curClass);
 			}
-
-			try
+                        
+                        //Java 7 part
+			/*try
 			{
 				classLoader.close();
 			}
 			catch (IOException e)
 			{
 				e.printStackTrace();
-			} 
+			} */
 
 			return true;
 		}
