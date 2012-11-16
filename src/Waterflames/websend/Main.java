@@ -28,21 +28,6 @@ public class Main extends JavaPlugin
 	private static CommunicationServer server;
 
 	@Override
-	public File getDataFolder()
-	{
-		String root = new File("").getAbsolutePath();
-		File pluginDir = new File(root, "plugins");
-		File websendDir = new File(pluginDir, "Websend");
-		if (!websendDir.exists())
-		{
-                        if(!websendDir.mkdir()){
-                                Main.logger.log(Level.WARNING, "Failed to create directory.");
-                        }
-		}
-		return websendDir;
-	}
-
-	@Override
 	public void onEnable()
 	{
 		// Setup vars
