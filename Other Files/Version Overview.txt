@@ -1,6 +1,0 @@
-- Removed /ChatColor command. You can now use the Minecraft chat color codes. All colors work now.
-- Fixed some errors in Websend.php: Broadcast() now works.
-- Fixed /ExecutePlayerCommand
-- PHP > Bukkit should work better now. No more (or fewer) EOFExceptions.
-- Fixed colors causing PrintToPlayer messages to be incomplete
-and some minor tweaks.
