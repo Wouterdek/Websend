@@ -4,6 +4,7 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConfigHandler
 {
@@ -35,6 +36,9 @@ public class ConfigHandler
 	{
 		// File declaration
 		File websendDir = Main.getInstance().getDataFolder();
+                if(!websendDir.exists()){
+                    websendDir.mkdirs();
+                }
 		File configFile = new File(websendDir, "config.txt");
 
 		// Prepare file
