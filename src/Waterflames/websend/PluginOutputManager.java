@@ -1,4 +1,4 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -90,8 +90,8 @@ public class PluginOutputManager
 			{
 			}
 		};
-                
-                //May give problems with openJDK
+
+		// May give problems with openJDK
 		Logger.getLogger(loggerName).addHandler(handler);
 	}
 }

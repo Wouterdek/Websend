@@ -1,10 +1,9 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ConfigHandler
 {
@@ -36,18 +35,20 @@ public class ConfigHandler
 	{
 		// File declaration
 		File websendDir = Main.getInstance().getDataFolder();
-                if(!websendDir.exists()){
-                    websendDir.mkdirs();
-                }
+		if (!websendDir.exists())
+		{
+			websendDir.mkdirs();
+		}
 		File configFile = new File(websendDir, "config.txt");
 
 		// Prepare file
 		PrintWriter writer = null;
 		try
 		{
-                        if(!configFile.createNewFile()){
-                            Main.getMainLogger().log(Level.WARNING, "Could not create new config file.");
-                        }
+			if (!configFile.createNewFile())
+			{
+				Main.getMainLogger().log(Level.WARNING, "Could not create new config file.");
+			}
 			writer = new PrintWriter(new FileWriter(configFile));
 		}
 		catch (IOException ex)
@@ -63,8 +64,8 @@ public class ConfigHandler
 		writer.println("#Help: SALT: adds a salt to the hashed password when sending over bukkit -> php connection.");
 		writer.println("PASS=YourPassHere");
 		writer.println("#Optional settings. Remove the '#' to use.");
-                writer.println("#URL=yoururl.com/page.php");
-                writer.println("#WEBLISTENER_ACTIVE=false/true");
+		writer.println("#URL=yoururl.com/page.php");
+		writer.println("#WEBLISTENER_ACTIVE=false/true");
 		writer.println("#ALTPORT=1234");
 		writer.println("#DEBUG_WEBSEND=false/true");
 		writer.println("#SALT=abc123");
@@ -104,7 +105,7 @@ public class ConfigHandler
 				settings.setPassword(value);
 			}
 			else if (line.startsWith("ALTPORT="))
-                        {
+			{
 				String value = line.replaceFirst("ALTPORT=", "");
 				int convertedValue = 0;
 				try
@@ -155,18 +156,20 @@ public class ConfigHandler
 			{
 				String value = line.replaceFirst("SALT=", "");
 				settings.setSalt(value);
-			}else if (line.startsWith("HASH_ALGORITHM=")){
-                                String value = line.replaceFirst("HASH_ALGORITHM=", "");
-                                try
-                                {
-                                        MessageDigest md = MessageDigest.getInstance(value);
-                                        settings.setHashingAlgorithm(value);
-                                }
-                                catch (NoSuchAlgorithmException ex)
-                                {
-                                        Main.getMainLogger().info("Hashing algorithm '"+value+"' is not available on this machine. Reverting to MD5");
-                                }
-                        }
+			}
+			else if (line.startsWith("HASH_ALGORITHM="))
+			{
+				String value = line.replaceFirst("HASH_ALGORITHM=", "");
+				try
+				{
+					MessageDigest md = MessageDigest.getInstance(value);
+					settings.setHashingAlgorithm(value);
+				}
+				catch (NoSuchAlgorithmException ex)
+				{
+					Main.getMainLogger().info("Hashing algorithm '" + value + "' is not available on this machine. Reverting to MD5");
+				}
+			}
 			else
 			{
 				Main.getMainLogger().info("WEBSEND ERROR: Error while parsing config file.");

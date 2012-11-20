@@ -1,4 +1,4 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
