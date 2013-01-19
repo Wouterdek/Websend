@@ -1,7 +1,5 @@
 package waterflames.websend;
 
-import waterflames.websend.script.ScriptManager;
-import waterflames.websend.server.CommunicationServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,6 +13,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import waterflames.websend.script.ScriptManager;
+import waterflames.websend.server.CommunicationServer;
 
 public class Main extends JavaPlugin
 {
@@ -36,7 +36,7 @@ public class Main extends JavaPlugin
 		plugin = this;
 		port = this.getServer().getPort();
 		boolean needsSetup = false;
-
+                
 		// Parse config
 		ConfigHandler configHandler = new ConfigHandler();
 		try
@@ -96,14 +96,6 @@ public class Main extends JavaPlugin
 		{
 			server = new CommunicationServer();
 			server.start();
-		}
-		try
-		{
-			PluginOutputManager.registerLoggerListener();
-		}
-		catch (NoClassDefFoundError ex)
-		{
-			logger.log(Level.WARNING, "Default bukkit detected, plugin output capturing may not function properly.");
 		}
 		// PluginOutputManager.hijackSystemOutputStream();
 		// PluginOutputManager.hijackLogger();

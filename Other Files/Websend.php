@@ -179,9 +179,37 @@
 			$this->writeRawByte(3);
 			$this->writeString($scriptName);
 		}
-
-		//---------- GOT RID OF MODDED BUKKIT STUFF ----------\\
-
+		
+		/**
+		* Start plugin output capture
+		*
+		* @param string $pluginName Name of the plugin.
+		*/
+		public function startPluginOutputListening($pluginName)
+		{
+			$this->writeRawByte(4);
+			$this->writeString($pluginName);
+		}
+		
+		/**
+		* Stop plugin output capture
+		*
+		* @param string $pluginName Name of the plugin.
+		* @return array of strings that contains output.
+		*/
+		public function stopPluginOutputListening($pluginName)
+		{
+			$this->writeRawByte(5);
+			$this->writeString($pluginName);
+			$size = $this->readRawInt();
+			$data = array();
+			for($i = 0; $i<$size;$i++){
+				$messageSize = $this->readRawInt();
+				$data[$i] = $this->readChars($messageSize);
+			}
+			return $data;
+		}
+		
 		/**
 		* Print output to the console window. Invisible to players.
 		*/

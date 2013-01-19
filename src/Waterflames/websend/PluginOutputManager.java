@@ -4,24 +4,42 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginLogger;
-import org.bukkit.plugin.PluginLoggerListener;
 
 public class PluginOutputManager
 {
 	private static HashMap<String, ArrayList<String>> pluginOutputHashMap = new HashMap<String, ArrayList<String>>();
+        private static  boolean handlersRegistered = false;
 
+        public static void registerPluginLoggerHandlers(){
+            Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
+            for(Plugin plugin : plugins){
+                plugin.getLogger().addHandler(new WebsendPluginLoggerHandler(plugin));
+            }
+        }
+        
 	public static void startRecording(String pluginName)
 	{
+                if(Main.getSettings().isDebugMode()){
+                    Main.getMainLogger().info("Starting output recording of plugin "+pluginName);
+                }
+            
+                //register handlers on first use to prevent missing any plugin on load.
+                if(!handlersRegistered){
+                    PluginOutputManager.registerPluginLoggerHandlers();
+                    handlersRegistered = true;
+                }
 		pluginOutputHashMap.put(pluginName, new ArrayList<String>());
 	}
 
 	public static ArrayList<String> stopRecording(String pluginName)
 	{
+                if(Main.getSettings().isDebugMode()){
+                    Main.getMainLogger().info("Stopping output recording of plugin "+pluginName);
+                }
 		ArrayList<String> result = pluginOutputHashMap.get(pluginName);
 		pluginOutputHashMap.remove(pluginName);
 		return result;
@@ -32,25 +50,6 @@ public class PluginOutputManager
 		if (pluginOutputHashMap.containsKey(plugin.getName()))
 		{
 			pluginOutputHashMap.get(plugin.getName()).add(logRecord.getMessage());
-		}
-	}
-
-	public static void registerLoggerListener()
-	{
-		try
-		{
-			PluginLogger.registerGlobalListener(new PluginLoggerListener()
-			{
-				@Override
-				public void onLogged(Plugin plugin, LogRecord lr)
-				{
-					PluginOutputManager.handleLogRecord(plugin, lr);
-				}
-			});
-		}
-		catch (Exception ex)
-		{
-			Main.getMainLogger().log(Level.INFO, "Default craftbukkit detected, plugin output capturing will not work.");
 		}
 	}
 
@@ -94,4 +93,29 @@ public class PluginOutputManager
 		// May give problems with openJDK
 		Logger.getLogger(loggerName).addHandler(handler);
 	}
+}
+
+class WebsendPluginLoggerHandler extends Handler{
+    Plugin plugin;
+    
+    WebsendPluginLoggerHandler(Plugin plugin) {
+        this.plugin = plugin;
+        if(Main.getSettings().isDebugMode()){
+            Main.getMainLogger().info("Tapped into: "+plugin.getName());
+        }
+    }
+
+    @Override
+    public void publish(LogRecord record) {
+        PluginOutputManager.handleLogRecord(plugin, record);
+        if(Main.getSettings().isDebugMode()){
+            Main.getMainLogger().info("Catched log record from "+plugin.getName());
+        }
+    }
+
+    @Override
+    public void flush() {}
+
+    @Override
+    public void close() throws SecurityException {}
 }
