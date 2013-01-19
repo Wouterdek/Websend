@@ -1,4 +1,4 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 public class API
 {

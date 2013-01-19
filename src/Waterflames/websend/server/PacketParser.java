@@ -1,7 +1,7 @@
-package Waterflames.websend.server;
+package waterflames.websend.server;
 
-import Waterflames.websend.Main;
-import Waterflames.websend.PluginOutputManager;
+import waterflames.websend.Main;
+import waterflames.websend.PluginOutputManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

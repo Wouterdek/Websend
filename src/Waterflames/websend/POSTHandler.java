@@ -1,4 +1,4 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 import com.Ostermiller.util.Base64;
 import java.io.*;
@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import org.bukkit.Server;
@@ -30,39 +29,44 @@ public class POSTHandler
 		settings = Main.getSettings();
 		server = Main.getBukkitServer();
 	}
-        
-        /*
-         *  Seperate variable setup function to check init before actually doing POST.
-         */
-        public boolean setupVariables(){
-                boolean success = true;
-            	pass = settings.getPassword();
+
+	/*
+	 * Seperate variable setup function to check init before actually doing
+	 * POST.
+	 */
+	public boolean setupVariables()
+	{
+		boolean success = true;
+		pass = settings.getPassword();
 
 		// Main url - set if it isn't set already.
-                if(url == null){
-                        String urlString = settings.getURL();
-                        if (urlString == null || "".equals(urlString.trim()))
-                        {
-                                Main.getMainLogger().log(Level.SEVERE, "No url was found. Please check your configuration file.");
-                                success = false;
-                        }else{
-                                try
-                                {
-                                        if (urlString.contains("@"))
-                                        {
-                                                String[] urlParts = urlString.split("@");
-                                                urlParts[0] = urlParts[0].replace("http://", "");
-                                                apacheAuthParts = urlParts[0].split(":");
-                                        }
-                                        url = new URL(urlString);
-                                }
-                                catch (MalformedURLException ex)
-                                {
-                                        Main.getMainLogger().log(Level.SEVERE, "Error while parsing URL: " + urlString, ex);
-                                        success = false;
-                                }
-                        }
-                }
+		if (url == null)
+		{
+			String urlString = settings.getURL();
+			if (urlString == null || "".equals(urlString.trim()))
+			{
+				Main.getMainLogger().log(Level.SEVERE, "No url was found. Please check your configuration file.");
+				success = false;
+			}
+			else
+			{
+				try
+				{
+					if (urlString.contains("@"))
+					{
+						String[] urlParts = urlString.split("@");
+						urlParts[0] = urlParts[0].replace("http://", "");
+						apacheAuthParts = urlParts[0].split(":");
+					}
+					url = new URL(urlString);
+				}
+				catch (MalformedURLException ex)
+				{
+					Main.getMainLogger().log(Level.SEVERE, "Error while parsing URL: " + urlString, ex);
+					success = false;
+				}
+			}
+		}
 
 		// Reponse url
 		if (settings.getResponseURL() != null)
@@ -77,28 +81,29 @@ public class POSTHandler
 				Main.getMainLogger().log(Level.SEVERE, "Error while parsing response URL: " + responseURLString, ex);
 			}
 		}
-                return success;
-        }
+		return success;
+	}
 
 	public boolean setURL(String urlArg)
 	{
 		try
 		{
 			url = new URL(urlArg);
-                        return true;
+			return true;
 		}
 		catch (MalformedURLException ex)
 		{
 			Main.getMainLogger().log(Level.SEVERE, "Error while parsing URL: " + urlArg, ex);
-                        return false;
+			return false;
 		}
 	}
 
 	public void sendPOST(String args[], Player player, String playerNameArg, boolean isResponse) throws Exception
 	{
-                if(url == null){                    
-                    return;
-                }
+		if (url == null)
+		{
+			return;
+		}
 		String argsEncoded[] = new String[args.length];
 		for (int i = 0; i < args.length; i++)
 		{
@@ -106,9 +111,10 @@ public class POSTHandler
 		}
 
 		URLConnection con = url.openConnection();
-                //Timeout to ensure error on infinitely loading pages. 10 seconds enough?
-                con.setConnectTimeout(10000);
-                con.setReadTimeout(10000);
+		// Timeout to ensure error on infinitely loading pages. 10 seconds
+		// enough?
+		con.setConnectTimeout(10000);
+		con.setReadTimeout(10000);
 		con.setRequestProperty("Host", Main.getBukkitServer().getIp());
 		con.setRequestProperty("User-Agent", Main.getInstance().getDescription().getFullName());
 		if (apacheAuthParts != null)
@@ -236,19 +242,20 @@ public class POSTHandler
 	{
 		try
 		{
-                        MessageDigest md = MessageDigest.getInstance(Main.getSettings().getHashingAlgorithm());
-                        md.update(input.getBytes());
-                        BigInteger bigInt = new BigInteger(1, md.digest());
-                        String result = bigInt.toString(16);
-                        if ((result.length() % 2) != 0) {
-                            result = "0" + result;
-                        }
-                        return result;
+			MessageDigest md = MessageDigest.getInstance(Main.getSettings().getHashingAlgorithm());
+			md.update(input.getBytes());
+			BigInteger bigInt = new BigInteger(1, md.digest());
+			String result = bigInt.toString(16);
+			if ((result.length() % 2) != 0)
+			{
+				result = "0" + result;
+			}
+			return result;
 		}
 		catch (Exception ex)
 		{
-			Main.getMainLogger().info("Failed to hash password to "+Main.getSettings().getHashingAlgorithm());
-                        return "";
+			Main.getMainLogger().info("Failed to hash password to " + Main.getSettings().getHashingAlgorithm());
+			return "";
 		}
 	}
 }

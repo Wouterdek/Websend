@@ -1,7 +1,7 @@
-package Waterflames.websend;
+package waterflames.websend;
 
-import Waterflames.websend.script.ScriptManager;
-import Waterflames.websend.server.CommunicationServer;
+import waterflames.websend.script.ScriptManager;
+import waterflames.websend.server.CommunicationServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -79,9 +79,10 @@ public class Main extends JavaPlugin
 		}
 		else
 		{
-			if(!new File(scriptsDir, "compiled").mkdirs()){
-                                Main.logger.log(Level.WARNING, "Failed to make scripts directory.");
-                        }
+			if (!new File(scriptsDir, "compiled").mkdirs())
+			{
+				Main.logger.log(Level.WARNING, "Failed to make scripts directory.");
+			}
 		}
 
 		if (needsSetup)
@@ -222,39 +223,48 @@ public class Main extends JavaPlugin
 		return false;
 	}
 
-        public static Server getBukkitServer() {
-                return bukkitServer;
-        }
+	public static Server getBukkitServer()
+	{
+		return bukkitServer;
+	}
 
-        public static Main getInstance() {
-                return plugin;
-        }
+	public static Main getInstance()
+	{
+		return plugin;
+	}
 
-        public static int getPort() {
-                return port;
-        }
+	public static int getPort()
+	{
+		return port;
+	}
 
-        public static ScriptManager getScriptManager() {
-                return scriptManager;
-        }
+	public static ScriptManager getScriptManager()
+	{
+		return scriptManager;
+	}
 
-        public static File getScriptsDir() {
-                return scriptsDir;
-        }
+	public static File getScriptsDir()
+	{
+		return scriptsDir;
+	}
 
-        public static CommunicationServer getCommunicationServer() {
-                return server;
-        }
+	public static CommunicationServer getCommunicationServer()
+	{
+		return server;
+	}
 
-        public static Settings getSettings() {
-                return settings;
-        }
+	public static Settings getSettings()
+	{
+		return settings;
+	}
 
-        public static Logger getMainLogger() {
-                return logger;
-        }
-        
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-                return null;
+	public static Logger getMainLogger()
+	{
+		return logger;
+	}
+
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+	{
+		return null;
 	}
 }

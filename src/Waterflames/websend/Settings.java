@@ -1,4 +1,4 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 public class Settings
 {
@@ -55,10 +55,11 @@ public class Settings
 	{
 		return salt;
 	}
-        
-        public String getHashingAlgorithm() {
-                return this.algorithm;
-        }
+
+	public String getHashingAlgorithm()
+	{
+		return this.algorithm;
+	}
 
 	public boolean isServerActive()
 	{
@@ -99,8 +100,9 @@ public class Settings
 	{
 		this.serverActive = serverActive;
 	}
-        
-        public void setHashingAlgorithm(String algorithm) {
-                this.algorithm = algorithm;
-        }
+
+	public void setHashingAlgorithm(String algorithm)
+	{
+		this.algorithm = algorithm;
+	}
 }

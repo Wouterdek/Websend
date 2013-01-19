@@ -1,4 +1,4 @@
-package Waterflames.websend;
+package waterflames.websend;
 
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
@@ -270,34 +270,37 @@ public class CommandParser
 
 	// </editor-fold>
 
-        //<editor-fold defaultstate="collapsed" desc="onExecuteConsoleCommandAndReturn">
-        private void onExecuteConsoleCommandAndReturn(String line)
-        {
-            // split line into command and variables
-            String[] commandArray = line.split("ExecuteConsoleCommandAndReturn-");
-            if (debugMode)
-            {
-                Main.getMainLogger().info("Websend: An ExecuteConsoleCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
-            }
-            Plugin plugin = null;
-            if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit"))
-            {
-                // TODO: implement bukkit listening.
-            }
-            else
-            {
-                plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
-                if (plugin == null)
-                {
-                    Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
-                    return;
-                }
-                // TODO: Implement or remove.
-            }
-        }
-        //</editor-fold>
+	// <editor-fold defaultstate="collapsed"
+	// desc="onExecuteConsoleCommandAndReturn">
+	private void onExecuteConsoleCommandAndReturn(String line)
+	{
+		// split line into command and variables
+		String[] commandArray = line.split("ExecuteConsoleCommandAndReturn-");
+		if (debugMode)
+		{
+			Main.getMainLogger().info("Websend: An ExecuteConsoleCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
+		}
+		Plugin plugin = null;
+		if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit"))
+		{
+			// TODO: implement bukkit listening.
+		}
+		else
+		{
+			plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
+			if (plugin == null)
+			{
+				Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
+				return;
+			}
+			// TODO: Implement or remove.
+		}
+	}
 
-	// <editor-fold defaultstate="collapsed" desc="onExecutePlayerCommandAndReturn">
+	// </editor-fold>
+
+	// <editor-fold defaultstate="collapsed"
+	// desc="onExecutePlayerCommandAndReturn">
 	private void onExecutePlayerCommandAndReturn(String line)
 	{
 		String commandArray[];
@@ -323,7 +326,7 @@ public class CommandParser
 				Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
 				return;
 			}
-                        //TODO: Implement or remove.
+			// TODO: Implement or remove.
 		}
 	}
 
@@ -372,7 +375,7 @@ public class CommandParser
 			{
 				Main.getMainLogger().info("Websend: Player 'console'? Using PrintToConsole instead.");
 			}
-            //Main.getMainLogger().info(Util.stringArrayToString(commandDataArray));
+			// Main.getMainLogger().info(Util.stringArrayToString(commandDataArray));
 		}
 		else if (currentPlayer == null)
 		{

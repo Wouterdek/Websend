@@ -1,6 +1,6 @@
-package Waterflames.websend.script;
+package waterflames.websend.script;
 
-import Waterflames.websend.Main;
+import waterflames.websend.Main;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -20,8 +20,8 @@ public class ScriptManager
 
 	public ScriptManager()
 	{
-		scriptsDir = Waterflames.websend.Main.getScriptsDir();
-		compiledDir = new File(Waterflames.websend.Main.getScriptsDir(), "compiled");
+		scriptsDir = waterflames.websend.Main.getScriptsDir();
+		compiledDir = new File(waterflames.websend.Main.getScriptsDir(), "compiled");
 		scripts = new HashMap<String, Script>();
 	}
 
@@ -121,7 +121,7 @@ public class ScriptManager
 			return null;
 		}
 
-		//File compiledFilesDir = new File(compiledDir, scriptName);
+		// File compiledFilesDir = new File(compiledDir, scriptName);
 
 		loadClasses(script);
 
@@ -175,9 +175,10 @@ public class ScriptManager
 			String dir = compiledFilesDir.getCanonicalPath();
 			if (!compiledFilesDir.exists())
 			{
-				if(!compiledFilesDir.mkdirs()){
-                                        Main.getMainLogger().log(Level.WARNING, "Failed to make compiled scripts directory.");
-                                }
+				if (!compiledFilesDir.mkdirs())
+				{
+					Main.getMainLogger().log(Level.WARNING, "Failed to make compiled scripts directory.");
+				}
 			}
 
 			boolean succes = jc.getTask(null, sjfm, null, Arrays.asList(new String[] { "-d", dir }), null, javas).call();
@@ -218,16 +219,12 @@ public class ScriptManager
 				}
 				container.addClass(curClass);
 			}
-                        
-                        //Java 7 part
-			/*try
-			{
-				classLoader.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			} */
+
+			// Java 7 part
+			/*
+			 * try { classLoader.close(); } catch (IOException e) {
+			 * e.printStackTrace(); }
+			 */
 
 			return true;
 		}
