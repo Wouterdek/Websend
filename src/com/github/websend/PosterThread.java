@@ -1,4 +1,4 @@
-package waterflames.websend;
+package com.github.websend;
 
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;

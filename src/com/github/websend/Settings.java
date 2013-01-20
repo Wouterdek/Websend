@@ -1,4 +1,4 @@
-package waterflames.websend;
+package com.github.websend;
 
 public class Settings
 {

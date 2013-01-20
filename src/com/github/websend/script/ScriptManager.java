@@ -1,6 +1,6 @@
-package waterflames.websend.script;
+package com.github.websend.script;
 
-import waterflames.websend.Main;
+import com.github.websend.Main;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -20,8 +20,8 @@ public class ScriptManager
 
 	public ScriptManager()
 	{
-		scriptsDir = waterflames.websend.Main.getScriptsDir();
-		compiledDir = new File(waterflames.websend.Main.getScriptsDir(), "compiled");
+		scriptsDir = com.github.websend.Main.getScriptsDir();
+		compiledDir = new File(com.github.websend.Main.getScriptsDir(), "compiled");
 		scripts = new HashMap<String, Script>();
 	}
 

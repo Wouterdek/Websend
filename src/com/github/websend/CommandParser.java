@@ -1,4 +1,4 @@
-package waterflames.websend;
+package com.github.websend;
 
 import java.util.logging.Level;
 import org.bukkit.Bukkit;

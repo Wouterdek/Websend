@@ -1,4 +1,4 @@
-package waterflames.websend;
+package com.github.websend;
 
 import java.io.PrintStream;
 import java.util.ArrayList;

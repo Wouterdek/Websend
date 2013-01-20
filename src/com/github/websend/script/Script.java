@@ -1,6 +1,6 @@
-package waterflames.websend.script;
+package com.github.websend.script;
 
-import waterflames.websend.Main;
+import com.github.websend.Main;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.logging.Level;

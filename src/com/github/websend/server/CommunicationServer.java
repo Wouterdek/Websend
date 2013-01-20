@@ -5,11 +5,11 @@
  * Password
  */
 
-package waterflames.websend.server;
+package com.github.websend.server;
 
-import waterflames.websend.Main;
-import waterflames.websend.PacketHandler;
-import waterflames.websend.TrustedHosts;
+import com.github.websend.Main;
+import com.github.websend.PacketHandler;
+import com.github.websend.TrustedHosts;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
