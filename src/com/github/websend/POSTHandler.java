@@ -113,8 +113,8 @@ public class POSTHandler
 		URLConnection con = url.openConnection();
 		// Timeout to ensure error on infinitely loading pages. 10 seconds
 		// enough?
-		con.setConnectTimeout(10000);
-		con.setReadTimeout(10000);
+		con.setConnectTimeout(30000);
+		con.setReadTimeout(30000);
 		con.setRequestProperty("Host", Main.getBukkitServer().getIp());
 		con.setRequestProperty("User-Agent", Main.getInstance().getDescription().getFullName());
 		if (apacheAuthParts != null)

@@ -1,6 +1,7 @@
 package com.github.websend;
 
 import java.net.SocketTimeoutException;
+import org.bukkit.ChatColor;
 import java.util.logging.Level;
 import org.bukkit.entity.Player;
 
@@ -60,11 +61,19 @@ public class PosterThread extends Thread
 		}
 		catch (SocketTimeoutException ex)
 		{
-			Main.getMainLogger().log(Level.SEVERE, "The page took too long to respond! (loading time > 10 seconds)", ex);
+			player.sendMessage(parseColor("&4Error: &cProcessing Failed. Please try the command again."));
+			Main.getMainLogger().log(Level.SEVERE, "The page took too long to respond! (loading time > 30 seconds)", ex);
 		}
 		catch (Exception ex)
 		{
 			Main.getMainLogger().log(Level.SEVERE, "An error occured while trying to do a bukkit -> php connection. (POST)", ex);
 		}
 	}
+
+	public String parseColor(String line)
+	{
+		// Much easier, I promise.
+		return ChatColor.translateAlternateColorCodes('&', line);
+	}
+
 }
