@@ -171,6 +171,7 @@ public class ScriptManager
 		{
 			JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
                         if(jc == null){
+                            Main.getMainLogger().log(Level.WARNING, "Can't get compiler!");
                             return false;
                         }
 			StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
