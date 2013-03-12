@@ -90,7 +90,9 @@ public class ScriptManager
 					Main.getMainLogger().log(Level.WARNING, "Loading script: " + cur.getName());
 				}
 				Script newScript = loadScriptFromDir(cur);
-				scripts.put(newScript.name, newScript);
+                                if(newScript != null){
+                                    scripts.put(newScript.name, newScript);
+                                }
 			}
 		}
 	}
@@ -168,6 +170,9 @@ public class ScriptManager
 		try
 		{
 			JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
+                        if(jc == null){
+                            return false;
+                        }
 			StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
 			Iterable<? extends JavaFileObject> javas = sjfm.getJavaFileObjectsFromFiles(Arrays.asList(javaFiles));
 
