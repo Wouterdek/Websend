@@ -272,6 +272,7 @@ public class CommandParser
 
 	// <editor-fold defaultstate="collapsed"
 	// desc="onExecuteConsoleCommandAndReturn">
+	@SuppressWarnings("unused")
 	private void onExecuteConsoleCommandAndReturn(String line)
 	{
 		// split line into command and variables
@@ -301,6 +302,7 @@ public class CommandParser
 
 	// <editor-fold defaultstate="collapsed"
 	// desc="onExecutePlayerCommandAndReturn">
+	@SuppressWarnings("unused")
 	private void onExecutePlayerCommandAndReturn(String line)
 	{
 		String commandArray[];

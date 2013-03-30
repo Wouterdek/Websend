@@ -162,6 +162,7 @@ public class ConfigHandler
 				String value = line.replaceFirst("HASH_ALGORITHM=", "");
 				try
 				{
+					@SuppressWarnings("unused")
 					MessageDigest md = MessageDigest.getInstance(value);
 					settings.setHashingAlgorithm(value);
 				}

@@ -213,6 +213,7 @@ public class ScriptManager
 				return false;
 			}
 
+			@SuppressWarnings("resource")
 			URLClassLoader classLoader = new URLClassLoader(new URL[] { scriptDir.toURI().toURL() });
 			File[] classFiles = scriptDir.listFiles(new ClassFileFilter());
 
