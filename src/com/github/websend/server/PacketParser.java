@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,7 +18,18 @@ public class PacketParser
 		String command = readString(in);
 		String playerStr = readString(in);
 		Player player = Main.getBukkitServer().getPlayer(playerStr);
-		if (player != null && Main.getBukkitServer().dispatchCommand(player, command))
+                
+                boolean success;
+                try{
+                    success = Main.getBukkitServer().dispatchCommand(player, command);
+                }catch(Exception ex){
+                    if(Main.getSettings().isDebugMode()){
+                        Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
+                    }
+                    success = false;
+                }
+                
+		if (player != null && success)
 		{
 			out.writeInt(1);
 		}
@@ -31,7 +43,15 @@ public class PacketParser
 	public static void parseDoCommandAsConsole(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String command = readString(in);
-		boolean success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
+                boolean success;
+                try{
+                    success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
+                }catch(Exception ex){
+                    if(Main.getSettings().isDebugMode()){
+                        Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
+                    }
+                    success = false;
+                }
 		if (success)
 		{
 			out.writeInt(1);
