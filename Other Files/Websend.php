@@ -1,6 +1,14 @@
 <?php
+    /*
+     *  Writted by Waterflames for the Websend project
+     *  (Project page: http://dev.bukkit.org/bukkit-plugins/websend/)
+     *  Includes changes by bukkitdev user ldrrp
+     */
 	class Websend
 	{
+        public $timeout = 3600;/* Connection timeout as defined in fsockopen */
+        public $password = "";/* Password in Websend server config */
+        
 		var $host;
 		var $port;
 		var $stream;
@@ -13,12 +21,18 @@
 
 		/**
 		* Connects to a Websend server.
+        * Returns true if successful.
 		*/
-		public function connect($password)
+		public function connect()
 		{
-			$this->stream = fsockopen($this->host, $this->port);
-			$this->writeRawByte(21);
-			$this->writeString($password);
+            $this->stream = fsockopen($this->host, $this->port,$errno,$errstr,$this->timeout);
+            if($this->stream){
+                $this->writeRawByte(21);
+                $this->writeString($this->password);
+                return true;
+            }else{
+                return false;
+            }
 		}
 
 		/**
