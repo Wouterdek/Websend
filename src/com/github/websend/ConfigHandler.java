@@ -7,7 +7,6 @@ import java.util.logging.Level;
 
 public class ConfigHandler
 {
-
 	public Settings loadSettings() throws FileNotFoundException, IOException
 	{
 		// Prepare new settings map
@@ -37,7 +36,9 @@ public class ConfigHandler
 		File websendDir = Main.getInstance().getDataFolder();
 		if (!websendDir.exists())
 		{
-			websendDir.mkdirs();
+			if(!websendDir.mkdirs()){
+                        Main.getMainLogger().log(Level.SEVERE, "Could not create plugin directory.");
+                  }
 		}
 		File configFile = new File(websendDir, "config.txt");
 
@@ -68,7 +69,7 @@ public class ConfigHandler
 		writer.println("#WEBLISTENER_ACTIVE=false/true");
 		writer.println("#ALTPORT=1234");
 		writer.println("#DEBUG_WEBSEND=false/true");
-		writer.println("#SALT=abc123");
+		writer.println("#GZIP_REQUESTS=false/true");
 		writer.close();
 	}
 
@@ -170,6 +171,11 @@ public class ConfigHandler
 				{
 					Main.getMainLogger().info("Hashing algorithm '" + value + "' is not available on this machine. Reverting to MD5");
 				}
+			}
+			else if (line.startsWith("GZIP_REQUESTS="))
+			{
+				String value = line.replaceFirst("GZIP_REQUESTS=", "");
+				settings.setGzipRequests(Boolean.parseBoolean(value));
 			}
 			else
 			{

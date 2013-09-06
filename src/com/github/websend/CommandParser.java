@@ -13,7 +13,6 @@ public class CommandParser
 	// <editor-fold defaultstate="collapsed" desc="VARIABLES AND CONSTRUCTOR">
 	Settings settings;
 	Server server;
-	boolean debugMode;
 
 	public CommandParser()
 	{
@@ -28,7 +27,7 @@ public class CommandParser
 	{ // Now it's slightly better.
 		if (line.contains(";"))
 		{ // check split sign
-			if (debugMode)
+			if (Main.getSettings().isDebugMode())
 			{
 				Main.getMainLogger().info("Websend: ';' found");
 			}
@@ -46,7 +45,7 @@ public class CommandParser
 				}
 				else
 				{
-					if (debugMode)
+					if (Main.getSettings().isDebugMode())
 					{
 						Main.getMainLogger().log(Level.WARNING, "Websend: No command or output tag found!");
 					}
@@ -55,7 +54,7 @@ public class CommandParser
 		}
 		else
 		{
-			if (debugMode)
+			if (Main.getSettings().isDebugMode())
 			{
 				Main.getMainLogger().log(Level.WARNING, "Websend: No ; found.");
 			}
@@ -67,7 +66,7 @@ public class CommandParser
 	// <editor-fold defaultstate="collapsed" desc="PARSING - COMMAND">
 	private void parseCommand(String line, Player player)
 	{
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: A command line was found.");
 		}
@@ -107,7 +106,7 @@ public class CommandParser
 	// <editor-fold defaultstate="collapsed" desc="PARSING - OUTPUT">
 	private void parseOutput(String line, Player player)
 	{
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: An output line was found.");
 		}
@@ -140,7 +139,7 @@ public class CommandParser
 	private void onSetResponseURL(String line)
 	{
 		String newURL = line.split("SetResponseURL:")[1];
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: Changed ResponseURL to " + newURL);
 		}
@@ -157,7 +156,7 @@ public class CommandParser
 			Main.getMainLogger().info("Websend: ExecutePlayerCommand is used in a wrong context.");
 		}
 		String[] commandArray = line.split("ExecutePlayerCommand:");
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: An ExecutePlayerCommand was found: '" + Util.stringArrayToString(commandArray) + "'");
 		}
@@ -196,7 +195,7 @@ public class CommandParser
 	{
 		// split line into command and variables
 		String[] commandArray = line.split("ExecutePlayerCommand-");
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: An ExecutePlayerCommand was found: '" + Util.stringArrayToString(commandArray) + "'");
 		}
@@ -240,7 +239,7 @@ public class CommandParser
 	{
 		// split line into command and variables
 		String[] commandArray = line.split("ExecuteConsoleCommand:");
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: An ExecuteConsoleCommand was found: '" + Util.stringArrayToString(commandArray) + "'");
 		}
@@ -270,45 +269,42 @@ public class CommandParser
 
 	// </editor-fold>
 
-	// <editor-fold defaultstate="collapsed"
-	// desc="onExecuteConsoleCommandAndReturn">
-	@SuppressWarnings("unused")
-	private void onExecuteConsoleCommandAndReturn(String line)
-	{
-		// split line into command and variables
-		String[] commandArray = line.split("ExecuteConsoleCommandAndReturn-");
-		if (debugMode)
-		{
-			Main.getMainLogger().info("Websend: An ExecuteConsoleCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
-		}
-		Plugin plugin = null;
-		if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit"))
-		{
-			// TODO: implement bukkit listening.
-		}
-		else
-		{
-			plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
-			if (plugin == null)
-			{
-				Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
-				return;
-			}
-			// TODO: Implement or remove.
-		}
-	}
+      //<editor-fold defaultstate="collapsed" desc="onExecuteConsoleCommandAndReturn">
+      @SuppressWarnings("unused")
+      private void onExecuteConsoleCommandAndReturn(String line)
+      {
+          // split line into command and variables
+          String[] commandArray = line.split("ExecuteConsoleCommandAndReturn-");
+          if (Main.getSettings().isDebugMode())
+          {
+              Main.getMainLogger().info("Websend: An ExecuteConsoleCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
+          }
+          Plugin plugin = null;
+          if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit"))
+          {
+              // TODO: implement bukkit listening.
+          }
+          else
+          {
+              plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
+              if (plugin == null)
+              {
+                  Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
+                  return;
+              }
+              // TODO: Implement or remove.
+          }
+      }
+      //</editor-fold>
 
-	// </editor-fold>
-
-	// <editor-fold defaultstate="collapsed"
-	// desc="onExecutePlayerCommandAndReturn">
+	// <editor-fold defaultstate="collapsed" desc="onExecutePlayerCommandAndReturn">
 	@SuppressWarnings("unused")
 	private void onExecutePlayerCommandAndReturn(String line)
 	{
 		String commandArray[];
 		// split line into command and variables
 		commandArray = line.split("ExecutePlayerCommandAndReturn-");
-		if (debugMode)
+		if (Main.getSettings().isDebugMode())
 		{
 			Main.getMainLogger().info("Websend: An ExecutePlayerCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
 		}
@@ -373,7 +369,7 @@ public class CommandParser
 		Player currentPlayer = server.getPlayer(playerName);
 		if ("console".equals(playerName))
 		{
-			if (debugMode)
+			if (Main.getSettings().isDebugMode())
 			{
 				Main.getMainLogger().info("Websend: Player 'console'? Using PrintToConsole instead.");
 			}
@@ -385,7 +381,7 @@ public class CommandParser
 		}
 		else if (!currentPlayer.isOnline())
 		{
-			if (debugMode)
+			if (Main.getSettings().isDebugMode())
 			{
 				Main.getMainLogger().info("Websend: Player '" + playerName + "' is offline. Ignoring PrintToPlayer");
 			}

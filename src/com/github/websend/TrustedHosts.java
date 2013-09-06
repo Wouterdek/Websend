@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TrustedHosts
 {
@@ -12,23 +13,30 @@ public class TrustedHosts
 
 	public static void load(File file) throws IOException
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line;
-		while ((line = reader.readLine()) != null)
-		{
-			if (line.startsWith("#") || line.trim().equals(""))
-			{
-			}
-			else if ("trust_all".equals(line.trim().toLowerCase()))
-			{
-				allIsTrusted = true;
-			}
-			else
-			{
-				trusted.add(InetAddress.getByName(line));
-			}
-		}
-		reader.close();
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                  if (line.startsWith("#") || line.trim().equals(""))
+                  {
+                  }
+                  else if ("trust_all".equals(line.trim().toLowerCase()))
+                  {
+                        allIsTrusted = true;
+                  }
+                  else
+                  {
+                        trusted.add(InetAddress.getByName(line));
+                  }
+            }
+            reader.close();
+        } finally {
+            if(reader != null){
+                reader.close();
+            }
+        }
 	}
 
 	public static boolean isTrusted(InetAddress address)

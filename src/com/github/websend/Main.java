@@ -1,8 +1,15 @@
 package com.github.websend;
 
+import com.github.websend.post.POSTHandlerThread;
+import com.github.websend.post.POSTHandlerThreadPool;
+import com.github.websend.post.POSTRequest;
+import com.github.websend.script.ScriptManager;
+import com.github.websend.server.CommunicationServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,8 +20,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.RemoteConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.github.websend.script.ScriptManager;
-import com.github.websend.server.CommunicationServer;
 
 public class Main extends JavaPlugin
 {
@@ -26,6 +31,7 @@ public class Main extends JavaPlugin
 	private static int port;
 	private static ScriptManager scriptManager;
 	private static CommunicationServer server;
+      private static POSTHandlerThreadPool requestThreadPool;
 
 	@Override
 	public void onEnable()
@@ -69,6 +75,9 @@ public class Main extends JavaPlugin
 		{
 			Main.logger.log(Level.SEVERE, null, ex);
 		}
+            
+            //Setup webrequest thread pool
+            requestThreadPool = new POSTHandlerThreadPool();
 
 		// Setup scripts
 		scriptsDir = new File(this.getDataFolder(), "scripts");
@@ -112,16 +121,28 @@ public class Main extends JavaPlugin
 
 	public static void doCommand(String[] args, Player player)
 	{
-		PosterThread poster = new PosterThread();
-		poster.setVariables(args, player, false);
-		poster.start();
+            URL url;
+            try {
+                url = new URL(Main.getSettings().getURL());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+                return;
+            }
+            POSTRequest request = new POSTRequest(url, args, player, false);
+            requestThreadPool.doRequest(request);
 	}
 
-	public static void doCommand(String[] args, String str)
+	public static void doCommand(String[] args, String ply)
 	{
-		PosterThread poster = new PosterThread();
-		poster.setVariables(args, str, false);
-		poster.start();
+            URL url;
+            try {
+                url = new URL(Main.getSettings().getURL());
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+                return;
+            }
+            POSTRequest request = new POSTRequest(url, args, ply, false);
+            requestThreadPool.doRequest(request);
 	}
 
 	@Override
@@ -129,11 +150,17 @@ public class Main extends JavaPlugin
 	{
 		if (cmd.getName().equalsIgnoreCase("websend") || cmd.getName().equalsIgnoreCase("ws"))
 		{
+                  URL url;
+                  try {
+                      url = new URL(Main.getSettings().getURL());
+                  } catch (MalformedURLException ex) {
+                      Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+                      return true;
+                  }
 			if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender)
 			{
-				PosterThread poster = new PosterThread();
-				poster.setVariables(args, "console", false);
-				poster.start();
+				POSTRequest request = new POSTRequest(url, args, "console", false);
+                        requestThreadPool.doRequest(request);
 				return true;
 			}
 			else if (sender instanceof Player)
@@ -142,19 +169,23 @@ public class Main extends JavaPlugin
 				// try{
 				if (plsender.hasPermission("websend"))
 				{
-					PosterThread poster = new PosterThread();
 					if (args.length > 0)
 					{
 						if (args[0].contains("-wp:"))
 						{
 							if (plsender.isOp())
 							{
-								poster.setURL(args[0].split(":")[1].trim());
+                                                try {
+                                                    url = new URL(Main.getSettings().getURL());
+                                                } catch (MalformedURLException ex) {
+                                                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+                                                    return true;
+                                                }
 							}
 						}
 					}
-					poster.setVariables(args, plsender, false);
-					poster.start();
+					POSTRequest request = new POSTRequest(url, args, plsender, false);
+                              requestThreadPool.doRequest(request);
 					return true;
 				}
 				else

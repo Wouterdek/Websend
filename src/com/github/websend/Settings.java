@@ -7,15 +7,16 @@ public class Settings
 	private String salt = "";
 	private String algorithm = "MD5";
 	private int port;
-	private boolean debugMode;
-	private boolean serverActive;
+	private boolean debugMode = false;
+	private boolean gzipRequests = false;
+	private boolean serverActive = false;
 	private String URL;
 
 	public Settings()
 	{
 	}
 
-	public Settings(String responseURL, String password, String salt, int port, boolean debugMode, boolean serverActive, String URL)
+	public Settings(String responseURL, String password, String salt, int port, boolean debugMode, boolean serverActive, boolean gzipRequests, String URL)
 	{
 		this.responseURL = responseURL;
 		this.password = password;
@@ -23,6 +24,7 @@ public class Settings
 		this.port = port;
 		this.debugMode = debugMode;
 		this.serverActive = serverActive;
+            this.gzipRequests = gzipRequests;
 		this.URL = URL;
 	}
 
@@ -105,4 +107,12 @@ public class Settings
 	{
 		this.algorithm = algorithm;
 	}
+
+      public boolean areRequestsGZipped() {
+            return gzipRequests;
+      }
+
+      public void setGzipRequests(boolean gzipRequests) {
+            this.gzipRequests = gzipRequests;
+      }
 }
