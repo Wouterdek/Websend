@@ -1,1 +1,2 @@
 To be able to compile and run you need the Ostermiller Java Utilities library, downloadable at http://ostermiller.org/utils/
+and the apache HTTPComponent libraries, downloadable at http://hc.apache.org/downloads.cgi
