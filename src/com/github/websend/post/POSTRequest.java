@@ -1,18 +1,21 @@
 package com.github.websend.post;
 
+import com.github.websend.CommandParser;
 import com.github.websend.CompressionToolkit;
 import com.github.websend.JSONSerializer;
 import com.github.websend.Main;
-import java.io.ByteArrayInputStream;
+import com.github.websend.Util;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -28,9 +31,12 @@ public class POSTRequest{
     private String jsonData;
     private URL url;
     
+    private Player player;
+    
     public POSTRequest(URL url, String args[], Player player, boolean isResponse){
+        this.player = player;
         content.add(new BasicNameValuePair("isResponse", Boolean.toString(isResponse)));
-        content.add(new BasicNameValuePair("authKey", Main.getSettings().getPassword()));
+        content.add(new BasicNameValuePair("authKey", Util.hash(Main.getSettings().getPassword())));
         content.add(new BasicNameValuePair("isCompressed", Boolean.toString(Main.getSettings().areRequestsGZipped())));
         
         try {
@@ -61,6 +67,45 @@ public class POSTRequest{
     }
     
     public void run(DefaultHttpClient httpClient) throws IOException{
+        HttpResponse response = doRequest(httpClient);
+        
+        int responseCode = response.getStatusLine().getStatusCode();
+        String reason = response.getStatusLine().getReasonPhrase();
+        
+        String message = "";
+        Level logLevel = Level.WARNING;
+        
+        if(responseCode >= 200 && responseCode < 300){
+            if(Main.getSettings().isDebugMode()){
+                message = "The server responded to the request with a 2xx code. Assuming request OK. ("+reason+")";
+                logLevel = Level.INFO;
+            }
+        }else if(responseCode >= 400){
+            message = "HTTP request failed. ("+reason+")";
+            Main.getMainLogger().log(Level.SEVERE, message);
+            return;
+        }else if(responseCode >= 300){
+            message = "The server responded to the request with a redirection message. Assuming request OK. ("+reason+")";
+        }else if(responseCode < 200){
+            message = "The server responded to the request with a continue or protocol switching message. Assuming request OK. ("+reason+")";
+        }else{
+            message = "The server responded to the request with an unknown response code ("+responseCode+"). Assuming request OK. ("+reason+")";
+        }
+        
+        if (Main.getSettings().isDebugMode()) {
+            Main.getMainLogger().log(logLevel, message);
+        }
+        
+        CommandParser parser = new CommandParser();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        String cur;
+        while((cur = reader.readLine()) != null){
+            parser.parse(cur, player);
+        }
+        reader.close();
+    }
+    
+    private HttpResponse doRequest(DefaultHttpClient httpClient) throws IOException {
         HttpPost httpPost = new HttpPost(url.toString());
         
         MultipartEntity ent = new MultipartEntity();
@@ -73,7 +118,7 @@ public class POSTRequest{
             ent.addPart("jsonData", new StringBody(jsonData));
         }
         httpPost.setEntity(ent);
-        httpClient.execute(httpPost);
+        return httpClient.execute(httpPost);
     }
     
     private String getJSONDataString(Player ply, String playerNameArg) throws JSONException {
