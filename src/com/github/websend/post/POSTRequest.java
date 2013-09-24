@@ -52,7 +52,7 @@ public class POSTRequest{
     
     public POSTRequest(URL url, String args[], String playerNameArg, boolean isResponse){
         content.add(new BasicNameValuePair("isResponse", Boolean.toString(isResponse)));
-        content.add(new BasicNameValuePair("authKey", Main.getSettings().getPassword()));
+        content.add(new BasicNameValuePair("authKey", Util.hash(Main.getSettings().getPassword())));
         content.add(new BasicNameValuePair("isCompressed", Boolean.toString(Main.getSettings().areRequestsGZipped())));
         
         try {
