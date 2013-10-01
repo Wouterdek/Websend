@@ -113,6 +113,8 @@ public class JSONSerializer {
                 result = serializeMetaFireworkEffect((FireworkEffectMeta)meta);
             }else if(meta instanceof FireworkMeta){
                 result = serializeMetaFirework((FireworkMeta)meta);
+            }else if(meta instanceof EnchantmentStorageMeta){
+                result = serializeMetaEnchantmentStorage((EnchantmentStorageMeta)meta);
             }else if(meta instanceof LeatherArmorMeta){
                 result = serializeMetaLeatherArmor((LeatherArmorMeta)meta);
             }else if(meta instanceof MapMeta){
@@ -217,6 +219,29 @@ public class JSONSerializer {
                 metaObj.put("Effects", arrayOfEffects);
             }
             metaObj.put("Power", fireworkMeta.getPower());
+        }
+        return metaObj;
+    }
+    
+    private static JSONObject serializeMetaEnchantmentStorage(EnchantmentStorageMeta enchantmentStorageMeta) throws JSONException {
+        JSONObject metaObj = new JSONObject();
+        {
+            JSONArray enchantArray = new JSONArray();
+            {
+                for (Entry<Enchantment, Integer> set : enchantmentStorageMeta.getStoredEnchants().entrySet()) {
+                    Enchantment enchantment = set.getKey();
+                    JSONObject enchantmentObj = new JSONObject();
+                    {
+                        enchantmentObj.put("Type", enchantment.getId());
+                        enchantmentObj.put("Name", enchantment.getName());
+                        enchantmentObj.put("MaxLevel", enchantment.getMaxLevel());
+                        enchantmentObj.put("StartLevel", enchantment.getStartLevel());
+                        enchantmentObj.put("Level", enchantmentStorageMeta.getEnchantLevel(enchantment));
+                    }
+                    enchantArray.put(enchantmentObj);
+                }
+            }
+            metaObj.put("EnchantmentStorage", enchantArray);
         }
         return metaObj;
     }
