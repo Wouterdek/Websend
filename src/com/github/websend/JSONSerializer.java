@@ -236,7 +236,7 @@ public class JSONSerializer {
                         enchantmentObj.put("Name", enchantment.getName());
                         enchantmentObj.put("MaxLevel", enchantment.getMaxLevel());
                         enchantmentObj.put("StartLevel", enchantment.getStartLevel());
-                        enchantmentObj.put("Level", enchantmentStorageMeta.getEnchantLevel(enchantment));
+                        enchantmentObj.put("Level", set.getValue());
                     }
                     enchantArray.put(enchantmentObj);
                 }

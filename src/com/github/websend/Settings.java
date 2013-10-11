@@ -1,5 +1,7 @@
 package com.github.websend;
 
+import java.net.InetAddress;
+
 public class Settings
 {
 	private String responseURL;
@@ -11,22 +13,7 @@ public class Settings
 	private boolean gzipRequests = false;
 	private boolean serverActive = false;
 	private String URL;
-
-	public Settings()
-	{
-	}
-
-	public Settings(String responseURL, String password, String salt, int port, boolean debugMode, boolean serverActive, boolean gzipRequests, String URL)
-	{
-		this.responseURL = responseURL;
-		this.password = password;
-		this.salt = salt;
-		this.port = port;
-		this.debugMode = debugMode;
-		this.serverActive = serverActive;
-            this.gzipRequests = gzipRequests;
-		this.URL = URL;
-	}
+      private InetAddress serverBindIP = null;
 
 	public String getURL()
 	{
@@ -67,6 +54,10 @@ public class Settings
 	{
 		return serverActive;
 	}
+      
+      public InetAddress getServerBindIP() {
+            return serverBindIP;
+      }
 
 	public void setURL(String URL)
 	{
@@ -114,5 +105,9 @@ public class Settings
 
       public void setGzipRequests(boolean gzipRequests) {
             this.gzipRequests = gzipRequests;
+      }
+      
+      public void setServerBindIP(InetAddress ip) {
+            this.serverBindIP = ip;
       }
 }

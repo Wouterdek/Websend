@@ -75,7 +75,15 @@ public class CommunicationServer extends Thread
 	private void startServer() throws IOException
 	{
 		running = true;
-		serverSkt = new ServerSocket(Main.getSettings().getPort());
+            if (Main.getSettings().getServerBindIP() != null) {
+                serverSkt = new ServerSocket(
+                    Main.getSettings().getPort(),
+                    0,
+                    Main.getSettings().getServerBindIP());
+            }else{
+                serverSkt = new ServerSocket(Main.getSettings().getPort());
+            }
+            
 		while (running)
 		{
 			if (Main.getSettings().isDebugMode())

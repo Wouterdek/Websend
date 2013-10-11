@@ -1,6 +1,7 @@
 package com.github.websend;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -177,10 +178,22 @@ public class ConfigHandler
 				String value = line.replaceFirst("GZIP_REQUESTS=", "");
 				settings.setGzipRequests(Boolean.parseBoolean(value));
 			}
-			else
+                  else if (line.startsWith("SERVER_BIND_IP="))
 			{
-				Main.getMainLogger().info("WEBSEND ERROR: Error while parsing config file.");
-				Main.getMainLogger().info("Invalid line: " + line);
+				String value = line.replaceFirst("SERVER_BIND_IP=", "");
+                        try{
+                            InetAddress address = InetAddress.getByName(value);
+                            if(address != null){
+                                settings.setServerBindIP(address);
+                            }else{
+                                Main.getMainLogger().log(Level.WARNING, "Error while parsing bind ip address.");
+                            }
+                        }catch(Exception ex){
+                            Main.getMainLogger().log(Level.WARNING, "Error while parsing bind ip address.");
+                        }
+			}else
+			{
+				Main.getMainLogger().log(Level.WARNING, "Error while parsing config file. Invalid line: \n" + line);
 			}
 		}
 	}
