@@ -17,9 +17,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CommunicationServer extends Thread
 {
+      private static final int MAX_FAILS = 15;
+      private static final int FAILURE_SLEEP_TIME = 15000;
 	private boolean running = false;
 	private boolean connected = false;
 	private boolean authenticated = false;
@@ -33,40 +36,39 @@ public class CommunicationServer extends Thread
 	@Override
 	public void run()
 	{
-		try
-		{
-			if (Main.getSettings().isDebugMode())
-			{
-				Main.getMainLogger().log(Level.INFO, "Starting server");
-			}
-			startServer();
-		}
-		catch (Exception ex)
-		{
-			Main.getMainLogger().log(Level.SEVERE, "Server encountered an error. Attempting restart.", ex);
-			running = true;
-			connected = false;
-			authenticated = false;
+          int fails = 0;
+          while (running) {
+              if(fails == MAX_FAILS){
+                  try {
+                      Main.getMainLogger().info("Max amount of fails reached. Waiting for "+(FAILURE_SLEEP_TIME/1000)+" seconds until retry.");
+                      Thread.sleep(FAILURE_SLEEP_TIME);
+                      fails = 0;
+                  } catch (InterruptedException ex) {
+                      Logger.getLogger(CommunicationServer.class.getName()).log(Level.SEVERE, "Failed to sleep", ex);
+                  }
+              }
+              try {
+                  if (Main.getSettings().isDebugMode()) {
+                      Main.getMainLogger().log(Level.INFO, "Starting server");
+                  }
+                  startServer();
+              } catch (Exception ex) {
+                  Main.getMainLogger().log(Level.SEVERE, "Server encountered an error. Attempting restart.", ex);
+                  running = true;
+                  connected = false;
+                  authenticated = false;
 
-			try
-			{
-				serverSkt.close();
-			}
-			catch (IOException ex1)
-			{
-			}
-
-			try
-			{
-				startServer();
-			}
-			catch (IOException ex1)
-			{
-				Main.getMainLogger().log(Level.SEVERE, "Server encountered an error. Server down.", ex);
-			}
-		}
+                  try {
+                      serverSkt.close();
+                  } catch (IOException ex1) {
+                      if (Main.getSettings().isDebugMode()) {
+                          Main.getMainLogger().log(Level.WARNING, "Failed to close server.", ex1);
+                      }
+                  }
+              }
+          }
 	}
-
+      
 	public void addPacketHandler(PacketHandler wph)
 	{
 		customPacketHandlers.put(wph.getHeader(), wph);
