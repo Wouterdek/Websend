@@ -109,7 +109,7 @@ class WebsendPluginLoggerHandler extends Handler{
     public void publish(LogRecord record) {
         PluginOutputManager.handleLogRecord(plugin, record);
         if(Main.getSettings().isDebugMode()){
-            Main.getMainLogger().info("Catched log record from "+plugin.getName());
+            System.out.println("Catched log record from "+plugin.getName());
         }
     }
 
