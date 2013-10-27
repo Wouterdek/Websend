@@ -37,10 +37,11 @@ public class PluginOutputManager
 
 	public static ArrayList<String> stopRecording(String pluginName)
 	{
-                if(Main.getSettings().isDebugMode()){
-                    Main.getMainLogger().info("Stopping output recording of plugin "+pluginName);
-                }
-		ArrayList<String> result = pluginOutputHashMap.get(pluginName);
+            ArrayList<String> result = pluginOutputHashMap.get(pluginName);
+            if(Main.getSettings().isDebugMode()){
+                Main.getMainLogger().info("Stopping output recording of plugin "+pluginName);
+                Main.getMainLogger().info("Recorded "+result.size()+" entries.");
+            }
 		pluginOutputHashMap.remove(pluginName);
 		return result;
 	}
