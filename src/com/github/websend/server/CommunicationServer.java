@@ -23,15 +23,11 @@ public class CommunicationServer extends Thread
 {
       private static final int MAX_FAILS = 15;
       private static final int FAILURE_SLEEP_TIME = 15000;
-	private boolean running = false;
+	private boolean running = true;
 	private boolean connected = false;
 	private boolean authenticated = false;
 	private ServerSocket serverSkt;
 	private HashMap<Byte, PacketHandler> customPacketHandlers = new HashMap<Byte, PacketHandler>();
-
-	public CommunicationServer()
-	{
-	}
 
 	@Override
 	public void run()
@@ -54,7 +50,6 @@ public class CommunicationServer extends Thread
                   startServer();
               } catch (Exception ex) {
                   Main.getMainLogger().log(Level.SEVERE, "Server encountered an error. Attempting restart.", ex);
-                  running = true;
                   connected = false;
                   authenticated = false;
 
@@ -139,6 +134,7 @@ public class CommunicationServer extends Thread
 					else
 					{
 						Main.getMainLogger().log(Level.WARNING, "First packet wasn't a password packet! Disconnecting. (Are you using the correct protocol?)");
+                                    connected = false;
 					}
 
 					while (connected)

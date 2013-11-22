@@ -191,6 +191,17 @@ public class ConfigHandler
                         }catch(Exception ex){
                             Main.getMainLogger().log(Level.WARNING, "Error while parsing bind ip address.");
                         }
+			}else if (line.startsWith("WRAP_COMMAND_EXECUTOR="))
+			{
+				String value = line.replaceFirst("WRAP_COMMAND_EXECUTOR=", "");
+                        if (value.toLowerCase().trim().contains("true"))
+				{
+					settings.setWrapCommandExecutor(true);
+				}
+				else
+				{
+					settings.setWrapCommandExecutor(false);
+				}
 			}else
 			{
 				Main.getMainLogger().log(Level.WARNING, "Error while parsing config file. Invalid line: \n" + line);

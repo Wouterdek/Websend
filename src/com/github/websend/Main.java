@@ -42,7 +42,7 @@ public class Main extends JavaPlugin
 		plugin = this;
 		port = this.getServer().getPort();
 		boolean needsSetup = false;
-                
+            
 		// Parse config
 		ConfigHandler configHandler = new ConfigHandler();
 		try
@@ -76,9 +76,15 @@ public class Main extends JavaPlugin
 			Main.logger.log(Level.SEVERE, null, ex);
 		}
             
+            if(Main.settings.isDebugMode()){
+                Main.logger.info("Setting up webrequest thread pool.");
+            }
             //Setup webrequest thread pool
             requestThreadPool = new POSTHandlerThreadPool();
 
+            if(Main.settings.isDebugMode()){
+                Main.logger.info("Setting up scripts.");
+            }
 		// Setup scripts
 		scriptsDir = new File(this.getDataFolder(), "scripts");
 		scriptManager = new ScriptManager();
@@ -103,6 +109,9 @@ public class Main extends JavaPlugin
 		// Start server
 		if (settings.isServerActive())
 		{
+                  if(Main.settings.isDebugMode()){
+                  	Main.logger.info("Setting up server.");
+                  }
 			server = new CommunicationServer();
 			server.start();
 		}

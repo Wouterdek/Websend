@@ -14,6 +14,7 @@ public class Settings
 	private boolean serverActive = false;
 	private String URL;
       private InetAddress serverBindIP = null;
+      private boolean wrapCommandExecutor;
 
 	public String getURL()
 	{
@@ -109,5 +110,13 @@ public class Settings
       
       public void setServerBindIP(InetAddress ip) {
             this.serverBindIP = ip;
+      }
+      
+      public boolean areCommandExecutorsWrapped() {
+            return wrapCommandExecutor;
+      }
+
+      public void setWrapCommandExecutor(boolean b) {
+            this.wrapCommandExecutor = b;
       }
 }

@@ -1,7 +1,10 @@
 package com.github.websend.server;
 
+import com.avaje.ebean.enhance.asm.Opcodes;
 import com.github.websend.Main;
 import com.github.websend.PluginOutputManager;
+import com.github.websend.WebsendConsoleCommandSender;
+import com.github.websend.WebsendPlayerCommandSender;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +13,7 @@ import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class PacketParser
 {
@@ -18,18 +22,32 @@ public class PacketParser
 		String command = readString(in);
 		String playerStr = readString(in);
 		Player player = Main.getBukkitServer().getPlayer(playerStr);
-                
-                boolean success;
-                try{
-                    success = Main.getBukkitServer().dispatchCommand(player, command);
-                }catch(Exception ex){
-                    if(Main.getSettings().isDebugMode()){
-                        Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
-                    }
-                    success = false;
+            
+            if(player == null){
+                if(Main.getSettings().isDebugMode()){
+                    Main.getMainLogger().log(Level.WARNING, "Can't execute command ("+command+") as player: Player cannot be found ("+playerStr+")");
                 }
+                out.writeInt(0);
+                out.flush();
+                return;
+            }
+            
+            boolean success;
+            try{
+                if(Main.getSettings().areCommandExecutorsWrapped()){
+                    Plugin targetPlugin = Main.getBukkitServer().getPluginCommand(command).getPlugin();
+                    success = Main.getBukkitServer().dispatchCommand(new WebsendPlayerCommandSender(player, targetPlugin), command);
+                }else{
+                    success = Main.getBukkitServer().dispatchCommand(player, command);
+                }
+            }catch(Exception ex){
+                if(Main.getSettings().isDebugMode()){
+                    Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
+                }
+                success = false;
+            }
                 
-		if (player != null && success)
+		if (success)
 		{
 			out.writeInt(1);
 		}
@@ -45,7 +63,17 @@ public class PacketParser
 		String command = readString(in);
                 boolean success;
                 try{
-                    success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
+                    //config check?
+                    if(Main.getSettings().areCommandExecutorsWrapped()){
+                        Plugin targetPlugin = Main.getBukkitServer().getPluginCommand(command).getPlugin();
+                        success = Main.getBukkitServer().dispatchCommand(
+                                new WebsendConsoleCommandSender(
+                                        Main.getBukkitServer().getConsoleSender(), 
+                                        targetPlugin), 
+                                command);
+                    }else{
+                        success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
+                    }
                 }catch(Exception ex){
                     if(Main.getSettings().isDebugMode()){
                         Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
