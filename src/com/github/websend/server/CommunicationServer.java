@@ -44,9 +44,7 @@ public class CommunicationServer extends Thread
                   }
               }
               try {
-                  if (Main.getSettings().isDebugMode()) {
-                      Main.getMainLogger().log(Level.INFO, "Starting server");
-                  }
+                  Main.logDebugInfo(Level.INFO, "Starting server");
                   startServer();
               } catch (Exception ex) {
                   Main.getMainLogger().log(Level.SEVERE, "Server encountered an error. Attempting restart.", ex);
@@ -56,9 +54,7 @@ public class CommunicationServer extends Thread
                   try {
                       serverSkt.close();
                   } catch (IOException ex1) {
-                      if (Main.getSettings().isDebugMode()) {
-                          Main.getMainLogger().log(Level.WARNING, "Failed to close server.", ex1);
-                      }
+                      Main.logDebugInfo(Level.WARNING, "Failed to close server.", ex1);
                   }
               }
           }
@@ -83,40 +79,23 @@ public class CommunicationServer extends Thread
             
 		while (running)
 		{
-			if (Main.getSettings().isDebugMode())
-			{
-				Main.getMainLogger().log(Level.INFO, "Waiting for client.");
-			}
+                  Main.logDebugInfo("Waiting for client.");
 			Socket skt = serverSkt.accept();
-			if (Main.getSettings().isDebugMode())
-			{
-				Main.getMainLogger().log(Level.INFO, "Client connected.");
-			}
+                  Main.logDebugInfo("Client connected.");
 			if (TrustedHosts.isTrusted(skt.getInetAddress()))
 			{
-				if (Main.getSettings().isDebugMode())
-				{
-					Main.getMainLogger().log(Level.INFO, "Client is trusted.");
-				}
+                        Main.logDebugInfo("Client is trusted.");
 				skt.setKeepAlive(true);
 				DataInputStream in = new DataInputStream(skt.getInputStream());
 				DataOutputStream out = new DataOutputStream(skt.getOutputStream());
-
 				connected = true;
-
-				if (Main.getSettings().isDebugMode())
-				{
-					Main.getMainLogger().log(Level.INFO, "Trying to read first byte.");
-				}
-
+                        
+                        Main.logDebugInfo("Trying to read first byte...");
 				try
 				{
 					if (in.readByte() == 21)
 					{
-						if (Main.getSettings().isDebugMode())
-						{
-							Main.getMainLogger().log(Level.INFO, "First packet is password packet.");
-						}
+                                    Main.logDebugInfo("First packet is password packet.");
 						authenticated = PacketParser.parsePasswordPacket(in, out);
 						if (!authenticated)
 						{
@@ -125,10 +104,7 @@ public class CommunicationServer extends Thread
 						}
 						else
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Password is correct! Client connected.");
-							}
+                                          Main.logDebugInfo("Password is correct! Client connected.");
 						}
 					}
 					else
@@ -142,82 +118,52 @@ public class CommunicationServer extends Thread
 						byte packetHeader = in.readByte();
 						if (packetHeader == 1)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: DoCommandAsPlayer");
-							}
+                                          Main.logDebugInfo("Got packet header: DoCommandAsPlayer");
 							PacketParser.parseDoCommandAsPlayer(in, out);
 						}
 						else if (packetHeader == 2)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: DoCommandAsConsole");
-							}
+                                          Main.logDebugInfo("Got packet header: DoCommandAsConsole");
 							PacketParser.parseDoCommandAsConsole(in, out);
 						}
 						else if (packetHeader == 3)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: DoScript");
-							}
+                                          Main.logDebugInfo("Got packet header: DoScript");
 							PacketParser.parseDoScript(in, out);
 						}
 						else if (packetHeader == 4)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: StartPluginOutputRecording");
-							}
+                                          Main.logDebugInfo("Got packet header: StartPluginOutputRecording");
 							PacketParser.parseStartPluginOutputRecording(in, out);
 						}
 						else if (packetHeader == 5)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: EndPluginOutputRecording");
-							}
+                                          Main.logDebugInfo("Got packet header: EndPluginOutputRecording");
 							PacketParser.parseEndPluginOutputRecording(in, out);
 						}
 						else if (packetHeader == 10)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: WriteOutputToConsole");
-							}
+                                          Main.logDebugInfo("Got packet header: WriteOutputToConsole");
 							PacketParser.parseWriteOutputToConsole(in, out);
 						}
 						else if (packetHeader == 11)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: WriteOutputToPlayer");
-							}
+                                          Main.logDebugInfo("Got packet header: WriteOutputToPlayer");
 							PacketParser.parseWriteOutputToPlayer(in, out);
 						}
 						else if (packetHeader == 12)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: Broadcast");
-							}
+                                          Main.logDebugInfo("Got packet header: Broadcast");
 							PacketParser.parseBroadcast(in, out);
 						}
 						else if (packetHeader == 20)
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got packet header: Disconnect");
-							}
+                                          Main.logDebugInfo("Got packet header: Disconnect");
 							connected = false;
 						}
 						else if (customPacketHandlers.containsKey(packetHeader))
 						{
-							if (Main.getSettings().isDebugMode())
-							{
-								Main.getMainLogger().log(Level.INFO, "Got custom packet header: " + packetHeader);
-							}
+                                          Main.logDebugInfo("Got custom packet header: " + packetHeader);
 							customPacketHandlers.get(packetHeader).onHeaderReceived(in, out);
 						}
 						else
@@ -225,10 +171,7 @@ public class CommunicationServer extends Thread
 							Main.getMainLogger().log(Level.WARNING, "Unsupported packet header!");
 						}
 					}
-					if (Main.getSettings().isDebugMode())
-					{
-						Main.getMainLogger().log(Level.INFO, "Closing connection with client.");
-					}
+                              Main.logDebugInfo("Closing connection with client.");
 					out.flush();
 					out.close();
 					in.close();

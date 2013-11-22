@@ -29,17 +29,11 @@ public class ScriptManager
 
 	public void invokeScript(String name)
 	{
-		if (Main.getSettings().isDebugMode())
-		{
-			Main.getMainLogger().log(Level.WARNING, "Searching script: " + name);
-		}
+		Main.logDebugInfo(Level.WARNING, "Searching script: " + name);
 		Script script = scripts.get(name);
 		if (script != null)
 		{
-			if (Main.getSettings().isDebugMode())
-			{
-				Main.getMainLogger().log(Level.WARNING, "Found script, invoking main method.");
-			}
+                  Main.logDebugInfo(Level.WARNING, "Found script, invoking main method.");
 			script.invoke();
 		}
 		else
@@ -50,10 +44,7 @@ public class ScriptManager
 
 	public void clearScripts()
 	{
-		if (Main.getSettings().isDebugMode())
-		{
-			Main.getMainLogger().log(Level.WARNING, "Cleared scripts map.");
-		}
+            Main.logDebugInfo(Level.WARNING, "Cleared scripts map.");
 		scripts.clear();
 	}
 
@@ -76,19 +67,13 @@ public class ScriptManager
 
 	public void loadScripts()
 	{
-		if (Main.getSettings().isDebugMode())
-		{
-			Main.getMainLogger().log(Level.WARNING, "Loading scripts");
-		}
+            Main.logDebugInfo(Level.WARNING, "Loading scripts");
 		File[] directories = scriptsDir.listFiles(new DirectoryFilter());
 		for (File cur : directories)
 		{
 			if (!cur.getName().equals("compiled"))
 			{
-				if (Main.getSettings().isDebugMode())
-				{
-					Main.getMainLogger().log(Level.WARNING, "Loading script: " + cur.getName());
-				}
+                        Main.logDebugInfo(Level.WARNING, "Loading script: " + cur.getName());
 				Script newScript = loadScriptFromDir(cur);
                                 if(newScript != null){
                                     scripts.put(newScript.name, newScript);
@@ -163,10 +148,7 @@ public class ScriptManager
 
 	private boolean compileClasses(String name, File[] javaFiles)
 	{
-		if (Main.getSettings().isDebugMode())
-		{
-			Main.getMainLogger().log(Level.WARNING, "Compiling classes");
-		}
+            Main.logDebugInfo(Level.WARNING, "Compiling classes");
 		try
 		{
 			JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
@@ -200,10 +182,7 @@ public class ScriptManager
 
 	private boolean loadClasses(Script container)
 	{
-		if (Main.getSettings().isDebugMode())
-		{
-			Main.getMainLogger().log(Level.WARNING, "Loading classes into JVM");
-		}
+            Main.logDebugInfo(Level.WARNING, "Loading classes into JVM");
 		try
 		{
 			File scriptDir = new File(compiledDir, container.name);

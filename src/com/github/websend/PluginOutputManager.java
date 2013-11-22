@@ -23,9 +23,7 @@ public class PluginOutputManager
         
 	public static void startRecording(String pluginName)
 	{
-                if(Main.getSettings().isDebugMode()){
-                    Main.getMainLogger().info("Starting output recording of plugin "+pluginName);
-                }
+                Main.logDebugInfo("Starting output recording of plugin "+pluginName);
             
                 //register handlers on first use to prevent missing any plugin on load.
                 if(!handlersRegistered){
@@ -38,10 +36,8 @@ public class PluginOutputManager
 	public static ArrayList<String> stopRecording(String pluginName)
 	{
             ArrayList<String> result = pluginOutputHashMap.get(pluginName);
-            if(Main.getSettings().isDebugMode()){
-                Main.getMainLogger().info("Stopping output recording of plugin "+pluginName);
-                Main.getMainLogger().info("Recorded "+result.size()+" entries.");
-            }
+            Main.logDebugInfo("Stopping output recording of plugin "+pluginName);
+            Main.logDebugInfo("Recorded "+result.size()+" entries.");
 		pluginOutputHashMap.remove(pluginName);
 		return result;
 	}
@@ -101,9 +97,7 @@ class WebsendPluginLoggerHandler extends Handler{
     
     WebsendPluginLoggerHandler(Plugin plugin) {
         this.plugin = plugin;
-        if(Main.getSettings().isDebugMode()){
-            Main.getMainLogger().info("Tapped into: "+plugin.getName());
-        }
+        Main.logDebugInfo("Tapped into: "+plugin.getName());
     }
 
     @Override

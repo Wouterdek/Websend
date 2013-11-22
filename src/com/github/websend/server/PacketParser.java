@@ -24,9 +24,7 @@ public class PacketParser
 		Player player = Main.getBukkitServer().getPlayer(playerStr);
             
             if(player == null){
-                if(Main.getSettings().isDebugMode()){
-                    Main.getMainLogger().log(Level.WARNING, "Can't execute command ("+command+") as player: Player cannot be found ("+playerStr+")");
-                }
+                Main.logDebugInfo(Level.WARNING, "Can't execute command ("+command+") as player: Player cannot be found ("+playerStr+")");
                 out.writeInt(0);
                 out.flush();
                 return;
@@ -41,9 +39,7 @@ public class PacketParser
                     success = Main.getBukkitServer().dispatchCommand(player, command);
                 }
             }catch(Exception ex){
-                if(Main.getSettings().isDebugMode()){
-                    Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
-                }
+                Main.logDebugInfo(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
                 success = false;
             }
                 
@@ -75,9 +71,7 @@ public class PacketParser
                         success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
                     }
                 }catch(Exception ex){
-                    if(Main.getSettings().isDebugMode()){
-                        Main.getMainLogger().log(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
-                    }
+                    Main.logDebugInfo(Level.WARNING, "Websend caught an exception while running command '"+command+"'", ex);
                     success = false;
                 }
 		if (success)

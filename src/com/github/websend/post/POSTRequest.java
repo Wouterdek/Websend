@@ -92,9 +92,7 @@ public class POSTRequest{
             message = "The server responded to the request with an unknown response code ("+responseCode+"). Assuming request OK. ("+reason+")";
         }
         
-        if (Main.getSettings().isDebugMode()) {
-            Main.getMainLogger().log(logLevel, message);
-        }
+        Main.logDebugInfo(logLevel, message);
         
         CommandParser parser = new CommandParser();
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

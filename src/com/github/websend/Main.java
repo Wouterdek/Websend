@@ -294,6 +294,20 @@ public class Main extends JavaPlugin
 	{
 		return logger;
 	}
+      
+      public static void logDebugInfo(String message){
+          logDebugInfo(Level.INFO, message);
+      }
+      
+      public static void logDebugInfo(Level level, String message){
+          logDebugInfo(level, message, null);
+      }
+      
+      public static void logDebugInfo(Level level, String message, Exception ex){
+          if(Main.getSettings().isDebugMode()){
+              Main.getMainLogger().log(level, message, ex);
+          }
+      }
 
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
 	{
