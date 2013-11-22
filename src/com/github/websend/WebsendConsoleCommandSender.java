@@ -1,4 +1,3 @@
-
 package com.github.websend;
 
 import java.util.Set;
@@ -8,22 +7,21 @@ import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
 
-public class WebsendConsoleCommandSender implements ConsoleCommandSender{
+public class WebsendConsoleCommandSender implements ConsoleCommandSender {
     /* This class allows tapping into command output from plugins
      * if the output is sent through the commandsender.
      *
      * Tap this method(1.6.4): sendRawMessage
-    */
-    
+     */
+
     private final ConsoleCommandSender parent;
     private final Plugin commandTargetPlugin;
-    
+
     public WebsendConsoleCommandSender(ConsoleCommandSender parent, Plugin commandTargetPlugin) {
         this.parent = parent;
         this.commandTargetPlugin = commandTargetPlugin;
@@ -37,12 +35,12 @@ public class WebsendConsoleCommandSender implements ConsoleCommandSender{
 
     @Override
     public void sendMessage(java.lang.String[] param0) {
-        for(String str : param0){
+        for (String str : param0) {
             PluginOutputManager.handleLogRecord(commandTargetPlugin, new LogRecord(Level.INFO, str));
         }
         parent.sendMessage(param0);
     }
-    
+
     @Override
     public void sendRawMessage(java.lang.String param0) {
         PluginOutputManager.handleLogRecord(commandTargetPlugin, new LogRecord(Level.INFO, param0));

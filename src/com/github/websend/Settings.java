@@ -2,121 +2,105 @@ package com.github.websend;
 
 import java.net.InetAddress;
 
-public class Settings
-{
-	private String responseURL;
-	private String password;
-	private String salt = "";
-	private String algorithm = "MD5";
-	private int port;
-	private boolean debugMode = false;
-	private boolean gzipRequests = false;
-	private boolean serverActive = false;
-	private String URL;
-      private InetAddress serverBindIP = null;
-      private boolean wrapCommandExecutor;
+public class Settings {
 
-	public String getURL()
-	{
-		return URL;
-	}
+    private String responseURL;
+    private String password;
+    private String salt = "";
+    private String algorithm = "MD5";
+    private int port;
+    private boolean debugMode = false;
+    private boolean gzipRequests = false;
+    private boolean serverActive = false;
+    private String URL;
+    private InetAddress serverBindIP = null;
+    private boolean wrapCommandExecutor;
 
-	public boolean isDebugMode()
-	{
-		return debugMode;
-	}
+    public String getURL() {
+        return URL;
+    }
 
-	public String getPassword()
-	{
-		return password;
-	}
+    public boolean isDebugMode() {
+        return debugMode;
+    }
 
-	public int getPort()
-	{
-		return port;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getResponseURL()
-	{
-		return responseURL;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public String getSalt()
-	{
-		return salt;
-	}
+    public String getResponseURL() {
+        return responseURL;
+    }
 
-	public String getHashingAlgorithm()
-	{
-		return this.algorithm;
-	}
+    public String getSalt() {
+        return salt;
+    }
 
-	public boolean isServerActive()
-	{
-		return serverActive;
-	}
-      
-      public InetAddress getServerBindIP() {
-            return serverBindIP;
-      }
+    public String getHashingAlgorithm() {
+        return this.algorithm;
+    }
 
-	public void setURL(String URL)
-	{
-		this.URL = URL;
-	}
+    public boolean isServerActive() {
+        return serverActive;
+    }
 
-	public void setDebugMode(boolean debugMode)
-	{
-		this.debugMode = debugMode;
-	}
+    public InetAddress getServerBindIP() {
+        return serverBindIP;
+    }
 
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
 
-	public void setPort(int port)
-	{
-		this.port = port;
-	}
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
 
-	public void setResponseURL(String responseURL)
-	{
-		this.responseURL = responseURL;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setSalt(String salt)
-	{
-		this.salt = salt;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-	public void setServerActive(boolean serverActive)
-	{
-		this.serverActive = serverActive;
-	}
+    public void setResponseURL(String responseURL) {
+        this.responseURL = responseURL;
+    }
 
-	public void setHashingAlgorithm(String algorithm)
-	{
-		this.algorithm = algorithm;
-	}
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
 
-      public boolean areRequestsGZipped() {
-            return gzipRequests;
-      }
+    public void setServerActive(boolean serverActive) {
+        this.serverActive = serverActive;
+    }
 
-      public void setGzipRequests(boolean gzipRequests) {
-            this.gzipRequests = gzipRequests;
-      }
-      
-      public void setServerBindIP(InetAddress ip) {
-            this.serverBindIP = ip;
-      }
-      
-      public boolean areCommandExecutorsWrapped() {
-            return wrapCommandExecutor;
-      }
+    public void setHashingAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
+    }
 
-      public void setWrapCommandExecutor(boolean b) {
-            this.wrapCommandExecutor = b;
-      }
+    public boolean areRequestsGZipped() {
+        return gzipRequests;
+    }
+
+    public void setGzipRequests(boolean gzipRequests) {
+        this.gzipRequests = gzipRequests;
+    }
+
+    public void setServerBindIP(InetAddress ip) {
+        this.serverBindIP = ip;
+    }
+
+    public boolean areCommandExecutorsWrapped() {
+        return wrapCommandExecutor;
+    }
+
+    public void setWrapCommandExecutor(boolean b) {
+        this.wrapCommandExecutor = b;
+    }
 }

@@ -3,19 +3,17 @@ package com.github.websend;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public abstract class PacketHandler
-{
-	private byte header;
+public abstract class PacketHandler {
 
-	public PacketHandler(byte header)
-	{
-		this.header = header;
-	}
+    private byte header;
 
-	public abstract void onHeaderReceived(DataInputStream in, DataOutputStream out);
+    public PacketHandler(byte header) {
+        this.header = header;
+    }
 
-	public byte getHeader()
-	{
-		return header;
-	}
+    public abstract void onHeaderReceived(DataInputStream in, DataOutputStream out);
+
+    public byte getHeader() {
+        return header;
+    }
 }

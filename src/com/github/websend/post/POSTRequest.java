@@ -26,99 +26,100 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class POSTRequest{
+public class POSTRequest {
+
     private ArrayList<BasicNameValuePair> content = new ArrayList<BasicNameValuePair>();
     private String jsonData;
     private URL url;
-    
+
     private Player player;
-    
-    public POSTRequest(URL url, String args[], Player player, boolean isResponse){
+
+    public POSTRequest(URL url, String args[], Player player, boolean isResponse) {
         this.player = player;
         content.add(new BasicNameValuePair("isResponse", Boolean.toString(isResponse)));
         content.add(new BasicNameValuePair("authKey", Util.hash(Main.getSettings().getPassword())));
         content.add(new BasicNameValuePair("isCompressed", Boolean.toString(Main.getSettings().areRequestsGZipped())));
-        
+
         try {
             jsonData = getJSONDataString(player, null);
         } catch (JSONException ex) {
             Logger.getLogger(POSTRequest.class.getName()).log(Level.SEVERE, "Failed to generate JSON data.", ex);
         }
-        for(int i = 0;i<args.length;i++){
-            content.add(new BasicNameValuePair("args["+i+"]", args[i]));    
+        for (int i = 0; i < args.length; i++) {
+            content.add(new BasicNameValuePair("args[" + i + "]", args[i]));
         }
         this.url = url;
     }
-    
-    public POSTRequest(URL url, String args[], String playerNameArg, boolean isResponse){
+
+    public POSTRequest(URL url, String args[], String playerNameArg, boolean isResponse) {
         content.add(new BasicNameValuePair("isResponse", Boolean.toString(isResponse)));
         content.add(new BasicNameValuePair("authKey", Util.hash(Main.getSettings().getPassword())));
         content.add(new BasicNameValuePair("isCompressed", Boolean.toString(Main.getSettings().areRequestsGZipped())));
-        
+
         try {
             jsonData = getJSONDataString(null, playerNameArg);
         } catch (JSONException ex) {
             Logger.getLogger(POSTRequest.class.getName()).log(Level.SEVERE, "Failed to generate JSON data.", ex);
         }
-        for(int i = 0;i<args.length;i++){
-            content.add(new BasicNameValuePair("args["+i+"]", args[i]));    
+        for (int i = 0; i < args.length; i++) {
+            content.add(new BasicNameValuePair("args[" + i + "]", args[i]));
         }
         this.url = url;
     }
-    
-    public void run(DefaultHttpClient httpClient) throws IOException{
+
+    public void run(DefaultHttpClient httpClient) throws IOException {
         HttpResponse response = doRequest(httpClient);
-        
+
         int responseCode = response.getStatusLine().getStatusCode();
         String reason = response.getStatusLine().getReasonPhrase();
-        
+
         String message = "";
         Level logLevel = Level.WARNING;
-        
-        if(responseCode >= 200 && responseCode < 300){
-            if(Main.getSettings().isDebugMode()){
-                message = "The server responded to the request with a 2xx code. Assuming request OK. ("+reason+")";
+
+        if (responseCode >= 200 && responseCode < 300) {
+            if (Main.getSettings().isDebugMode()) {
+                message = "The server responded to the request with a 2xx code. Assuming request OK. (" + reason + ")";
                 logLevel = Level.INFO;
             }
-        }else if(responseCode >= 400){
-            message = "HTTP request failed. ("+reason+")";
+        } else if (responseCode >= 400) {
+            message = "HTTP request failed. (" + reason + ")";
             Main.getMainLogger().log(Level.SEVERE, message);
             return;
-        }else if(responseCode >= 300){
-            message = "The server responded to the request with a redirection message. Assuming request OK. ("+reason+")";
-        }else if(responseCode < 200){
-            message = "The server responded to the request with a continue or protocol switching message. Assuming request OK. ("+reason+")";
-        }else{
-            message = "The server responded to the request with an unknown response code ("+responseCode+"). Assuming request OK. ("+reason+")";
+        } else if (responseCode >= 300) {
+            message = "The server responded to the request with a redirection message. Assuming request OK. (" + reason + ")";
+        } else if (responseCode < 200) {
+            message = "The server responded to the request with a continue or protocol switching message. Assuming request OK. (" + reason + ")";
+        } else {
+            message = "The server responded to the request with an unknown response code (" + responseCode + "). Assuming request OK. (" + reason + ")";
         }
-        
+
         Main.logDebugInfo(logLevel, message);
-        
+
         CommandParser parser = new CommandParser();
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String cur;
-        while((cur = reader.readLine()) != null){
+        while ((cur = reader.readLine()) != null) {
             parser.parse(cur, player);
         }
         reader.close();
     }
-    
+
     private HttpResponse doRequest(DefaultHttpClient httpClient) throws IOException {
         HttpPost httpPost = new HttpPost(url.toString());
-        
+
         MultipartEntity ent = new MultipartEntity();
-        for(BasicNameValuePair cur : content){
+        for (BasicNameValuePair cur : content) {
             ent.addPart(cur.getName(), new StringBody(cur.getValue()));
         }
-        if(Main.getSettings().areRequestsGZipped()){
+        if (Main.getSettings().areRequestsGZipped()) {
             ent.addPart("jsonData", new ByteArrayBody(CompressionToolkit.gzipString(jsonData), "jsonData"));
-        }else{
+        } else {
             ent.addPart("jsonData", new StringBody(jsonData));
         }
         httpPost.setEntity(ent);
         return httpClient.execute(httpPost);
     }
-    
+
     private String getJSONDataString(Player ply, String playerNameArg) throws JSONException {
         Server server = Main.getBukkitServer();
         JSONObject data = new JSONObject();
@@ -126,20 +127,20 @@ public class POSTRequest{
             if (ply != null) {
                 JSONObject player = JSONSerializer.serializePlayer(ply);
                 data.put("Invoker", player);
-            }else if(playerNameArg != null){
+            } else if (playerNameArg != null) {
                 JSONObject player = new JSONObject();
                 {
                     player.put("Name", playerNameArg);
                 }
                 data.put("Invoker", player);
-            }else{
+            } else {
                 JSONObject player = new JSONObject();
                 {
                     player.put("Name", "Console");
                 }
                 data.put("Invoker", player);
             }
-            
+
             JSONArray plugins = new JSONArray();
             for (Plugin plugin : server.getPluginManager().getPlugins()) {
                 JSONObject plug = new JSONObject();
@@ -147,7 +148,7 @@ public class POSTRequest{
                 plugins.put(plug);
             }
             data.put("Plugins", plugins);
-            
+
             JSONObject serverSettings = new JSONObject();
             {
                 serverSettings.put("Name", server.getServerName());
@@ -160,7 +161,7 @@ public class POSTRequest{
                 serverSettings.put("MaxPlayers", server.getMaxPlayers());
             }
             data.put("ServerSettings", serverSettings);
-            
+
             JSONObject serverStatus = new JSONObject();
             {
                 JSONArray onlinePlayers = new JSONArray();

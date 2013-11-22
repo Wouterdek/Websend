@@ -11,10 +11,11 @@ public class WebsendPlayerCommandSender implements Player {
      * Note to anyone having compilation problems: Compile against Bukkit, not CraftBukkit.
      *
      * Tap this method(1.6.4): sendRawMessage, sendMessage(String), sendMessage(String[])
-    */
+     */
+
     private final Player baseObject;
     private final Plugin commandTargetPlugin;
-    
+
     public WebsendPlayerCommandSender(Player baseObject, Plugin commandTargetPlugin) {
         this.baseObject = baseObject;
         this.commandTargetPlugin = commandTargetPlugin;
@@ -28,18 +29,18 @@ public class WebsendPlayerCommandSender implements Player {
 
     @Override
     public void sendMessage(java.lang.String[] param0) {
-        for(String str : param0){
+        for (String str : param0) {
             PluginOutputManager.handleLogRecord(commandTargetPlugin, new LogRecord(Level.INFO, str));
         }
         baseObject.sendMessage(param0);
     }
-    
+
     @Override
     public void sendRawMessage(java.lang.String param0) {
         PluginOutputManager.handleLogRecord(commandTargetPlugin, new LogRecord(Level.INFO, param0));
         baseObject.sendRawMessage(param0);
     }
-    
+
     @Override
     public java.lang.String getDisplayName() {
         return baseObject.getDisplayName();

@@ -10,6 +10,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 
 public class POSTHandlerThreadPool {
+
     private ArrayList<POSTHandlerThread> busyThreads;
     private ConcurrentLinkedQueue<POSTHandlerThread> availableThreadsQueue;
     private PoolingClientConnectionManager connectionManager;
@@ -17,30 +18,30 @@ public class POSTHandlerThreadPool {
     public POSTHandlerThreadPool(int poolStartSize) {
         busyThreads = new ArrayList<POSTHandlerThread>();
         availableThreadsQueue = new ConcurrentLinkedQueue<POSTHandlerThread>();
-        
+
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
         connectionManager = new PoolingClientConnectionManager(schemeRegistry);
         connectionManager.setDefaultMaxPerRoute(poolStartSize);
-        connectionManager.setMaxTotal(poolStartSize*2);
-        for(int i = 0;i<poolStartSize;i++){
+        connectionManager.setMaxTotal(poolStartSize * 2);
+        for (int i = 0; i < poolStartSize; i++) {
             POSTHandlerThread thread = new POSTHandlerThread(this, connectionManager);
             thread.start();
             availableThreadsQueue.offer(thread);
         }
     }
-    
+
     public POSTHandlerThreadPool() {
         this(5);
     }
-    
-    public void doRequest(POSTRequest request){
+
+    public void doRequest(POSTRequest request) {
         POSTHandlerThread thread = availableThreadsQueue.poll();
-        if(thread == null){
+        if (thread == null) {
             int curMaxTotal = connectionManager.getMaxTotal();
             int curMaxPerRoute = connectionManager.getDefaultMaxPerRoute();
-            if(curMaxTotal < curMaxPerRoute + 1){
-                connectionManager.setMaxTotal((curMaxPerRoute + 1)*2);
+            if (curMaxTotal < curMaxPerRoute + 1) {
+                connectionManager.setMaxTotal((curMaxPerRoute + 1) * 2);
             }
             connectionManager.setDefaultMaxPerRoute(curMaxPerRoute + 1);
             thread = new POSTHandlerThread(this, connectionManager);
@@ -48,24 +49,24 @@ public class POSTHandlerThreadPool {
         }
         thread.startRequest(request);
     }
-    
-    protected void onThreadDone(POSTHandlerThread thread){
+
+    protected void onThreadDone(POSTHandlerThread thread) {
         busyThreads.remove(thread);
         availableThreadsQueue.offer(thread);
     }
-    
-    public void stopThreads(){
-        for(POSTHandlerThread cur : availableThreadsQueue){
+
+    public void stopThreads() {
+        for (POSTHandlerThread cur : availableThreadsQueue) {
             cur.stopRunning();
         }
-        while(!busyThreads.isEmpty()){
+        while (!busyThreads.isEmpty()) {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException ex) {
                 Logger.getLogger(POSTHandlerThreadPool.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        for(POSTHandlerThread cur : availableThreadsQueue){
+        for (POSTHandlerThread cur : availableThreadsQueue) {
             cur.stopRunning();
         }
         connectionManager.shutdown();

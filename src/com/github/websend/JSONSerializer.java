@@ -2,7 +2,6 @@ package com.github.websend;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -58,7 +57,7 @@ public class JSONSerializer {
         {
             for (int i = 0; i < inv.getSize(); i++) {
                 ItemStack itemStack = inv.getItem(i);
-                if(itemStack != null){
+                if (itemStack != null) {
                     JSONObject item = JSONSerializer.serializeItemStack(itemStack);
                     item.put("Slot", i);
                     inventory.put(item);
@@ -74,9 +73,9 @@ public class JSONSerializer {
             item.put("Type", itemStack.getTypeId());
             item.put("Amount", itemStack.getAmount());
             item.put("Durability", itemStack.getDurability());
-            if(itemStack.hasItemMeta()){
+            if (itemStack.hasItemMeta()) {
                 JSONObject obj = JSONSerializer.serializeMetaData(itemStack.getItemMeta());
-                if(obj != null){
+                if (obj != null) {
                     item.put("Meta", obj);
                 }
             }
@@ -99,58 +98,58 @@ public class JSONSerializer {
         }
         return item;
     }
-    
-    public static JSONObject serializeMetaData(ItemMeta meta) throws JSONException{
-        if(meta == null){
+
+    public static JSONObject serializeMetaData(ItemMeta meta) throws JSONException {
+        if (meta == null) {
             return null;
         }
         //All implemented except EnchantmentStorageMeta
         JSONObject result = null;
-        try{
-            if(meta instanceof BookMeta){
-                result = serializeMetaBook((BookMeta)meta);
-            }else if(meta instanceof FireworkEffectMeta){
-                result = serializeMetaFireworkEffect((FireworkEffectMeta)meta);
-            }else if(meta instanceof FireworkMeta){
-                result = serializeMetaFirework((FireworkMeta)meta);
-            }else if(meta instanceof EnchantmentStorageMeta){
-                result = serializeMetaEnchantmentStorage((EnchantmentStorageMeta)meta);
-            }else if(meta instanceof LeatherArmorMeta){
-                result = serializeMetaLeatherArmor((LeatherArmorMeta)meta);
-            }else if(meta instanceof MapMeta){
-                result = serializeMetaMap((MapMeta)meta);
-            }else if(meta instanceof PotionMeta){
-                result = serializeMetaPotion((PotionMeta)meta);
-            }else if(meta instanceof Repairable){
-                result = serializeMetaRepairable((Repairable)meta);
-            }else if(meta instanceof SkullMeta){
-                result = serializeMetaSkull((SkullMeta)meta);
-            }else{
+        try {
+            if (meta instanceof BookMeta) {
+                result = serializeMetaBook((BookMeta) meta);
+            } else if (meta instanceof FireworkEffectMeta) {
+                result = serializeMetaFireworkEffect((FireworkEffectMeta) meta);
+            } else if (meta instanceof FireworkMeta) {
+                result = serializeMetaFirework((FireworkMeta) meta);
+            } else if (meta instanceof EnchantmentStorageMeta) {
+                result = serializeMetaEnchantmentStorage((EnchantmentStorageMeta) meta);
+            } else if (meta instanceof LeatherArmorMeta) {
+                result = serializeMetaLeatherArmor((LeatherArmorMeta) meta);
+            } else if (meta instanceof MapMeta) {
+                result = serializeMetaMap((MapMeta) meta);
+            } else if (meta instanceof PotionMeta) {
+                result = serializeMetaPotion((PotionMeta) meta);
+            } else if (meta instanceof Repairable) {
+                result = serializeMetaRepairable((Repairable) meta);
+            } else if (meta instanceof SkullMeta) {
+                result = serializeMetaSkull((SkullMeta) meta);
+            } else {
                 //Is probably an item with enchantments.
                 result = new JSONObject();
             }
-        }catch(Exception ex){
-            if(Main.getSettings().isDebugMode()){
+        } catch (Exception ex) {
+            if (Main.getSettings().isDebugMode()) {
                 Main.getMainLogger().log(
-                    Level.WARNING, 
-                    "Exception while serializing item meta data. "
-                    + "This may be caused by a mismatch between the Bukkit and "
-                    + "Websend versions.", 
-                    ex);
-            }else{
+                        Level.WARNING,
+                        "Exception while serializing item meta data. "
+                        + "This may be caused by a mismatch between the Bukkit and "
+                        + "Websend versions.",
+                        ex);
+            } else {
                 Main.getMainLogger().log(
-                    Level.WARNING, 
-                    "Exception while serializing item meta data. "
-                    + "This may be caused by a mismatch between the Bukkit and "
-                    + "Websend versions. Enable debug mode for stack trace.");
+                        Level.WARNING,
+                        "Exception while serializing item meta data. "
+                        + "This may be caused by a mismatch between the Bukkit and "
+                        + "Websend versions. Enable debug mode for stack trace.");
             }
         }
         addNameAndLore(result, meta);
         addEnchantments(result, meta);
         return result;
     }
-    
-    private static void addNameAndLore(JSONObject obj, ItemMeta meta) throws JSONException{
+
+    private static void addNameAndLore(JSONObject obj, ItemMeta meta) throws JSONException {
         if (meta.hasDisplayName()) {
             obj.put("DisplayName", meta.getDisplayName());
         }
@@ -159,9 +158,9 @@ public class JSONSerializer {
             obj.put("Lore", lore);
         }
     }
-    
+
     private static void addEnchantments(JSONObject obj, ItemMeta meta) throws JSONException {
-        if(!meta.hasEnchants()){
+        if (!meta.hasEnchants()) {
             return;
         }
         JSONArray enchantArray = new JSONArray();
@@ -185,35 +184,35 @@ public class JSONSerializer {
     private static JSONObject serializeMetaBook(BookMeta bookMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
-            if(bookMeta.hasAuthor()){
+            if (bookMeta.hasAuthor()) {
                 metaObj.put("Author", bookMeta.getAuthor());
             }
-            if(bookMeta.hasTitle()){
+            if (bookMeta.hasTitle()) {
                 metaObj.put("Title", bookMeta.getTitle());
             }
-            if(bookMeta.hasPages()){
+            if (bookMeta.hasPages()) {
                 metaObj.put("Pages", new JSONArray(bookMeta.getPages()));
             }
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaFireworkEffect(FireworkEffectMeta fireworkEffectMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
-            if(fireworkEffectMeta.hasEffect()){
+            if (fireworkEffectMeta.hasEffect()) {
                 metaObj.put("Effect", new JSONArray(fireworkEffectMeta.getEffect().serialize()));
             }
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaFirework(FireworkMeta fireworkMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
-            if(fireworkMeta.hasEffects()){
+            if (fireworkMeta.hasEffects()) {
                 JSONArray arrayOfEffects = new JSONArray();
-                for(FireworkEffect cur : fireworkMeta.getEffects()){
+                for (FireworkEffect cur : fireworkMeta.getEffects()) {
                     arrayOfEffects.put(cur.serialize());
                 }
                 metaObj.put("Effects", arrayOfEffects);
@@ -222,7 +221,7 @@ public class JSONSerializer {
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaEnchantmentStorage(EnchantmentStorageMeta enchantmentStorageMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
@@ -245,7 +244,7 @@ public class JSONSerializer {
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaLeatherArmor(LeatherArmorMeta leatherArmorMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
@@ -253,7 +252,7 @@ public class JSONSerializer {
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaMap(MapMeta mapMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
@@ -261,13 +260,13 @@ public class JSONSerializer {
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaPotion(PotionMeta potionMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
-            if(potionMeta.hasCustomEffects()){
+            if (potionMeta.hasCustomEffects()) {
                 JSONArray arrayOfEffects = new JSONArray();
-                for(PotionEffect cur : potionMeta.getCustomEffects()){
+                for (PotionEffect cur : potionMeta.getCustomEffects()) {
                     arrayOfEffects.put(cur.serialize());
                 }
                 metaObj.put("CustomEffects", arrayOfEffects);
@@ -275,21 +274,21 @@ public class JSONSerializer {
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaRepairable(Repairable repairable) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
-            if(repairable.hasRepairCost()){
+            if (repairable.hasRepairCost()) {
                 metaObj.put("RepairCost", repairable.getRepairCost());
             }
         }
         return metaObj;
     }
-    
+
     private static JSONObject serializeMetaSkull(SkullMeta skullMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
-            if(skullMeta.hasOwner()){
+            if (skullMeta.hasOwner()) {
                 metaObj.put("Owner", skullMeta.getOwner());
             }
         }
