@@ -8,8 +8,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class POSTHandlerThread extends Thread {
 
-    private POSTHandlerThreadPool parent;
-    private DefaultHttpClient httpClient;
+    private final POSTHandlerThreadPool parent;
+    private final DefaultHttpClient httpClient;
     private boolean running = true;
     private boolean busy = false;
     private POSTRequest currentRequest;

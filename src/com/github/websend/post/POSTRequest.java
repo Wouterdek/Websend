@@ -28,10 +28,9 @@ import org.json.JSONObject;
 
 public class POSTRequest {
 
-    private ArrayList<BasicNameValuePair> content = new ArrayList<BasicNameValuePair>();
+    private final ArrayList<BasicNameValuePair> content = new ArrayList<BasicNameValuePair>();
     private String jsonData;
     private URL url;
-
     private Player player;
 
     public POSTRequest(URL url, String args[], Player player, boolean isResponse) {
@@ -125,20 +124,20 @@ public class POSTRequest {
         JSONObject data = new JSONObject();
         {
             if (ply != null) {
-                JSONObject player = JSONSerializer.serializePlayer(ply);
-                data.put("Invoker", player);
+                JSONObject jsonPlayer = JSONSerializer.serializePlayer(ply);
+                data.put("Invoker", jsonPlayer);
             } else if (playerNameArg != null) {
-                JSONObject player = new JSONObject();
+                JSONObject jsonPlayer = new JSONObject();
                 {
-                    player.put("Name", playerNameArg);
+                    jsonPlayer.put("Name", playerNameArg);
                 }
-                data.put("Invoker", player);
+                data.put("Invoker", jsonPlayer);
             } else {
-                JSONObject player = new JSONObject();
+                JSONObject jsonPlayer = new JSONObject();
                 {
-                    player.put("Name", "Console");
+                    jsonPlayer.put("Name", "Console");
                 }
-                data.put("Invoker", player);
+                data.put("Invoker", jsonPlayer);
             }
 
             JSONArray plugins = new JSONArray();

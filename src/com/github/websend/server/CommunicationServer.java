@@ -22,11 +22,11 @@ public class CommunicationServer extends Thread {
 
     private static final int MAX_FAILS = 15;
     private static final int FAILURE_SLEEP_TIME = 15000;
+    private final HashMap<Byte, PacketHandler> customPacketHandlers = new HashMap<Byte, PacketHandler>();
     private boolean running = true;
     private boolean connected = false;
     private boolean authenticated = false;
     private ServerSocket serverSkt;
-    private HashMap<Byte, PacketHandler> customPacketHandlers = new HashMap<Byte, PacketHandler>();
 
     @Override
     public void run() {
