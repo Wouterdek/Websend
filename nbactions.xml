@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>build</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <goals>
+            <goal>install</goal>
+                
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Generate Assembly</actionName>
+        <displayName>Generate Assembly</displayName>
+        <goals>
+                <goal>assembly:assembly</goal>
+            </goals>
+    </action>
+    
+</actions>

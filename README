@@ -1,4 +1,3 @@
-To be able to compile and run you need the Ostermiller Java Utilities library, downloadable at http://ostermiller.org/utils/
-and the apache HTTPComponent libraries 4.2.5, downloadable at http://hc.apache.org/downloads.cgi
-
-Documentation is available: https://dl.dropboxusercontent.com/u/35774053/Websend/index.html
+Official repository for the Bukkit plugin Websend. (http://dev.bukkit.org/bukkit-plugins/websend/)
+Maven is required to build this project.
+Documentation is available here: https://dl.dropboxusercontent.com/u/35774053/Websend/index.html
