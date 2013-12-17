@@ -21,6 +21,7 @@ public class POSTHandlerThreadPool {
         builder = HttpClientBuilder.create();
         builder.setMaxConnPerRoute(poolStartSize);
         builder.setMaxConnTotal(poolStartSize * 2);
+        builder.setUserAgent("Websend/"+Main.getInstance().getDescription().getVersion());
         maxPerRoute = poolStartSize;
         maxTotal = poolStartSize * 2;
         
