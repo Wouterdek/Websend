@@ -87,16 +87,17 @@ public abstract class CommunicationServer extends Thread {
                 Main.logDebugInfo("Trying to read first byte...");
                 try {
                     if (in.readByte() == 21) {
-                        Main.logDebugInfo("First packet is password packet.");
-                        authenticated = PacketParser.parsePasswordPacket(in, out);
+                        Main.logDebugInfo("First packet is authentication request packet.");
+                        
+                        authenticated = PacketParser.parseAuthenticationRequestPacket(in, out);
                         if (!authenticated) {
-                            Main.getMainLogger().log(Level.INFO, "Password is incorrect! Client disconnected!");
+                            Main.getMainLogger().log(Level.INFO, "Client failed to authenticate! Disconnecting.");
                             connected = false;
                         } else {
                             Main.logDebugInfo("Password is correct! Client connected.");
                         }
                     } else {
-                        Main.getMainLogger().log(Level.WARNING, "First packet wasn't a password packet! Disconnecting. (Are you using the correct protocol?)");
+                        Main.getMainLogger().log(Level.WARNING, "First packet wasn't a authentication request packet! Disconnecting. (Are you using the correct version?)");
                         connected = false;
                     }
 

@@ -7,7 +7,7 @@ public class Settings {
     private String responseURL;
     private String password;
     private String salt = "";
-    private String algorithm = "MD5";
+    private String algorithm = "SHA512";
     private int port;
     private boolean debugMode = false;
     private boolean gzipRequests = false;

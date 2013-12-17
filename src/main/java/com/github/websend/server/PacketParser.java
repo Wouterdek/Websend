@@ -2,11 +2,13 @@ package com.github.websend.server;
 
 import com.github.websend.Main;
 import com.github.websend.PluginOutputManager;
+import com.github.websend.Util;
 import com.github.websend.WebsendConsoleCommandSender;
 import com.github.websend.WebsendPlayerCommandSender;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -16,7 +18,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class PacketParser {
-
+    static boolean parseAuthenticationRequestPacket(DataInputStream in, DataOutputStream out) throws IOException {
+        String header = readString(in);
+        if(!header.equals("websendmagic")){
+            return false;
+        }
+        
+        SecureRandom random = new SecureRandom();
+        int seed = random.nextInt();
+        out.writeInt(seed);
+        String correctHash = Util.hash(seed+Main.getSettings().getPassword());
+        
+        String authString = readString(in);
+        boolean success = authString.equals(correctHash);
+        out.writeInt(success?1:0);
+        return success;
+    }
+    
     public static void parseDoCommandAsPlayer(DataInputStream in, DataOutputStream out) throws IOException {
         String command = readString(in);
         String playerStr = readString(in);
@@ -115,11 +133,6 @@ public class PacketParser {
     public static void parseBroadcast(DataInputStream in, DataOutputStream out) throws IOException {
         String message = readString(in);
         Main.getBukkitServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
-    }
-
-    public static boolean parsePasswordPacket(DataInputStream in, DataOutputStream out) throws IOException {
-        String inPass = readString(in);
-        return inPass.equals(Main.getSettings().getPassword());
     }
 
     public static void parseStartPluginOutputRecording(DataInputStream in, DataOutputStream out) throws IOException {

@@ -8,6 +8,7 @@
 	{
         public $timeout = 3600;/* Connection timeout as defined in fsockopen */
         public $password = "";/* Password in Websend server config */
+		public $hashAlgorithm = "sha512";
         
 		var $host;
 		var $port;
@@ -28,8 +29,17 @@
             $this->stream = fsockopen($this->host, $this->port,$errno,$errstr,$this->timeout);
             if($this->stream){
                 $this->writeRawByte(21);
-                $this->writeString($this->password);
-                return true;
+				$this->writeString("websendmagic");
+				$seed = $this->readRawInt();
+				$hashedPassword = hash($this->hashAlgorithm, $seed.$this->password);
+				echo $this->password." hashed with seed ".$seed." using ".$this->hashAlgorithm." gave hash ".$hashedPassword;
+                $this->writeString($hashedPassword);
+				$result = $this->readRawInt();
+				if($result == 1){
+					return true;
+				}else{
+					return false;
+				}
             }else{
                 return false;
             }
