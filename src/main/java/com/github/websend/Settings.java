@@ -15,7 +15,9 @@ public class Settings {
     private String URL;
     private InetAddress serverBindIP = null;
     private boolean wrapCommandExecutor;
-
+    private boolean sslEnabled = false;
+    private String sslPassword = null;
+    
     public String getURL() {
         return URL;
     }
@@ -102,5 +104,21 @@ public class Settings {
 
     public void setWrapCommandExecutor(boolean b) {
         this.wrapCommandExecutor = b;
+    }
+
+    public boolean isSSLEnabled() {
+        return sslEnabled;
+    }
+
+    public void setSSLEnabled(boolean sslEnabled) {
+        this.sslEnabled = sslEnabled;
+    }
+
+    public String getSSLPassword() {
+        return this.sslPassword;
+    }
+
+    public void setSslPassword(String sslPassword) {
+        this.sslPassword = sslPassword;
     }
 }

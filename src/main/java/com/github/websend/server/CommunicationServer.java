@@ -12,14 +12,14 @@ import com.github.websend.TrustedHosts;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CommunicationServer extends Thread {
-
+public abstract class CommunicationServer extends Thread {
     private static final int MAX_FAILS = 15;
     private static final int FAILURE_SLEEP_TIME = 15000;
     private final HashMap<Byte, PacketHandler> customPacketHandlers = new HashMap<Byte, PacketHandler>();
@@ -27,7 +27,10 @@ public class CommunicationServer extends Thread {
     private boolean connected = false;
     private boolean authenticated = false;
     private ServerSocket serverSkt;
-
+    
+    abstract ServerSocket openServerSocket(InetAddress bindIP, int port) throws IOException;
+    abstract ServerSocket openServerSocket(int port) throws IOException;
+    
     @Override
     public void run() {
         int fails = 0;
@@ -65,12 +68,9 @@ public class CommunicationServer extends Thread {
     private void startServer() throws IOException {
         running = true;
         if (Main.getSettings().getServerBindIP() != null) {
-            serverSkt = new ServerSocket(
-                    Main.getSettings().getPort(),
-                    0,
-                    Main.getSettings().getServerBindIP());
+            serverSkt = openServerSocket(Main.getSettings().getServerBindIP(), Main.getSettings().getPort());
         } else {
-            serverSkt = new ServerSocket(Main.getSettings().getPort());
+            serverSkt = openServerSocket(Main.getSettings().getPort());
         }
 
         while (running) {

@@ -153,6 +153,16 @@ public class ConfigHandler {
                 } else {
                     settings.setWrapCommandExecutor(false);
                 }
+            } else if (line.startsWith("USE_SSL=")) {
+                String value = line.replaceFirst("USE_SSL=", "");
+                if (value.toLowerCase().trim().contains("true")) {
+                    settings.setSSLEnabled(true);
+                } else {
+                    settings.setSSLEnabled(false);
+                }
+            } else if (line.startsWith("SSL_PASS=")) {
+                String value = line.replaceFirst("SSL_PASS=", "");
+                settings.setSslPassword(value);
             } else {
                 Main.getMainLogger().log(Level.WARNING, "Error while parsing config file. Invalid line: \n" + line);
             }

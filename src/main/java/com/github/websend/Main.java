@@ -4,6 +4,8 @@ import com.github.websend.post.POSTHandlerThreadPool;
 import com.github.websend.post.POSTRequest;
 import com.github.websend.script.ScriptManager;
 import com.github.websend.server.CommunicationServer;
+import com.github.websend.server.NonSecureCommunicationServer;
+import com.github.websend.server.SecureCommunicationServer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-
     private static Settings settings;
     private static Logger logger;
     private static Server bukkitServer;
@@ -68,6 +69,34 @@ public class Main extends JavaPlugin {
         if (Main.settings.isDebugMode()) {
             Main.logger.info("Setting up webrequest thread pool.");
         }
+        
+        //Setup SSL keystore
+        if(settings.isSSLEnabled()){
+            if(settings.getSSLPassword() == null){
+                Main.logger.log(Level.WARNING, "SSL password is not set in configuration. Connections are INSECURE.");
+            }else{
+                if(System.getProperty("javax.net.ssl.keyStore") != null){
+                    Main.logger.log(Level.WARNING, "javax.net.ssl.keyStore is already set. "
+                            + "Websend will override it, but this may introduce unexpected behaviour in other plugins.");
+                }else if(System.getProperty("javax.net.ssl.keyStorePassword") != null){
+                    Main.logger.log(Level.WARNING, "javax.net.ssl.keyStorePassword is already set. "
+                            + "Websend will override it, but this may introduce unexpected behaviour in other plugins.");
+                }
+                try {
+                    File certFile = new File(this.getDataFolder(), "websendKeyStore");
+                    if(certFile.exists()){
+                        System.setProperty("javax.net.ssl.keyStore", certFile.getCanonicalPath());
+                        System.setProperty("javax.net.ssl.keyStorePassword", settings.getSSLPassword());
+                    }else{
+                        Main.logger.log(Level.WARNING, "No SSL keystore found. Connections are INSECURE.");
+                    }
+                } catch (IOException ex) {
+                    Main.logger.log(Level.WARNING, "Failed to set SSL keystore path. Connections are INSECURE.", ex);
+                    settings.setSSLEnabled(false);
+                }
+            }
+        }
+        
         //Setup webrequest thread pool
         requestThreadPool = new POSTHandlerThreadPool();
 
@@ -95,7 +124,11 @@ public class Main extends JavaPlugin {
             if (Main.settings.isDebugMode()) {
                 Main.logger.info("Setting up server.");
             }
-            server = new CommunicationServer();
+            if(settings.isSSLEnabled()){
+                server = new SecureCommunicationServer();
+            }else{
+                server = new NonSecureCommunicationServer();
+            }
             server.start();
         }
     }
