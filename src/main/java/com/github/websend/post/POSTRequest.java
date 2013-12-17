@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -27,10 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class POSTRequest {
-
     private final ArrayList<BasicNameValuePair> content = new ArrayList<BasicNameValuePair>();
+    private final URL url;
     private String jsonData;
-    private URL url;
     private Player player;
 
     public POSTRequest(URL url, String args[], Player player, boolean isResponse) {
@@ -66,7 +64,7 @@ public class POSTRequest {
         this.url = url;
     }
 
-    public void run(DefaultHttpClient httpClient) throws IOException {
+    public void run(HttpClient httpClient) throws IOException {
         HttpResponse response = doRequest(httpClient);
 
         int responseCode = response.getStatusLine().getStatusCode();
@@ -103,19 +101,19 @@ public class POSTRequest {
         reader.close();
     }
 
-    private HttpResponse doRequest(DefaultHttpClient httpClient) throws IOException {
+    private HttpResponse doRequest(HttpClient httpClient) throws IOException {
         HttpPost httpPost = new HttpPost(url.toString());
-
-        MultipartEntity ent = new MultipartEntity();
+        
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         for (BasicNameValuePair cur : content) {
-            ent.addPart(cur.getName(), new StringBody(cur.getValue()));
+            builder.addTextBody(cur.getName(), cur.getValue());
         }
         if (Main.getSettings().areRequestsGZipped()) {
-            ent.addPart("jsonData", new ByteArrayBody(CompressionToolkit.gzipString(jsonData), "jsonData"));
+            builder.addPart("jsonData", new ByteArrayBody(CompressionToolkit.gzipString(jsonData), "jsonData"));
         } else {
-            ent.addPart("jsonData", new StringBody(jsonData));
+            builder.addTextBody("jsonData", jsonData);
         }
-        httpPost.setEntity(ent);
+        httpPost.setEntity(builder.build());
         return httpClient.execute(httpPost);
     }
 

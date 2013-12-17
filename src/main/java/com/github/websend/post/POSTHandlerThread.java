@@ -1,22 +1,22 @@
 package com.github.websend.post;
 
 import com.github.websend.Main;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 public class POSTHandlerThread extends Thread {
-
     private final POSTHandlerThreadPool parent;
-    private final DefaultHttpClient httpClient;
+    private final CloseableHttpClient httpClient;
     private boolean running = true;
     private boolean busy = false;
     private POSTRequest currentRequest;
-
-    public POSTHandlerThread(POSTHandlerThreadPool parent, ClientConnectionManager connectionManager) {
+    
+    public POSTHandlerThread(POSTHandlerThreadPool parent, HttpClientBuilder builder) {
         super("Websend POST Request Handler");
-        this.httpClient = new DefaultHttpClient(connectionManager);
+        this.httpClient = builder.build();
         this.parent = parent;
     }
 
@@ -40,6 +40,11 @@ public class POSTHandlerThread extends Thread {
                     Logger.getLogger(POSTHandlerThread.class.getName()).log(Level.SEVERE, "Thread interrupted.", ex);
                 }
             }
+        }
+        try {
+            httpClient.close();
+        } catch (IOException ex) {
+            Main.logDebugInfo(Level.WARNING, "An exception occured while closing the httpclient.", ex);
         }
     }
 
