@@ -1,6 +1,5 @@
 package com.github.websend.server;
 
-import com.avaje.ebean.enhance.asm.Opcodes;
 import com.github.websend.Main;
 import com.github.websend.PluginOutputManager;
 import com.github.websend.WebsendConsoleCommandSender;

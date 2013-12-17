@@ -91,9 +91,7 @@ class WebsendPluginLoggerHandler extends Handler {
     @Override
     public void publish(LogRecord record) {
         PluginOutputManager.handleLogRecord(plugin, record);
-        if (Main.getSettings().isDebugMode()) {
-            System.out.println("Catched log record from " + plugin.getName());
-        }
+        Main.logDebugInfo("Catched log record from " + plugin.getName());
     }
 
     @Override

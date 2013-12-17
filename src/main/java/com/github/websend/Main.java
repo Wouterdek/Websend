@@ -66,9 +66,7 @@ public class Main extends JavaPlugin {
             Main.logger.log(Level.SEVERE, null, ex);
         }
 
-        if (Main.settings.isDebugMode()) {
-            Main.logger.info("Setting up webrequest thread pool.");
-        }
+        Main.logDebugInfo("Setting up webrequest thread pool.");
         
         //Setup SSL keystore
         if(settings.isSSLEnabled()){
@@ -99,10 +97,8 @@ public class Main extends JavaPlugin {
         
         //Setup webrequest thread pool
         requestThreadPool = new POSTHandlerThreadPool();
-
-        if (Main.settings.isDebugMode()) {
-            Main.logger.info("Setting up scripts.");
-        }
+        
+        Main.logDebugInfo("Setting up scripts.");
         // Setup scripts
         scriptsDir = new File(this.getDataFolder(), "scripts");
         scriptManager = new ScriptManager();
@@ -121,9 +117,7 @@ public class Main extends JavaPlugin {
 
         // Start server
         if (settings.isServerActive()) {
-            if (Main.settings.isDebugMode()) {
-                Main.logger.info("Setting up server.");
-            }
+            Main.logDebugInfo("Setting up scripts.");
             if(settings.isSSLEnabled()){
                 server = new SecureCommunicationServer();
             }else{
