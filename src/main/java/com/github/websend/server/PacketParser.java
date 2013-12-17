@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -32,8 +33,14 @@ public class PacketParser {
         boolean success;
         try {
             if (Main.getSettings().areCommandExecutorsWrapped()) {
-                Plugin targetPlugin = Main.getBukkitServer().getPluginCommand(command).getPlugin();
-                success = Main.getBukkitServer().dispatchCommand(new WebsendPlayerCommandSender(player, targetPlugin), command);
+                PluginCommand pluginCommand = Main.getBukkitServer().getPluginCommand(command);
+                if(pluginCommand != null){
+                    Plugin targetPlugin = pluginCommand.getPlugin();
+                    success = Main.getBukkitServer().dispatchCommand(new WebsendPlayerCommandSender(player, targetPlugin), command);
+                }else{
+                    Main.getMainLogger().log(Level.WARNING, "Cannot execute command '"+command+"': Command does not exist.");
+                    success = false;
+                }
             } else {
                 success = Main.getBukkitServer().dispatchCommand(player, command);
             }
@@ -56,12 +63,18 @@ public class PacketParser {
         try {
             //config check?
             if (Main.getSettings().areCommandExecutorsWrapped()) {
-                Plugin targetPlugin = Main.getBukkitServer().getPluginCommand(command).getPlugin();
-                success = Main.getBukkitServer().dispatchCommand(
+                PluginCommand pluginCommand = Main.getBukkitServer().getPluginCommand(command);
+                if(pluginCommand != null){
+                    Plugin targetPlugin = pluginCommand.getPlugin();
+                    success = Main.getBukkitServer().dispatchCommand(
                         new WebsendConsoleCommandSender(
                                 Main.getBukkitServer().getConsoleSender(),
                                 targetPlugin),
-                        command);
+                                command);
+                }else{
+                    Main.getMainLogger().log(Level.WARNING, "Cannot execute command '"+command+"': Command does not exist.");
+                    success = false;
+                }
             } else {
                 success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
             }
