@@ -38,7 +38,7 @@ public class PacketParser {
     public static void parseDoCommandAsPlayer(DataInputStream in, DataOutputStream out) throws IOException {
         String command = readString(in);
         String playerStr = readString(in);
-        Player player = Main.getBukkitServer().getPlayer(playerStr);
+        Player player = Main.getBukkitServer().getPlayerExact(playerStr);
 
         if (player == null) {
             Main.logDebugInfo(Level.WARNING, "Can't execute command (" + command + ") as player: Player cannot be found (" + playerStr + ")");
@@ -120,7 +120,7 @@ public class PacketParser {
     public static void parseWriteOutputToPlayer(DataInputStream in, DataOutputStream out) throws IOException {
         String message = readString(in);
         String playerStr = readString(in);
-        Player player = Main.getInstance().getServer().getPlayer(playerStr);
+        Player player = Main.getInstance().getServer().getPlayerExact(playerStr);
         if (player != null) {
             out.writeInt(1);
             player.sendMessage(message);

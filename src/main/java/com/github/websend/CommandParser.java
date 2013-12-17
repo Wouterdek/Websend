@@ -131,7 +131,7 @@ public class CommandParser {
             @Override
             public void run() {
                 String argArray[] = ((String[]) this.getArgs().get(0))[1].split(":");
-                Player fakePlayer = server.getPlayer(argArray[0].trim());
+                Player fakePlayer = server.getPlayerExact(argArray[0].trim());
                 if (!server.dispatchCommand(fakePlayer, argArray[1])) { // execute command and check for succes.
                     Main.getMainLogger().info("Command dispatching failed: '" + argArray[1] + "'"); // error
                 }
@@ -204,7 +204,7 @@ public class CommandParser {
         commandArray = line.split("ExecutePlayerCommandAndReturn-");
         Main.logDebugInfo("Command parsing: An ExecutePlayerCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
         String argArray[] = commandArray[1].split("-");
-        Player fakePlayer = server.getPlayer(argArray[0].trim());
+        Player fakePlayer = server.getPlayerExact(argArray[0].trim());
         String command = argArray[1].split(":")[1];
         Plugin plugin = null;
         if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit")) {
@@ -247,7 +247,7 @@ public class CommandParser {
         String[] commandDataArray = commandData.split(":");
         String playerName = commandDataArray[0];
         String message = commandDataArray[1];
-        Player currentPlayer = server.getPlayer(playerName);
+        Player currentPlayer = server.getPlayerExact(playerName);
         if ("console".equals(playerName)) {
             Main.logDebugInfo("Websend: Player 'console'? Using PrintToConsole instead.");
         } else if (currentPlayer == null) {
