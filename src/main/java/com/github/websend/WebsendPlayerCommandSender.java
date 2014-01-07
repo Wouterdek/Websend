@@ -1145,4 +1145,10 @@ public class WebsendPlayerCommandSender implements Player {
     public java.util.Set<java.lang.String> getListeningPluginChannels() {
         return baseObject.getListeningPluginChannels();
     }
+
+	@Override
+	public void setResourcePack(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
