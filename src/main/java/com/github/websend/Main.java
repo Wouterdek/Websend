@@ -40,7 +40,6 @@ public class Main extends JavaPlugin {
         bukkitServer = this.getServer();
         plugin = this;
         port = this.getServer().getPort();
-        boolean needsSetup = false;
 
         // Parse config
         ConfigHandler configHandler = new ConfigHandler();
@@ -49,7 +48,7 @@ public class Main extends JavaPlugin {
         } catch (FileNotFoundException ex) {
             configHandler.generateConfig();
             logger.info("Websend generated a config file. Go edit it!");
-            needsSetup = true;
+            return;
         } catch (IOException ex) {
             logger.info("Websend failed to read your configuration file.");
             logger.log(Level.SEVERE, null, ex);
@@ -108,11 +107,6 @@ public class Main extends JavaPlugin {
             if (!new File(scriptsDir, "compiled").mkdirs()) {
                 Main.logger.log(Level.WARNING, "Failed to make scripts directory.");
             }
-        }
-
-        if (needsSetup) {
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
         }
 
         // Start server
@@ -271,7 +265,7 @@ public class Main extends JavaPlugin {
     }
 
     public static void logDebugInfo(Level level, String message, Exception ex) {
-        if (Main.getSettings().isDebugMode()) {
+        if (Main.getSettings() == null || Main.getSettings().isDebugMode()) {
             Main.getMainLogger().log(level, message, ex);
         }
     }
