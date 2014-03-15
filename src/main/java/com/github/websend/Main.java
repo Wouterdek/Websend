@@ -55,6 +55,7 @@ public class Main extends JavaPlugin {
             return;
         }
 
+        Main.logDebugInfo("Loading trusted hosts list.");
         try {
             File trustedFile = new File(this.getDataFolder(), "trusted.txt");
             if (!trustedFile.exists()) {
@@ -65,10 +66,10 @@ public class Main extends JavaPlugin {
             Main.logger.log(Level.SEVERE, null, ex);
         }
 
-        Main.logDebugInfo("Setting up webrequest thread pool.");
         
         //Setup SSL keystore
         if(settings.isSSLEnabled()){
+            Main.logDebugInfo("Loading SSL settings.");
             if(settings.getSSLPassword() == null){
                 Main.logger.log(Level.WARNING, "SSL password is not set in configuration. Connections are INSECURE.");
             }else{
@@ -94,11 +95,12 @@ public class Main extends JavaPlugin {
             }
         }
         
-        //Setup webrequest thread pool
+         //Setup webrequest thread pool
+        Main.logDebugInfo("Loading POST handler pool.");
         requestThreadPool = new POSTHandlerThreadPool();
         
-        Main.logDebugInfo("Setting up scripts.");
         // Setup scripts
+        Main.logDebugInfo("Loading scripts.");
         scriptsDir = new File(this.getDataFolder(), "scripts");
         scriptManager = new ScriptManager();
         if (scriptsDir.exists()) {
@@ -112,8 +114,10 @@ public class Main extends JavaPlugin {
         // Start server
         if (settings.isServerActive()) {
             if(settings.isSSLEnabled()){
+                Main.logDebugInfo("Loading secure webrequest server on port "+settings.getPort()+".");
                 server = new SecureCommunicationServer();
             }else{
+                Main.logDebugInfo("Loading regular webrequest server on port "+settings.getPort()+".");
                 server = new NonSecureCommunicationServer();
             }
             server.start();
