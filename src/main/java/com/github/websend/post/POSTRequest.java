@@ -133,7 +133,7 @@ public class POSTRequest {
             } else {
                 JSONObject jsonPlayer = new JSONObject();
                 {
-                    jsonPlayer.put("Name", "Console");
+                    jsonPlayer.put("Name", "@Console");
                 }
                 data.put("Invoker", jsonPlayer);
             }

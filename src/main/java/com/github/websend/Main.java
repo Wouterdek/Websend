@@ -166,7 +166,7 @@ public class Main extends JavaPlugin {
                 return true;
             }
             if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender) {
-                POSTRequest request = new POSTRequest(url, args, "console", false);
+                POSTRequest request = new POSTRequest(url, args, "@Console", false);
                 requestThreadPool.doRequest(request);
                 return true;
             } else if (sender instanceof Player) {
