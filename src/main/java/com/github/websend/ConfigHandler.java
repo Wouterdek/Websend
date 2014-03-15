@@ -11,12 +11,7 @@ public class ConfigHandler {
     public Settings loadSettings() throws FileNotFoundException, IOException {
         // Prepare new settings map
         Settings settings = new Settings();
-
-        // Set default values
-        settings.setPort(4445);
-        settings.setDebugMode(false);
-        settings.setServerActive(false);
-
+        
         // Open file
         BufferedReader reader = openFile();
 

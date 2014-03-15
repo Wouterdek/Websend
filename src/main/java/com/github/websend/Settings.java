@@ -8,7 +8,7 @@ public class Settings {
     private String password;
     private String salt = "";
     private String algorithm = "SHA-512";
-    private int port;
+    private int port = 4445;
     private boolean debugMode = false;
     private boolean gzipRequests = false;
     private boolean serverActive = false;
