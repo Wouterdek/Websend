@@ -2,8 +2,12 @@ package com.github.websend;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import org.bukkit.Achievement;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 public class WebsendPlayerCommandSender implements Player {
     /* This class allows tapping into command output from plugins
@@ -1145,10 +1149,76 @@ public class WebsendPlayerCommandSender implements Player {
     public java.util.Set<java.lang.String> getListeningPluginChannels() {
         return baseObject.getListeningPluginChannels();
     }
+    
+    public void setResourcePack(String arg0) {
+        baseObject.setResourcePack(arg0);
+    }
 
-	@Override
-	public void setResourcePack(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void removeAchievement(Achievement achievement) {
+        baseObject.removeAchievement(achievement);
+    }
+
+    public boolean hasAchievement(Achievement achievement) {
+        return baseObject.hasAchievement(achievement);
+    }
+
+    public void decrementStatistic(Statistic statistic) throws IllegalArgumentException {
+        baseObject.decrementStatistic(statistic);
+    }
+
+    public void decrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException {
+        baseObject.decrementStatistic(statistic, amount);
+    }
+
+    public void setStatistic(Statistic statistic, int newValue) throws IllegalArgumentException {
+        baseObject.setStatistic(statistic, newValue);
+    }
+
+    public int getStatistic(Statistic statistic) throws IllegalArgumentException {
+        return baseObject.getStatistic(statistic);
+    }
+
+    public void decrementStatistic(Statistic statistic, Material material) throws IllegalArgumentException {
+        baseObject.decrementStatistic(statistic, material);
+    }
+
+    public int getStatistic(Statistic statistic, Material material) throws IllegalArgumentException {
+        return baseObject.getStatistic(statistic, material);
+    }
+
+    public void decrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException {
+        baseObject.decrementStatistic(statistic, material, amount);
+    }
+
+    public void setStatistic(Statistic statistic, Material material, int newValue) throws IllegalArgumentException {
+        baseObject.setStatistic(statistic, material, newValue);
+    }
+
+    public void incrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException {
+        baseObject.incrementStatistic(statistic, entityType);
+    }
+
+    public void decrementStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException {
+        baseObject.decrementStatistic(statistic, entityType);
+    }
+
+    public int getStatistic(Statistic statistic, EntityType entityType) throws IllegalArgumentException {
+        return baseObject.getStatistic(statistic, entityType);
+    }
+
+    public void incrementStatistic(Statistic statistic, EntityType entityType, int amount) throws IllegalArgumentException {
+        baseObject.incrementStatistic(statistic, entityType, amount);
+    }
+
+    public void decrementStatistic(Statistic statistic, EntityType entityType, int amount) {
+        baseObject.decrementStatistic(statistic, entityType, amount);
+    }
+
+    public void setStatistic(Statistic statistic, EntityType entityType, int newValue) {
+        baseObject.setStatistic(statistic, entityType, newValue);
+    }
+
+    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector velocity) {
+        return baseObject.launchProjectile(projectile, velocity);
+    }
 }
