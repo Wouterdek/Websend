@@ -56,7 +56,6 @@ public class ScriptManager {
     }
 
     public void loadScripts() {
-        Main.logDebugInfo(Level.WARNING, "Loading scripts");
         File[] directories = scriptsDir.listFiles(new DirectoryFilter());
         for (File cur : directories) {
             if (!cur.getName().equals("compiled")) {
