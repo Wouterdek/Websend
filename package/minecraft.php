@@ -3,7 +3,8 @@
 /*********************************** Variables ***********************************/
 /**/  $checkpass = "PutYourPasswordHere";
 /*********************************************************************************/
-/**/  $receivedMD5 = $_POST['authKey'];
+/**/  $receivedHash = $_POST['authKey'];
+/**/  $hashAlgorithm = "sha512";
 /**/  $args = $_POST["args"]; //each argument is stored in an array called "args"
 /**/  $json = json_decode($_POST["jsonData"]);
 /*********************************************************************************/
@@ -11,9 +12,9 @@
 $invoker = $json->{'Invoker'}->{'Name'};
 
 //Do not edit!
-if($receivedMD5 != "" && $args[0] != "")
+if($receivedHash != "" && $args[0] != "")
 {
-    if($receivedMD5 == md5($checkpass))
+    if($receivedHash == hash($hashAlgorithm, $checkpass))
     {
         //Begin your code here.
         if($args[0] == "checkcolors") //script 1
@@ -98,7 +99,6 @@ if($receivedMD5 != "" && $args[0] != "")
     else
     {
         print('/Output/PrintToConsole:Authorization Failed;');
-        print("/Output/PrintToConsole:$receivedMD5 != ".md5($checkpass).";");
     }
 }
 else
