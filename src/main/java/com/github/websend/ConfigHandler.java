@@ -129,7 +129,7 @@ public class ConfigHandler {
                     MessageDigest md = MessageDigest.getInstance(value);
                     settings.setHashingAlgorithm(value);
                 } catch (NoSuchAlgorithmException ex) {
-                    Main.getMainLogger().info("Hashing algorithm '" + value + "' is not available on this machine. Reverting to MD5");
+                    Main.getMainLogger().info("Hashing algorithm '" + value + "' is not available on this machine.");
                 }
             } else if (line.startsWith("GZIP_REQUESTS=")) {
                 String value = line.replaceFirst("GZIP_REQUESTS=", "");
