@@ -111,7 +111,6 @@ public class Main extends JavaPlugin {
 
         // Start server
         if (settings.isServerActive()) {
-            Main.logDebugInfo("Setting up scripts.");
             if(settings.isSSLEnabled()){
                 server = new SecureCommunicationServer();
             }else{
