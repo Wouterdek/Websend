@@ -2,16 +2,23 @@
 //variables
 /*********************************** Variables ***********************************/
 /**/  $checkpass = "PutYourPasswordHere";
-/*********************************************************************************/
-/**/  $receivedHash = $_POST['authKey'];
 /**/  $hashAlgorithm = "sha512";
-/**/  $args = $_POST["args"]; //each argument is stored in an array called "args"
-/**/  $json = json_decode($_POST["jsonData"]);
+/*********************************************************************************/
+$receivedHash = $_POST['authKey'];
+$args = $_POST["args"]; //each argument is stored in an array called "args"
+if($_POST['isCompressed'] == "true" && isset($_FILES['jsonData']['tmp_name'])){
+    $json = json_decode(gzdecode(file_get_contents($_FILES['jsonData']['tmp_name'])));
+}else{
+    $json = json_decode($_POST["jsonData"]);
+}
+if($json == ''){
+    print('/Output/PrintToConsole:Error:Failed to retrieve JSON data!;');
+    //If compressed is enabled PHP probably refused the binary data: check upload_max_filesize, post_max_size and file_uploads
+}
 /*********************************************************************************/
 
 $invoker = $json->{'Invoker'}->{'Name'};
 
-//Do not edit!
 if($receivedHash != "" && $args[0] != "")
 {
     if($receivedHash == hash($hashAlgorithm, $checkpass))
@@ -19,7 +26,7 @@ if($receivedHash != "" && $args[0] != "")
         //Begin your code here.
         if($args[0] == "checkcolors") //script 1
         {
-            if($invoker == 'console')
+            if($invoker == '@Console')
             {
                 print('/Output/PrintToConsole:Error: Only in-game players can use this command.;');
             }else{
@@ -47,7 +54,7 @@ if($receivedHash != "" && $args[0] != "")
         }
         elseif($args[0] == "timeset") //script 2
         {
-            if($invoker == 'console')
+            if($invoker == '@Console')
             {
                 print('/Output/PrintToConsole:Error: Only in-game players can use this command.;');
             }else{
@@ -64,7 +71,8 @@ if($receivedHash != "" && $args[0] != "")
         elseif($args[0] == "weatherset") //script 3 example using a plugin command to change the weather
         {
             print("/Command/ExecuteConsoleCommand:weather sun;");
-            if($invoker == 'console')
+            print("/Command/ExecuteConsoleCommand:".$invoker.";");
+            if($invoker == '@Console')
             {
                 print('/Output/PrintToConsole:Weather changed.;');
                 print("/Output/PrintToConsole:Player = ".$invoker.";");
@@ -79,7 +87,7 @@ if($receivedHash != "" && $args[0] != "")
         {
             print('/Output/PrintToPlayer:Example script from php.;');
             print('/Output/PrintToPlayer:This command will send a command to the console.;');
-            if($invoker == 'console')
+            if($invoker == '@Console')
             {
                 print('/Output/PrintToConsole:Error: Only in-game players can use this command.;');
             }

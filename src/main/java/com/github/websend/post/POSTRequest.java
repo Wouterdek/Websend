@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.message.BasicNameValuePair;
@@ -103,8 +104,10 @@ public class POSTRequest {
 
     private HttpResponse doRequest(HttpClient httpClient) throws IOException {
         HttpPost httpPost = new HttpPost(url.toString());
+        httpPost.setHeader("enctype", "multipart/form-data");
         
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         for (BasicNameValuePair cur : content) {
             builder.addTextBody(cur.getName(), cur.getValue());
         }
