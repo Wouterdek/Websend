@@ -22,6 +22,7 @@ public class JSONSerializer {
         {
             player.put("Name", ply.getName());
             player.put("UUID", ply.getUniqueId());
+            player.put("UUIDVersion", ply.getUniqueId().version());
             player.put("XP", ply.getExp());
             player.put("XPLevel", ply.getLevel());
             player.put("Exhaustion", ply.getExhaustion());
