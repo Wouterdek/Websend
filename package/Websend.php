@@ -32,7 +32,7 @@
 				$this->writeString("websendmagic");
 				$seed = $this->readRawInt();
 				$hashedPassword = hash($this->hashAlgorithm, $seed.$this->password);
-				echo $this->password." hashed with seed ".$seed." using ".$this->hashAlgorithm." gave hash ".$hashedPassword;
+				//echo $this->password." hashed with seed ".$seed." using ".$this->hashAlgorithm." gave hash ".$hashedPassword;
                 $this->writeString($hashedPassword);
 				$result = $this->readRawInt();
 				if($result == 1){
