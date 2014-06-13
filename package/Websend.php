@@ -105,6 +105,9 @@
 			$c = $this->readRawByte();
 			$d = $this->readRawByte();
 			$i = ((($a & 0xff) << 24) | (($b & 0xff) << 16) | (($c & 0xff) << 8) | ($d & 0xff));
+			if($i > 2147483648){
+     			$i -= 4294967296;
+ 			}
 			return $i;
 		}
 		private function readRawDouble()
@@ -114,6 +117,15 @@
 			return $d;
 		}
 		private function readRawByte()
+		{
+			$up = unpack( "Ci", fread( $this->stream, 1 ) );
+			$b = $up["i"];
+			if($b > 127){
+				$b -= 256;
+			}
+			return $b;
+		}
+		private function readRawUnsignedByte()
 		{
 			$up = unpack( "Ci", fread( $this->stream, 1 ) );
 			$b = $up["i"];
