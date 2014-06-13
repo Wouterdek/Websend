@@ -142,7 +142,7 @@ public abstract class CommunicationServer extends Thread {
                     out.close();
                     in.close();
                 } catch (IOException ex) {
-                    Main.getMainLogger().log(Level.WARNING, "IOException while communicating to client! Disconnecting.");
+                    Main.getMainLogger().log(Level.WARNING, "IOException while communicating to client! Disconnecting. ("+ex.getMessage()+")");
                     connected = false;
                 }
             } else {

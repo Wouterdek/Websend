@@ -1,15 +1,15 @@
 <?php
-    /*
-     *  Writted by Waterflames for the Websend project
-     *  (Project page: http://dev.bukkit.org/bukkit-plugins/websend/)
-     *  See https://github.com/Waterflames/Websend/blob/master/package/Websend.php for commits by other users.
-     */
+	/*
+	 *  Writted by Waterflames for the Websend project
+	 *  (Project page: http://dev.bukkit.org/bukkit-plugins/websend/)
+	 *  See https://github.com/Waterflames/Websend/blob/master/package/Websend.php for commits by other users.
+	 */
 	class Websend
 	{
-        public $timeout = 3600;/* Connection timeout as defined in fsockopen */
-        public $password = "";/* Password in Websend server config */
+		public $timeout = 3600;/* Connection timeout as defined in fsockopen */
+		public $password = "";/* Password in Websend server config */
 		public $hashAlgorithm = "sha512";
-        
+		
 		var $host;
 		var $port;
 		var $stream;
@@ -22,26 +22,26 @@
 
 		/**
 		* Connects to a Websend server.
-        * Returns true if successful.
+		* Returns true if successful.
 		*/
 		public function connect()
 		{
-            $this->stream = fsockopen($this->host, $this->port,$errno,$errstr,$this->timeout);
-            if($this->stream){
-                $this->writeRawByte(21);
+			$this->stream = fsockopen($this->host, $this->port,$errno,$errstr,$this->timeout);
+			if($this->stream){
+				$this->writeRawByte(21);
 				$this->writeString("websendmagic");
 				$seed = $this->readRawInt();
 				$hashedPassword = hash($this->hashAlgorithm, $seed.$this->password);
-                $this->writeString($hashedPassword);
+				$this->writeString($hashedPassword);
 				$result = $this->readRawInt();
 				if($result == 1){
 					return true;
 				}else{
 					return false;
 				}
-            }else{
-                return false;
-            }
+			}else{
+				return false;
+			}
 		}
 
 		/**
@@ -106,7 +106,7 @@
 			$d = $this->readRawByte();
 			$i = ((($a & 0xff) << 24) | (($b & 0xff) << 16) | (($c & 0xff) << 8) | ($d & 0xff));
 			if($i > 2147483648){
-     			$i -= 4294967296;
+	 			$i -= 4294967296;
  			}
 			return $i;
 		}
