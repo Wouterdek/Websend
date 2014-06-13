@@ -2,7 +2,7 @@
     /*
      *  Writted by Waterflames for the Websend project
      *  (Project page: http://dev.bukkit.org/bukkit-plugins/websend/)
-     *  Includes changes by bukkitdev user ldrrp
+     *  See https://github.com/Waterflames/Websend/blob/master/package/Websend.php for commits by other users.
      */
 	class Websend
 	{
