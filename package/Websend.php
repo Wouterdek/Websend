@@ -20,6 +20,12 @@
 			$this->port = $port;
 		}
 
+		public function __destruct(){
+        	if($this->stream){
+            	$this->disconnect();
+        	}
+    	}
+
 		/**
 		* Connects to a Websend server.
 		* Returns true if successful.
