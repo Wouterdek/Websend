@@ -9,12 +9,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -107,6 +109,7 @@ public class POSTRequest {
         httpPost.setHeader("enctype", "multipart/form-data");
         
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setCharset(Charset.forName("UTF-8"));
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         for (BasicNameValuePair cur : content) {
             builder.addTextBody(cur.getName(), cur.getValue());
@@ -114,7 +117,7 @@ public class POSTRequest {
         if (Main.getSettings().areRequestsGZipped()) {
             builder.addPart("jsonData", new ByteArrayBody(CompressionToolkit.gzipString(jsonData), "jsonData"));
         } else {
-            builder.addTextBody("jsonData", jsonData);
+            builder.addTextBody("jsonData", jsonData, ContentType.APPLICATION_JSON);
         }
         httpPost.setEntity(builder.build());
         return httpClient.execute(httpPost);

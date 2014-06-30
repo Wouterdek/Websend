@@ -105,7 +105,6 @@ public class JSONSerializer {
         if (meta == null) {
             return null;
         }
-        //All implemented except EnchantmentStorageMeta
         JSONObject result = null;
         try {
             if (meta instanceof BookMeta) {
