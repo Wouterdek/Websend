@@ -226,6 +226,10 @@ public class Main extends JavaPlugin {
         }
         return false;
     }
+    
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        return null;
+    }
 
     public static Server getBukkitServer() {
         return bukkitServer;
@@ -254,26 +258,46 @@ public class Main extends JavaPlugin {
     public static Settings getSettings() {
         return settings;
     }
-
+    
+    /*************/
+    /*  LOGGING  */
+    /*************/
+    
     public static Logger getMainLogger() {
         return logger;
     }
-
-    public static void logDebugInfo(String message) {
-        logDebugInfo(Level.INFO, message);
+    
+    public static void log(Level level, String message, Exception ex) {
+        Main.getMainLogger().log(level, message, ex);
     }
-
-    public static void logDebugInfo(Level level, String message) {
-        logDebugInfo(level, message, null);
-    }
-
-    public static void logDebugInfo(Level level, String message, Exception ex) {
+    
+    public static void logDebug(Level level, String message, Exception ex) {
         if (Main.getSettings() == null || Main.getSettings().isDebugMode()) {
             Main.getMainLogger().log(level, message, ex);
         }
     }
-
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return null;
+    
+    public static void logDebugInfo(Level level, String message) {
+        logDebug(level, message, null);
+    }
+    
+    public static void logDebugInfo(String message) {
+        logDebugInfo(Level.INFO, message);
+    }
+    
+    public static void logWarning(String message, Exception ex) {
+        log(Level.WARNING, message, ex);
+    }
+    
+    public static void logWarning(String message) {
+        logWarning(message, null);
+    }
+    
+    public static void logError(String message, Exception ex) {
+        log(Level.SEVERE, message, ex);
+    }
+    
+    public static void logError(String message) {
+        logError(message, null);
     }
 }

@@ -41,7 +41,7 @@ public abstract class CommunicationServer extends Thread {
         while (running) {
             if (fails == MAX_FAILS) {
                 try {
-                    Main.getMainLogger().info("Max amount of fails reached. Waiting for " + (FAILURE_SLEEP_TIME / 1000) + " seconds until retry.");
+                    Main.logWarning("Max amount of fails reached. Waiting for " + (FAILURE_SLEEP_TIME / 1000) + " seconds until retry.");
                     Thread.sleep(FAILURE_SLEEP_TIME);
                     fails = 0;
                 } catch (InterruptedException ex) {
@@ -52,14 +52,14 @@ public abstract class CommunicationServer extends Thread {
                 Main.logDebugInfo(Level.INFO, "Starting server");
                 startServer();
             } catch (Exception ex) {
-                Main.getMainLogger().log(Level.SEVERE, "Server encountered an error. Attempting restart.", ex);
+                Main.logError("Server encountered an error. Attempting restart.", ex);
                 connected = false;
                 authenticated = false;
 
                 try {
                     serverSkt.close();
                 } catch (IOException ex1) {
-                    Main.logDebugInfo(Level.WARNING, "Failed to close server.", ex1);
+                    Main.logDebug(Level.WARNING, "Failed to close server.", ex1);
                 }
             }
         }
@@ -96,13 +96,13 @@ public abstract class CommunicationServer extends Thread {
                         authenticated = parser.parseAuthenticationRequestPacket(in, out);
                         
                         if (!authenticated) {
-                            Main.getMainLogger().log(Level.INFO, "Client failed to authenticate! Disconnecting.");
+                            Main.logWarning("Client failed to authenticate! Disconnecting.");
                             connected = false;
                         } else {
                             Main.logDebugInfo("Password is correct! Client connected.");
                         }
                     } else {
-                        Main.getMainLogger().log(Level.WARNING, "First packet wasn't a authentication request packet! Disconnecting. (Are you using the correct version?)");
+                        Main.logWarning("First packet wasn't a authentication request packet! Disconnecting. (Are you using the correct version?)");
                         connected = false;
                     }
 
@@ -142,7 +142,7 @@ public abstract class CommunicationServer extends Thread {
                             Main.logDebugInfo("Got custom packet header: " + packetHeader);
                             customPacketHandlers.get(packetHeader).onHeaderReceived(in, out);
                         } else {
-                            Main.getMainLogger().log(Level.WARNING, "Unsupported packet header!");
+                            Main.logWarning("Unsupported packet header!");
                         }
                     }
                     Main.logDebugInfo("Closing connection with client.");
@@ -150,13 +150,13 @@ public abstract class CommunicationServer extends Thread {
                     out.close();
                     in.close();
                 } catch (IOException ex) {
-                    Main.getMainLogger().log(Level.WARNING, "IOException while communicating to client! Disconnecting. ("+ex.getMessage()+")");
+                    Main.logWarning("IOException while communicating to client! Disconnecting. ("+ex.getMessage()+")");
                     connected = false;
                 }
             } else {
-                Main.getMainLogger().log(Level.WARNING, "Connection request from unauthorized address!");
-                Main.getMainLogger().log(Level.WARNING, "Address: " + skt.getInetAddress());
-                Main.getMainLogger().log(Level.WARNING, "Add this address to trusted.txt to allow access.");
+                Main.logWarning("Connection request from unauthorized address!");
+                Main.logWarning("Address: " + skt.getInetAddress());
+                Main.logWarning("Add this address to trusted.txt to allow access.");
             }
             skt.close();
         }

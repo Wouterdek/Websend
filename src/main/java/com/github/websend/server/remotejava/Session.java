@@ -69,10 +69,10 @@ public class Session{
                 Method result = obj.getClass().getMethod(methodName, params);
                 return this.storeMethod(result);
             } catch (ClassNotFoundException ex) {
-                Main.logDebugInfo(Level.WARNING, "Error while retrieving methodID from object: invalid typestring ("+typeString+")", ex);
+                Main.logDebug(Level.WARNING, "Error while retrieving methodID from object: invalid typestring ("+typeString+")", ex);
                 return -1;
             } catch (NoSuchMethodException ex){
-                Main.logDebugInfo(Level.WARNING, "Error while retrieving methodID from object: no such method ("+methodName+")", ex);
+                Main.logDebug(Level.WARNING, "Error while retrieving methodID from object: no such method ("+methodName+")", ex);
                 return -2;
             }
         }else{
@@ -89,14 +89,14 @@ public class Session{
                 Method result = clazz.getMethod(methodName, params);
                 return this.storeMethod(result);
             } catch (ClassNotFoundException ex) {
-                Main.logDebugInfo(Level.WARNING, "Error while retrieving methodID from class: invalid typestring ("+typeString+")", ex);
+                Main.logDebug(Level.WARNING, "Error while retrieving methodID from class: invalid typestring ("+typeString+")", ex);
                 return -1;
             } catch (NoSuchMethodException ex){
-                Main.logDebugInfo(Level.WARNING, "Error while retrieving methodID from class: no such method ("+methodName+")", ex);
+                Main.logDebug(Level.WARNING, "Error while retrieving methodID from class: no such method ("+methodName+")", ex);
                 return -2;
             }
         }catch(ClassNotFoundException ex){
-            Main.logDebugInfo(Level.WARNING, "Error while retrieving methodID from class: invalid classname ("+className+")", ex);
+            Main.logDebug(Level.WARNING, "Error while retrieving methodID from class: invalid classname ("+className+")", ex);
             return -3;
         }
     }
@@ -117,13 +117,13 @@ public class Session{
         try {
             return method.invoke(obj, args);
         } catch (IllegalAccessException ex) {
-            Main.logDebugInfo(Level.WARNING, "Error while invoking method: no access ("+method.getName()+")", ex);
+            Main.logDebug(Level.WARNING, "Error while invoking method: no access ("+method.getName()+")", ex);
             return -3;
         } catch (IllegalArgumentException ex) {
-            Main.logDebugInfo(Level.WARNING, "Error while invoking method: invalid arguments ("+method.getName()+")", ex);
+            Main.logDebug(Level.WARNING, "Error while invoking method: invalid arguments ("+method.getName()+")", ex);
             return -4;
         } catch (InvocationTargetException ex) {
-            Main.logDebugInfo(Level.WARNING, "Exception was thrown while invoking method: "+ex.getTargetException()+" ("+method.getName()+")", ex);
+            Main.logDebug(Level.WARNING, "Exception was thrown while invoking method: "+ex.getTargetException()+" ("+method.getName()+")", ex);
             return -5;
         }
     }
@@ -138,13 +138,13 @@ public class Session{
         try {
             return method.invoke(null, args);
         } catch (IllegalAccessException ex) {
-            Main.logDebugInfo(Level.WARNING, "Error while invoking method: no access ("+method.getName()+")", ex);
+            Main.logDebug(Level.WARNING, "Error while invoking method: no access ("+method.getName()+")", ex);
             return -3;
         } catch (IllegalArgumentException ex) {
-            Main.logDebugInfo(Level.WARNING, "Error while invoking method: invalid arguments ("+method.getName()+")", ex);
+            Main.logDebug(Level.WARNING, "Error while invoking method: invalid arguments ("+method.getName()+")", ex);
             return -4;
         } catch (InvocationTargetException ex) {
-            Main.logDebugInfo(Level.WARNING, "Exception was thrown while invoking method: "+ex.getTargetException()+" ("+method.getName()+")", ex);
+            Main.logDebug(Level.WARNING, "Exception was thrown while invoking method: "+ex.getTargetException()+" ("+method.getName()+")", ex);
             return -5;
         }
     }

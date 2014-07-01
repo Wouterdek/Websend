@@ -24,7 +24,7 @@ public class Util {
             }
             return result;
         } catch (Exception ex) {
-            Main.getMainLogger().info("Failed to hash password to " + Main.getSettings().getHashingAlgorithm());
+            Main.logError("Failed to hash password to " + Main.getSettings().getHashingAlgorithm());
             return "";
         }
     }

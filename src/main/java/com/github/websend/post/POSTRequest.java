@@ -83,7 +83,7 @@ public class POSTRequest {
             }
         } else if (responseCode >= 400) {
             message = "HTTP request failed. (" + reason + ")";
-            Main.getMainLogger().log(Level.SEVERE, message);
+            Main.logError(message);
             return;
         } else if (responseCode >= 300) {
             message = "The server responded to the request with a redirection message. Assuming request OK. (" + reason + ")";

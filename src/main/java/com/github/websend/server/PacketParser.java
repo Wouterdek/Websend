@@ -61,14 +61,14 @@ public class PacketParser {
                     Plugin targetPlugin = pluginCommand.getPlugin();
                     success = Main.getBukkitServer().dispatchCommand(new WebsendPlayerCommandSender(player, targetPlugin), command);
                 }else{
-                    Main.getMainLogger().log(Level.WARNING, "Cannot execute command '"+command+"': Command does not exist.");
+                    Main.logWarning("Cannot execute command '"+command+"': Command does not exist.");
                     success = false;
                 }
             } else {
                 success = Main.getBukkitServer().dispatchCommand(player, command);
             }
         } catch (Exception ex) {
-            Main.logDebugInfo(Level.WARNING, "Websend caught an exception while running command '" + command + "'", ex);
+            Main.logDebug(Level.WARNING, "Websend caught an exception while running command '" + command + "'", ex);
             success = false;
         }
 
@@ -95,14 +95,14 @@ public class PacketParser {
                                 targetPlugin),
                                 command);
                 }else{
-                    Main.getMainLogger().log(Level.WARNING, "Cannot execute command '"+command+"': Command does not exist.");
+                    Main.logWarning("Cannot execute command '"+command+"': Command does not exist.");
                     success = false;
                 }
             } else {
                 success = Main.getBukkitServer().dispatchCommand(Main.getBukkitServer().getConsoleSender(), command);
             }
         } catch (Exception ex) {
-            Main.logDebugInfo(Level.WARNING, "Websend caught an exception while running command '" + command + "'", ex);
+            Main.logDebug(Level.WARNING, "Websend caught an exception while running command '" + command + "'", ex);
             success = false;
         }
         if (success) {

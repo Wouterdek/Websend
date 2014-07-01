@@ -37,7 +37,7 @@ public class TrustedHosts {
 
     static void writeDefaultFile(File trustedFile) throws IOException {
         if (!trustedFile.createNewFile()) {
-            Main.getMainLogger().log(Level.WARNING, "Failed to make trusted hosts file.");
+            Main.logError("Failed to make trusted hosts file.");
         }
         PrintWriter writer = new PrintWriter(new FileWriter(trustedFile));
         writer.println("#Put your trusted domains in this file.");

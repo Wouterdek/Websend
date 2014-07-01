@@ -29,7 +29,7 @@ public class ConfigHandler {
         File websendDir = Main.getInstance().getDataFolder();
         if (!websendDir.exists()) {
             if (!websendDir.mkdirs()) {
-                Main.getMainLogger().log(Level.SEVERE, "Could not create plugin directory.");
+                Main.logError("Could not create plugin directory.");
             }
         }
         File configFile = new File(websendDir, "config.txt");
@@ -38,12 +38,11 @@ public class ConfigHandler {
         PrintWriter writer = null;
         try {
             if (!configFile.createNewFile()) {
-                Main.getMainLogger().log(Level.WARNING, "Could not create new config file.");
+                Main.logError("Could not create new config file.");
             }
             writer = new PrintWriter(new FileWriter(configFile));
         } catch (IOException ex) {
-            Main.getMainLogger().info("Websend failed to create a new configuration file.");
-            Main.getMainLogger().log(Level.SEVERE, null, ex);
+            Main.logError("Websend failed to create a new configuration file.", ex);
         }
 
         // Fill file
@@ -51,6 +50,7 @@ public class ConfigHandler {
         writer.println("#Help: PASS: change the password to one of your choice (set the same in the server php file).");
         writer.println("#Help: DEBUG_WEBSEND: shows debugging messages for easier tracking of bugs.");
         writer.println("#Help: SALT: adds a salt to the hashed password when sending over bukkit -> php connection.");
+        writer.println("#Help: More switches are available in the documentation.");
         writer.println("PASS=YourPassHere");
         writer.println("#Optional settings. Remove the '#' to use.");
         writer.println("#URL=yoururl.com/page.php");
@@ -90,10 +90,10 @@ public class ConfigHandler {
                 try {
                     convertedValue = Integer.parseInt(value.trim());
                     if (convertedValue == Main.getBukkitServer().getPort()) {
-                        Main.getMainLogger().log(Level.WARNING, "You are trying to host Websend on the minecraft server port! Choose a different port.");
+                        Main.logError("You are trying to host Websend on the minecraft server port! Choose a different port.");
                     }
-                } catch (Exception ex) {
-                    Main.getMainLogger().log(Level.SEVERE, "Websend failed to parse your new port value:" + value, ex);
+                } catch (NumberFormatException ex) {
+                    Main.logError("Failed to parse your new port value:" + value, ex);
                     return;
                 }
                 settings.setPort(convertedValue);
@@ -124,7 +124,7 @@ public class ConfigHandler {
                     MessageDigest md = MessageDigest.getInstance(value);
                     settings.setHashingAlgorithm(value);
                 } catch (NoSuchAlgorithmException ex) {
-                    Main.getMainLogger().info("Hashing algorithm '" + value + "' is not available on this machine.");
+                    Main.logError("Hashing algorithm '" + value + "' is not available on this machine.");
                 }
             } else if (line.startsWith("GZIP_REQUESTS=")) {
                 String value = line.replaceFirst("GZIP_REQUESTS=", "");
@@ -136,10 +136,10 @@ public class ConfigHandler {
                     if (address != null) {
                         settings.setServerBindIP(address);
                     } else {
-                        Main.getMainLogger().log(Level.WARNING, "Error while parsing bind ip address.");
+                        Main.logError("Failed to parse bind ip address.");
                     }
                 } catch (Exception ex) {
-                    Main.getMainLogger().log(Level.WARNING, "Error while parsing bind ip address.");
+                    Main.logError("Failed to parse bind ip address.", ex);
                 }
             } else if (line.startsWith("WRAP_COMMAND_EXECUTOR=")) {
                 String value = line.replaceFirst("WRAP_COMMAND_EXECUTOR=", "");
@@ -159,7 +159,7 @@ public class ConfigHandler {
                 String value = line.replaceFirst("SSL_PASS=", "");
                 settings.setSslPassword(value);
             } else {
-                Main.getMainLogger().log(Level.WARNING, "Error while parsing config file. Invalid line: \n" + line);
+                Main.logError("Invalid line in config file: \n" + line);
             }
         }
     }

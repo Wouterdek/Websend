@@ -4,12 +4,11 @@ import com.github.websend.Main;
 import com.github.websend.server.ComplexInputStream;
 import com.github.websend.server.ComplexOutputStream;
 import java.io.IOException;
-import java.util.logging.Level;
 
 public abstract class Request {
     static boolean checkSession(Session session){
         if(session == null){
-            Main.logDebugInfo(Level.WARNING, "Received invalid sessionID!");
+            Main.logWarning("Received invalid sessionID!");
             return false;
         }
         return true;

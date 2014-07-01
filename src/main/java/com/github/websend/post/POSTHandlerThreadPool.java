@@ -63,7 +63,7 @@ public class POSTHandlerThreadPool {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException ex) {
-                Main.logDebugInfo(Level.SEVERE, "PostHandlerThreadPool interrupted while shutting down.", ex);
+                Main.logDebug(Level.SEVERE, "PostHandlerThreadPool interrupted while shutting down.", ex);
             }
         }
         for (POSTHandlerThread cur : availableThreadsQueue) {

@@ -38,13 +38,13 @@ public class InvokeRequest extends Request{
             try {
                 argTypes = session.parseTypeString(typeStr);
             } catch (ClassNotFoundException ex) {
-                Main.getMainLogger().log(Level.WARNING, "Invalid class in invocation argument types!", ex);
+                Main.logWarning("Invalid class in invocation argument types!", ex);
                 return;
             }
             if (!runStatic && obj == null) {
-                Main.getMainLogger().log(Level.WARNING, "Invalid object in invocation!");
+                Main.logWarning("Invalid object in invocation!");
             } else if (method == null) {
-                Main.getMainLogger().log(Level.WARNING, "Invalid method in invocation!");
+                Main.logWarning("Invalid method in invocation!");
             } else {
                 Object[] args = deserializeObjects(in, session, argTypes);
                 Object returnVal = runMethod(obj, method, args);
@@ -57,11 +57,11 @@ public class InvokeRequest extends Request{
         try {
             return method.invoke(obj, args);
         } catch (IllegalAccessException ex) {
-            Main.getMainLogger().log(Level.WARNING, "Illegal Access in invocation!");
+            Main.logError("Illegal Access in invocation!");
         } catch (IllegalArgumentException ex) {
-            Main.getMainLogger().log(Level.WARNING, "Invalid arguments in invocation!");
+            Main.logWarning("Invalid arguments in invocation!");
         } catch (InvocationTargetException ex) {
-            Main.getMainLogger().log(Level.WARNING, "Method threw exception: " + ex.getMessage(), ex);
+            Main.logWarning("Method threw exception: " + ex.getMessage(), ex);
         }
         return null;
     }

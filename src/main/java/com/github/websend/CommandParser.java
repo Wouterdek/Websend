@@ -59,8 +59,8 @@ public class CommandParser {
         } else if (splittedLine[1].contains("SetResponseURL:")) {
             onSetResponseURL(splittedLine[1]);
         } else {
-            Main.getMainLogger().info("Websend ERROR: While parsing php output, websend found");
-            Main.getMainLogger().info("an error on output line " + line + ": Invalid command.");
+            Main.logWarning("While parsing php output, websend found");
+            Main.logWarning("an error on output line " + line + ": Invalid command.");
         }
     }
 
@@ -95,7 +95,7 @@ public class CommandParser {
     // <editor-fold defaultstate="collapsed" desc="onExecutePlayerCommand">
     private void onExecutePlayerCommand(Player player, String line) {
         if (player == null) {
-            Main.getMainLogger().info("Websend: ExecutePlayerCommand is used in a wrong context.");
+            Main.logWarning("ExecutePlayerCommand is used in a wrong context.");
         }
         String[] commandArray = line.split("ExecutePlayerCommand:");
         Main.logDebugInfo("Command parsing: An ExecutePlayerCommand was found: '" + Util.stringArrayToString(commandArray) + "'");
@@ -107,12 +107,12 @@ public class CommandParser {
                 Player player = (Player) this.getArgs().get(1);
                 try {
                     if (player == null) {
-                        Main.getMainLogger().info("Command dispatching from terminal is not allowed. Try again in-game.");
+                        Main.logWarning("Command dispatching from terminal is not allowed. Try again in-game.");
                     } else if (!player.getServer().dispatchCommand(player, commandArray[1])) { // execute command and check for succes.
                         player.sendMessage("Command dispatching failed: '" + commandArray[1] + "'"); // error
                     }
                 } catch (Exception ex) {
-                    Main.getMainLogger().info("An error has occured, are you trying to execute a player command from console?");
+                    Main.logWarning("An error has occured, are you trying to execute a player command from console?");
                 }
             }
 
@@ -133,7 +133,7 @@ public class CommandParser {
                 String argArray[] = ((String[]) this.getArgs().get(0))[1].split(":");
                 Player fakePlayer = server.getPlayerExact(argArray[0].trim());
                 if (!server.dispatchCommand(fakePlayer, argArray[1])) { // execute command and check for succes.
-                    Main.getMainLogger().info("Command dispatching failed: '" + argArray[1] + "'"); // error
+                    Main.logWarning("Command dispatching failed: '" + argArray[1] + "'"); // error
                 }
             }
         });
@@ -168,7 +168,7 @@ public class CommandParser {
                     if (player != null) {
                         player.sendMessage("Command dispatching failed: '" + commandArray[1] + "'"); // error
                     } else {
-                        Main.getMainLogger().info("Command dispatching failed: '" + commandArray[1] + "'"); // error
+                        Main.logWarning("Command dispatching failed: '" + commandArray[1] + "'"); // error
                     }
                 }
             }
@@ -188,7 +188,7 @@ public class CommandParser {
         } else {
             plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
             if (plugin == null) {
-                Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
+                Main.logWarning("An invalid plugin name was provided!");
                 return;
             }
             // TODO: Implement or remove.
@@ -212,7 +212,7 @@ public class CommandParser {
         } else {
             plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
             if (plugin == null) {
-                Main.getMainLogger().info("ERROR: An invalid plugin name was provided.");
+                Main.logWarning("An invalid plugin name was provided.");
                 return;
             }
             // TODO: Implement or remove.
@@ -232,8 +232,8 @@ public class CommandParser {
     // <editor-fold defaultstate="collapsed" desc="onPrintToPlayer">
     private void onPrintToPlayer(String line, Player player) {
         if (player == null) {
-            Main.getMainLogger().log(Level.WARNING, "Websend: No player to print text to. Use 'PrintToPlayer-playername: text' to sent text in this context.");
-            Main.getMainLogger().log(Level.WARNING, line.replaceFirst("PrintToConsole:", ""));
+            Main.logWarning("No player to print text to. Use 'PrintToPlayer-playername: text' to sent text in this context.");
+            Main.logWarning(line.replaceFirst("PrintToConsole:", ""));
         } else {
             String text = line.replaceFirst("PrintToPlayer:", "");
             player.sendMessage(parseColor(text));
@@ -249,9 +249,9 @@ public class CommandParser {
         String message = commandDataArray[1];
         Player currentPlayer = server.getPlayerExact(playerName);
         if ("console".equals(playerName)) {
-            Main.logDebugInfo("Websend: Player 'console'? Using PrintToConsole instead.");
+            Main.logDebugInfo("Player 'console'? Using PrintToConsole instead.");
         } else if (currentPlayer == null) {
-            Main.getMainLogger().log(Level.WARNING, "Websend: No player '" + playerName + "' found on PrintToPlayer.");
+            Main.logWarning("No player '" + playerName + "' found on PrintToPlayer.");
         } else if (!currentPlayer.isOnline()) {
             Main.logDebugInfo("Websend: Player '" + playerName + "' is offline. Ignoring PrintToPlayer");
         } else {

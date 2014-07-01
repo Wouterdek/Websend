@@ -130,19 +130,13 @@ public class JSONSerializer {
                 result = new JSONObject();
             }
         } catch (Exception ex) {
+            String message = "Exception while serializing item meta data. "
+                        + "This may be caused by a mismatch between the Bukkit and "
+                        + "Websend versions.";
             if (Main.getSettings().isDebugMode()) {
-                Main.getMainLogger().log(
-                        Level.WARNING,
-                        "Exception while serializing item meta data. "
-                        + "This may be caused by a mismatch between the Bukkit and "
-                        + "Websend versions.",
-                        ex);
+                Main.logWarning(message, ex);
             } else {
-                Main.getMainLogger().log(
-                        Level.WARNING,
-                        "Exception while serializing item meta data. "
-                        + "This may be caused by a mismatch between the Bukkit and "
-                        + "Websend versions. Enable debug mode for stack trace.");
+                Main.logWarning(message);
             }
         }
         addNameAndLore(result, meta);

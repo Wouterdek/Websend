@@ -28,7 +28,7 @@ public class POSTHandlerThread extends Thread {
                 try {
                     currentRequest.run(httpClient);
                 } catch (Exception ex) {
-                    Main.getMainLogger().log(Level.SEVERE, "An exception occured while running a POST request.", ex);
+                    Main.logError("An exception occured while running a POST request.", ex);
                 }
                 parent.onThreadDone(this);
                 currentRequest = null;
@@ -44,7 +44,7 @@ public class POSTHandlerThread extends Thread {
         try {
             httpClient.close();
         } catch (IOException ex) {
-            Main.logDebugInfo(Level.WARNING, "An exception occured while closing the httpclient.", ex);
+            Main.logDebug(Level.WARNING, "An exception occured while closing the httpclient.", ex);
         }
     }
 

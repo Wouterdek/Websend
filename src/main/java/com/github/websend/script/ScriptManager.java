@@ -32,12 +32,12 @@ public class ScriptManager {
             Main.logDebugInfo(Level.WARNING, "Found script, invoking main method.");
             script.invoke();
         } else {
-            Main.getMainLogger().info("No script with name: " + name);
+            Main.logError("No script with name: " + name);
         }
     }
 
     public void clearScripts() {
-        Main.logDebugInfo(Level.WARNING, "Cleared scripts map.");
+        Main.logDebugInfo("Cleared scripts map.");
         scripts.clear();
     }
 
@@ -48,7 +48,7 @@ public class ScriptManager {
 
     public void reload(String scriptName) {
         if (!scripts.containsKey(scriptName)) {
-            Main.getMainLogger().log(Level.WARNING, "'" + scriptName + "' was not found and therefore can't be reloaded.");
+            Main.logError("'" + scriptName + "' was not found and therefore can't be reloaded.");
             return;
         }
         scripts.remove(scriptName);
@@ -85,7 +85,7 @@ public class ScriptManager {
 
         File[] javas = directory.listFiles(new JavaFileFilter());
         if (!compileClasses(scriptName, javas)) {
-            Main.getMainLogger().log(Level.SEVERE, "Failed to compile script " + scriptName + "!");
+            Main.logError("Failed to compile script " + scriptName + "!");
             return null;
         }
 
@@ -113,7 +113,7 @@ public class ScriptManager {
             }
             reader.close();
         } catch (Exception ex) {
-            Main.getMainLogger().log(Level.WARNING, "Failed to load script info for: " + script.name, ex);
+            Main.logError("Failed to load script info for: " + script.name, ex);
         }
     }
 
@@ -122,7 +122,7 @@ public class ScriptManager {
         try {
             JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
             if (jc == null) {
-                Main.getMainLogger().log(Level.WARNING, "Can't get compiler!");
+                Main.logError("Can't get compiler!");
                 return false;
             }
             StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
@@ -132,7 +132,7 @@ public class ScriptManager {
             String dir = compiledFilesDir.getCanonicalPath();
             if (!compiledFilesDir.exists()) {
                 if (!compiledFilesDir.mkdirs()) {
-                    Main.getMainLogger().log(Level.WARNING, "Failed to make compiled scripts directory.");
+                    Main.logError("Failed to make compiled scripts directory.");
                 }
             }
 
@@ -140,7 +140,7 @@ public class ScriptManager {
             sjfm.close();
             return succes;
         } catch (IOException ex) {
-            Main.getMainLogger().log(Level.SEVERE, null, ex);
+            Main.logError("An IOException occured while compiling classes.", ex);
             return false;
         }
     }
@@ -150,7 +150,7 @@ public class ScriptManager {
         try {
             File scriptDir = new File(compiledDir, container.name);
             if (!scriptDir.exists()) {
-                Main.getMainLogger().log(Level.WARNING, "Invalid script! No compiled files dir found!");
+                Main.logWarning("Invalid script! No compiled files dir found!");
                 return false;
             }
 
@@ -173,7 +173,7 @@ public class ScriptManager {
              */
             return true;
         } catch (Exception e) {
-            Main.getMainLogger().log(Level.SEVERE, "Error while loading classes into the JVM!", e);
+            Main.logError("Error while loading classes into the JVM!", e);
         }
         return false;
     }
