@@ -9,12 +9,14 @@ package com.github.websend.server;
 import com.github.websend.Main;
 import com.github.websend.PacketHandler;
 import com.github.websend.TrustedHosts;
+import com.github.websend.server.remotejava.Session;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +29,8 @@ public abstract class CommunicationServer extends Thread {
     private boolean connected = false;
     private boolean authenticated = false;
     private ServerSocket serverSkt;
+    private PacketParser parser = new PacketParser(this);
+    private ArrayList<Session> remoteJavaSessions = new ArrayList<Session>();
     
     abstract ServerSocket openServerSocket(InetAddress bindIP, int port) throws IOException;
     abstract ServerSocket openServerSocket(int port) throws IOException;
@@ -80,8 +84,8 @@ public abstract class CommunicationServer extends Thread {
             if (TrustedHosts.isTrusted(skt.getInetAddress())) {
                 Main.logDebugInfo("Client is trusted.");
                 skt.setKeepAlive(true);
-                DataInputStream in = new DataInputStream(skt.getInputStream());
-                DataOutputStream out = new DataOutputStream(skt.getOutputStream());
+                ComplexInputStream in = new ComplexInputStream(skt.getInputStream());
+                ComplexOutputStream out = new ComplexOutputStream(skt.getOutputStream());
                 connected = true;
 
                 Main.logDebugInfo("Trying to read first byte...");
@@ -89,7 +93,8 @@ public abstract class CommunicationServer extends Thread {
                     if (in.readByte() == 21) {
                         Main.logDebugInfo("First packet is authentication request packet.");
                         
-                        authenticated = PacketParser.parseAuthenticationRequestPacket(in, out);
+                        authenticated = parser.parseAuthenticationRequestPacket(in, out);
+                        
                         if (!authenticated) {
                             Main.getMainLogger().log(Level.INFO, "Client failed to authenticate! Disconnecting.");
                             connected = false;
@@ -105,28 +110,31 @@ public abstract class CommunicationServer extends Thread {
                         byte packetHeader = in.readByte();
                         if (packetHeader == 1) {
                             Main.logDebugInfo("Got packet header: DoCommandAsPlayer");
-                            PacketParser.parseDoCommandAsPlayer(in, out);
+                            parser.parseDoCommandAsPlayer(in, out);
                         } else if (packetHeader == 2) {
                             Main.logDebugInfo("Got packet header: DoCommandAsConsole");
-                            PacketParser.parseDoCommandAsConsole(in, out);
+                            parser.parseDoCommandAsConsole(in, out);
                         } else if (packetHeader == 3) {
                             Main.logDebugInfo("Got packet header: DoScript");
-                            PacketParser.parseDoScript(in, out);
+                            parser.parseDoScript(in, out);
                         } else if (packetHeader == 4) {
                             Main.logDebugInfo("Got packet header: StartPluginOutputRecording");
-                            PacketParser.parseStartPluginOutputRecording(in, out);
+                            parser.parseStartPluginOutputRecording(in, out);
                         } else if (packetHeader == 5) {
                             Main.logDebugInfo("Got packet header: EndPluginOutputRecording");
-                            PacketParser.parseEndPluginOutputRecording(in, out);
+                            parser.parseEndPluginOutputRecording(in, out);
                         } else if (packetHeader == 10) {
                             Main.logDebugInfo("Got packet header: WriteOutputToConsole");
-                            PacketParser.parseWriteOutputToConsole(in, out);
+                            parser.parseWriteOutputToConsole(in, out);
                         } else if (packetHeader == 11) {
                             Main.logDebugInfo("Got packet header: WriteOutputToPlayer");
-                            PacketParser.parseWriteOutputToPlayer(in, out);
+                            parser.parseWriteOutputToPlayer(in, out);
                         } else if (packetHeader == 12) {
                             Main.logDebugInfo("Got packet header: Broadcast");
-                            PacketParser.parseBroadcast(in, out);
+                            parser.parseBroadcast(in, out);
+                        }else if (packetHeader >= 30 && packetHeader < 38) {
+                            Main.logDebugInfo("Got packet header: Remote Java Request");
+                            parser.parseRemoteJavaRequest(packetHeader, in, out);
                         } else if (packetHeader == 20) {
                             Main.logDebugInfo("Got packet header: Disconnect");
                             connected = false;
@@ -153,6 +161,27 @@ public abstract class CommunicationServer extends Thread {
             skt.close();
         }
         serverSkt.close();
+    }
+    
+    //Remote java
+    public int openRemoteJavaSession(){
+        if(remoteJavaSessions.add(new Session())){
+            return remoteJavaSessions.size() - 1;
+        }else{
+            return -1;
+        }
+    }
+    
+    public Session getRemoteJavaSession(int sessionID){
+        return remoteJavaSessions.get(sessionID);
+    }
+    
+    public void closeRemoteJavaSession(int sessionID){
+        Session session = remoteJavaSessions.get(sessionID);
+        if(session != null){
+            session.close();
+            remoteJavaSessions.remove(sessionID);
+        }
     }
 
     public void stopServer() {

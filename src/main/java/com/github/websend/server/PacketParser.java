@@ -5,8 +5,9 @@ import com.github.websend.PluginOutputManager;
 import com.github.websend.Util;
 import com.github.websend.WebsendConsoleCommandSender;
 import com.github.websend.WebsendPlayerCommandSender;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.github.websend.server.remotejava.InvokeRequest;
+import com.github.websend.server.remotejava.MethodRequest;
+import com.github.websend.server.remotejava.MiscRequest;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -18,8 +19,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class PacketParser {
-    static boolean parseAuthenticationRequestPacket(DataInputStream in, DataOutputStream out) throws IOException {
-        String header = readString(in);
+    private CommunicationServer server;
+    public PacketParser(CommunicationServer server) {
+        this.server = server;
+    }
+    
+    boolean parseAuthenticationRequestPacket(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String header = in.readString();
         if(!header.equals("websendmagic")){
             return false;
         }
@@ -29,15 +35,15 @@ public class PacketParser {
         out.writeInt(seed);
         String correctHash = Util.hash(seed+Main.getSettings().getPassword());
         
-        String authString = readString(in);
+        String authString = in.readString();
         boolean success = authString.equals(correctHash);
         out.writeInt(success?1:0);
         return success;
     }
     
-    public static void parseDoCommandAsPlayer(DataInputStream in, DataOutputStream out) throws IOException {
-        String command = readString(in);
-        String playerStr = readString(in);
+    void parseDoCommandAsPlayer(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String command = in.readString();
+        String playerStr = in.readString();
         Player player = Main.getBukkitServer().getPlayerExact(playerStr);
 
         if (player == null) {
@@ -74,8 +80,8 @@ public class PacketParser {
         out.flush();
     }
 
-    public static void parseDoCommandAsConsole(DataInputStream in, DataOutputStream out) throws IOException {
-        String command = readString(in);
+    void parseDoCommandAsConsole(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String command = in.readString();
         boolean success;
         try {
             //config check?
@@ -107,19 +113,19 @@ public class PacketParser {
         out.flush();
     }
 
-    public static void parseDoScript(DataInputStream in, DataOutputStream out) throws IOException {
-        String scriptName = readString(in);
+    void parseDoScript(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String scriptName = in.readString();
         Main.getScriptManager().invokeScript(scriptName);
     }
 
-    public static void parseWriteOutputToConsole(DataInputStream in, DataOutputStream out) throws IOException {
-        String message = readString(in);
+    void parseWriteOutputToConsole(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String message = in.readString();
         Main.getMainLogger().info(message);
     }
 
-    public static void parseWriteOutputToPlayer(DataInputStream in, DataOutputStream out) throws IOException {
-        String message = readString(in);
-        String playerStr = readString(in);
+    void parseWriteOutputToPlayer(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String message = in.readString();
+        String playerStr = in.readString();
         Player player = Main.getInstance().getServer().getPlayerExact(playerStr);
         if (player != null) {
             out.writeInt(1);
@@ -130,38 +136,59 @@ public class PacketParser {
         out.flush();
     }
 
-    public static void parseBroadcast(DataInputStream in, DataOutputStream out) throws IOException {
-        String message = readString(in);
+    void parseBroadcast(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String message = in.readString();
         Main.getBukkitServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    public static void parseStartPluginOutputRecording(DataInputStream in, DataOutputStream out) throws IOException {
-        String pluginName = readString(in);
+    void parseStartPluginOutputRecording(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String pluginName = in.readString();
         PluginOutputManager.startRecording(pluginName);
     }
 
-    public static void parseEndPluginOutputRecording(DataInputStream in, DataOutputStream out) throws IOException {
-        String pluginName = readString(in);
+    void parseEndPluginOutputRecording(ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        String pluginName = in.readString();
         ArrayList<String> output = PluginOutputManager.stopRecording(pluginName);
         out.writeInt(output.size());
         for (String cur : output) {
-            writeString(out, cur);
+            out.writeString(cur);
         }
         out.flush();
     }
-
-    private static String readString(DataInputStream in) throws IOException {
-        int stringSize = in.readInt();
-        StringBuilder buffer = new StringBuilder();
-        for (int i = 0; i < stringSize; i++) {
-            buffer.append(in.readChar());
+    
+    static final int RJ_OPEN_SESSION            = 30;
+    static final int RJ_CLOSE_SESSION           = 31;
+    static final int RJ_REQUEST_METHOD_BY_OBJ   = 32;
+    static final int RJ_REQUEST_METHOD_BY_CLASS = 33;
+    static final int RJ_REQUEST_INVOKE          = 34;
+    static final int RJ_REQUEST_INVOKE_STATIC   = 35;
+    static final int RJ_REQUEST_RELEASE_OBJECT  = 36;
+    static final int RJ_REQUEST_RELEASE_METHOD  = 37;
+    void parseRemoteJavaRequest(byte packetHeader, ComplexInputStream in, ComplexOutputStream out) throws IOException {
+        if(packetHeader == RJ_OPEN_SESSION){
+            Main.logDebugInfo("Opening remote java session.");
+            MiscRequest.openSession(server, in, out);
+        }else if(packetHeader == RJ_CLOSE_SESSION){
+            Main.logDebugInfo("Closing remote java session.");
+            MiscRequest.closeSession(server, in, out);
+        }else if(packetHeader == RJ_REQUEST_METHOD_BY_OBJ){
+            Main.logDebugInfo("Received method by object request");
+            MethodRequest.byObject(server, in, out);
+        }else if(packetHeader == RJ_REQUEST_METHOD_BY_CLASS){
+            Main.logDebugInfo("Received method by class request");
+            MethodRequest.byClass(server, in, out);
+        }else if(packetHeader == RJ_REQUEST_INVOKE){
+            Main.logDebugInfo("Received method invoke request");
+            InvokeRequest.onObject(server, in, out);
+        }else if(packetHeader == RJ_REQUEST_INVOKE_STATIC){
+            Main.logDebugInfo("Received static method invoke request");
+            InvokeRequest.onClass(server, in, out);
+        }else if(packetHeader == RJ_REQUEST_RELEASE_OBJECT){
+            Main.logDebugInfo("Received object release request");
+            MiscRequest.releaseObject(server, in, out);
+        }else if(packetHeader == RJ_REQUEST_RELEASE_METHOD){
+            Main.logDebugInfo("Received method release request");
+            MiscRequest.releaseMethod(server, in, out);
         }
-
-        return buffer.toString();
-    }
-
-    private static void writeString(DataOutputStream out, String string) throws IOException {
-        out.writeInt(string.length());
-        out.writeChars(string);
     }
 }
