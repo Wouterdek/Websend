@@ -353,8 +353,7 @@ class JavaStream{
 
 	public function writeString( $string )
 	{
-		$array = str_split($string);
-		$this->writeInt(count($array));
+		$this->writeInt(strlen($string));
 		$this->writeChars($string);
 	}
 

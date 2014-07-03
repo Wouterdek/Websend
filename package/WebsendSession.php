@@ -158,7 +158,7 @@ class WebsendSession {
 		$curClassName = "";
 
 		$objectI = 0;
-		for($i = 0;$i<count($chars);$i++){
+		for($i = 0;$i<strlen($typeStr);$i++){
 			$char = $chars[$i];
 			$lowerChar = strtolower($char);
 			$obj = $objects[$objectI];
@@ -169,7 +169,7 @@ class WebsendSession {
 					if($curClassName === "java.lang.String" && is_string($obj)){
 						$this->ws->javaStream->writeString($obj);
 					}else{
-						$this->ws->javaStream->writeInt($obj);
+						$this->ws->javaStream->writeInt($obj->objID);
 					}
 				}else{
 					$curClassName = $curClassName . $char;
@@ -208,7 +208,7 @@ class WebsendSession {
 
 		$objects = array();
 		$objectI = 0;
-		for($i = 0;$i<count($chars);$i++){
+		for($i = 0;$i<strlen($typeStr);$i++){
 			$char = $chars[$i];
 			$lowerChar = strtolower($char);
 			if($readingClassName){
