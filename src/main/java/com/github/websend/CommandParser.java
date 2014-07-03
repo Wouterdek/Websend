@@ -195,31 +195,6 @@ public class CommandParser {
         }
     }
       //</editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="onExecutePlayerCommandAndReturn">
-    @SuppressWarnings("unused")
-    private void onExecutePlayerCommandAndReturn(String line) {
-        String commandArray[];
-        // split line into command and variables
-        commandArray = line.split("ExecutePlayerCommandAndReturn-");
-        Main.logDebugInfo("Command parsing: An ExecutePlayerCommandAndReturn was found: '" + Util.stringArrayToString(commandArray) + "'");
-        String argArray[] = commandArray[1].split("-");
-        Player fakePlayer = server.getPlayerExact(argArray[0].trim());
-        String command = argArray[1].split(":")[1];
-        Plugin plugin = null;
-        if (commandArray[1].split(":")[0].toLowerCase().startsWith("bukkit")) {
-            // TODO: implement bukkit listening.
-        } else {
-            plugin = server.getPluginManager().getPlugin(commandArray[1].split(":")[0]);
-            if (plugin == null) {
-                Main.logWarning("An invalid plugin name was provided.");
-                return;
-            }
-            // TODO: Implement or remove.
-        }
-    }
-
-	// </editor-fold>
 	// </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="EXECUTION - OUTPUT">
     // <editor-fold defaultstate="collapsed" desc="onPrintToConsole">
