@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 public class JSONSerializer {
 
-    public static JSONObject serializePlayer(Player ply) throws JSONException {
+    public static JSONObject serializePlayer(Player ply, boolean serializeAllData) throws JSONException {
         JSONObject player = new JSONObject();
         {
             player.put("Name", ply.getName());
@@ -31,12 +31,14 @@ public class JSONSerializer {
             player.put("Health", ply.getHealth());
             player.put("IP", ply.getAddress().toString());
             player.put("IsOP", ply.isOp());
-            player.put("CurrentItemIndex", ply.getInventory().getHeldItemSlot());
-            player.put("CurrentItemID", ply.getItemInHand().getTypeId());
-            JSONObject location = JSONSerializer.serializeLocation(ply.getLocation());
-            player.put("Location", location);
-            JSONArray inventory = JSONSerializer.serializeInventory(ply.getInventory());
-            player.put("Inventory", inventory);
+            if(serializeAllData){
+                player.put("CurrentItemIndex", ply.getInventory().getHeldItemSlot());
+                player.put("CurrentItemID", ply.getItemInHand().getTypeId());
+                JSONObject location = JSONSerializer.serializeLocation(ply.getLocation());
+                player.put("Location", location);
+                JSONArray inventory = JSONSerializer.serializeInventory(ply.getInventory());
+                player.put("Inventory", inventory);
+            }
         }
         return player;
     }
