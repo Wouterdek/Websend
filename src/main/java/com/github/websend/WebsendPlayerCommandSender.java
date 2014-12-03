@@ -3,6 +3,7 @@ package com.github.websend;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import org.bukkit.Achievement;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.entity.*;
@@ -1220,5 +1221,9 @@ public class WebsendPlayerCommandSender implements Player {
 
     public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector velocity) {
         return baseObject.launchProjectile(projectile, velocity);
+    }
+
+    public void sendSignChange(Location lctn, String[] strings) throws IllegalArgumentException {
+        baseObject.sendSignChange(lctn, strings);
     }
 }
