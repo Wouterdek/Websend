@@ -73,7 +73,6 @@ public class JSONSerializer {
         JSONObject item = new JSONObject();
         {
             item.put("Type", itemStack.getTypeId());
-            item.put("TypeName", itemStack.getType().name());
             item.put("Amount", itemStack.getAmount());
             item.put("Durability", itemStack.getDurability());
             if (itemStack.hasItemMeta()) {
