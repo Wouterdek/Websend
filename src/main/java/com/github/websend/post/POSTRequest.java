@@ -128,7 +128,7 @@ public class POSTRequest {
         JSONObject data = new JSONObject();
         {
             if (ply != null) {
-                JSONObject jsonPlayer = JSONSerializer.serializePlayer(ply, true);
+                JSONObject jsonPlayer = JSONSerializer.getInstance().serializePlayer(ply, true);
                 data.put("Invoker", jsonPlayer);
             } else if (playerNameArg != null) {
                 JSONObject jsonPlayer = new JSONObject();
@@ -170,7 +170,7 @@ public class POSTRequest {
                 JSONArray onlinePlayers = new JSONArray();
                 {
                     for (Player cur : server.getOnlinePlayers()) {
-                        JSONObject curPlayer = JSONSerializer.serializePlayer(cur, false);
+                        JSONObject curPlayer = JSONSerializer.getInstance().serializePlayer(cur, false);
                         onlinePlayers.put(curPlayer);
                     }
                 }

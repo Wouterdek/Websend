@@ -1,8 +1,10 @@
 package com.github.websend;
 
+import com.github.websend.spigot.SpigotJSONSerializer;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.logging.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -15,9 +17,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONSerializer {
-
-    public static JSONObject serializePlayer(Player ply, boolean serializeAllData) throws JSONException {
+/**
+ * Bukkit is not updated to 1.8 and the server mods based of bukkit are implementing their own patches to support 1.8
+ * This is a compatibility problem since the central Bukkit API is now splitting up in several small APIs that all require seperate code to support.
+ * This class provides several abstract serialization methods for subclasses to implement according to each API.
+ */
+public abstract class JSONSerializer {
+    private static JSONSerializer instance = null;
+    
+    public static JSONSerializer getInstance(){
+        if(instance == null){
+            if(Bukkit.getServer().getVersion().contains("Spigot")){
+                instance = new SpigotJSONSerializer();
+            }else{
+                instance = new BukkitJSONSerializer();
+            }
+        }
+        return instance;
+    }
+    
+    public JSONObject serializePlayer(Player ply, boolean serializeAllData) throws JSONException {
         JSONObject player = new JSONObject();
         {
             player.put("Name", ply.getName());
@@ -34,16 +53,16 @@ public class JSONSerializer {
             if(serializeAllData){
                 player.put("CurrentItemIndex", ply.getInventory().getHeldItemSlot());
                 player.put("CurrentItemID", ply.getItemInHand().getTypeId());
-                JSONObject location = JSONSerializer.serializeLocation(ply.getLocation());
+                JSONObject location = serializeLocation(ply.getLocation());
                 player.put("Location", location);
-                JSONArray inventory = JSONSerializer.serializeInventory(ply.getInventory());
+                JSONArray inventory = serializeInventory(ply.getInventory());
                 player.put("Inventory", inventory);
             }
         }
         return player;
     }
 
-    public static JSONObject serializeLocation(Location loc) throws JSONException {
+    public JSONObject serializeLocation(Location loc) throws JSONException {
         JSONObject location = new JSONObject();
         {
             location.put("X", loc.getX());
@@ -56,13 +75,13 @@ public class JSONSerializer {
         return location;
     }
 
-    public static JSONArray serializeInventory(Inventory inv) throws JSONException {
+    public JSONArray serializeInventory(Inventory inv) throws JSONException {
         JSONArray inventory = new JSONArray();
         {
             for (int i = 0; i < inv.getSize(); i++) {
                 ItemStack itemStack = inv.getItem(i);
                 if (itemStack != null) {
-                    JSONObject item = JSONSerializer.serializeItemStack(itemStack);
+                    JSONObject item = serializeItemStack(itemStack);
                     item.put("Slot", i);
                     inventory.put(item);
                 }
@@ -71,7 +90,7 @@ public class JSONSerializer {
         return inventory;
     }
 
-    public static JSONObject serializeItemStack(ItemStack itemStack) throws JSONException {
+    public JSONObject serializeItemStack(ItemStack itemStack) throws JSONException {
         JSONObject item = new JSONObject();
         {
             item.put("Type", itemStack.getTypeId());
@@ -79,7 +98,7 @@ public class JSONSerializer {
             item.put("Amount", itemStack.getAmount());
             item.put("Durability", itemStack.getDurability());
             if (itemStack.hasItemMeta()) {
-                JSONObject obj = JSONSerializer.serializeMetaData(itemStack.getItemMeta());
+                JSONObject obj = serializeMetaData(itemStack.getItemMeta());
                 if (obj != null) {
                     item.put("Meta", obj);
                 }
@@ -104,13 +123,16 @@ public class JSONSerializer {
         return item;
     }
 
-    public static JSONObject serializeMetaData(ItemMeta meta) throws JSONException {
+    public JSONObject serializeMetaData(ItemMeta meta) throws JSONException {
         if (meta == null) {
             return null;
         }
         JSONObject result = null;
         try {
-            if (meta instanceof BookMeta) {
+            result = serializeMetaCustom(meta);
+            if(result != null){
+                //Is custom item implemented by subclass
+            }else if (meta instanceof BookMeta) {
                 result = serializeMetaBook((BookMeta) meta);
             } else if (meta instanceof FireworkEffectMeta) {
                 result = serializeMetaFireworkEffect((FireworkEffectMeta) meta);
@@ -128,8 +150,7 @@ public class JSONSerializer {
                 result = serializeMetaRepairable((Repairable) meta);
             } else if (meta instanceof SkullMeta) {
                 result = serializeMetaSkull((SkullMeta) meta);
-            } else {
-                //Is probably an item with enchantments.
+            }else {
                 result = new JSONObject();
             }
         } catch (Exception ex) {
@@ -153,7 +174,7 @@ public class JSONSerializer {
         return result;
     }
 
-    private static void addNameAndLore(JSONObject obj, ItemMeta meta) throws JSONException {
+    public void addNameAndLore(JSONObject obj, ItemMeta meta) throws JSONException {
         if (meta.hasDisplayName()) {
             obj.put("DisplayName", meta.getDisplayName());
         }
@@ -163,7 +184,7 @@ public class JSONSerializer {
         }
     }
 
-    private static void addEnchantments(JSONObject obj, ItemMeta meta) throws JSONException {
+    public void addEnchantments(JSONObject obj, ItemMeta meta) throws JSONException {
         if (!meta.hasEnchants()) {
             return;
         }
@@ -185,7 +206,7 @@ public class JSONSerializer {
         obj.put("Enchantments", enchantArray);
     }
 
-    private static JSONObject serializeMetaBook(BookMeta bookMeta) throws JSONException {
+    public JSONObject serializeMetaBook(BookMeta bookMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             if (bookMeta.hasAuthor()) {
@@ -201,7 +222,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaFireworkEffect(FireworkEffectMeta fireworkEffectMeta) throws JSONException {
+    public JSONObject serializeMetaFireworkEffect(FireworkEffectMeta fireworkEffectMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             if (fireworkEffectMeta.hasEffect()) {
@@ -211,7 +232,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaFirework(FireworkMeta fireworkMeta) throws JSONException {
+    public JSONObject serializeMetaFirework(FireworkMeta fireworkMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             if (fireworkMeta.hasEffects()) {
@@ -226,7 +247,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaEnchantmentStorage(EnchantmentStorageMeta enchantmentStorageMeta) throws JSONException {
+    public JSONObject serializeMetaEnchantmentStorage(EnchantmentStorageMeta enchantmentStorageMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             JSONArray enchantArray = new JSONArray();
@@ -249,7 +270,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaLeatherArmor(LeatherArmorMeta leatherArmorMeta) throws JSONException {
+    public JSONObject serializeMetaLeatherArmor(LeatherArmorMeta leatherArmorMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             metaObj.put("Color", leatherArmorMeta.getColor().serialize());
@@ -257,7 +278,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaMap(MapMeta mapMeta) throws JSONException {
+    public JSONObject serializeMetaMap(MapMeta mapMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             metaObj.put("Scaling", mapMeta.isScaling());
@@ -265,7 +286,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaPotion(PotionMeta potionMeta) throws JSONException {
+    public JSONObject serializeMetaPotion(PotionMeta potionMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             if (potionMeta.hasCustomEffects()) {
@@ -279,7 +300,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaRepairable(Repairable repairable) throws JSONException {
+    public JSONObject serializeMetaRepairable(Repairable repairable) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             if (repairable.hasRepairCost()) {
@@ -289,7 +310,7 @@ public class JSONSerializer {
         return metaObj;
     }
 
-    private static JSONObject serializeMetaSkull(SkullMeta skullMeta) throws JSONException {
+    public JSONObject serializeMetaSkull(SkullMeta skullMeta) throws JSONException {
         JSONObject metaObj = new JSONObject();
         {
             if (skullMeta.hasOwner()) {
@@ -298,4 +319,6 @@ public class JSONSerializer {
         }
         return metaObj;
     }
+    
+    public abstract JSONObject serializeMetaCustom(ItemMeta bannerMeta) throws JSONException;
 }

@@ -136,7 +136,7 @@ public class Main extends JavaPlugin {
         try {
             url = new URL(Main.getSettings().getURL());
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+            logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
             return;
         }
         POSTRequest request = new POSTRequest(url, args, player, false);
@@ -148,7 +148,7 @@ public class Main extends JavaPlugin {
         try {
             url = new URL(Main.getSettings().getURL());
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+            logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
             return;
         }
         POSTRequest request = new POSTRequest(url, args, ply, false);
@@ -157,12 +157,14 @@ public class Main extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("websend") || cmd.getName().equalsIgnoreCase("ws")) {
+        if(!this.isEnabled()){
+            logger.log(Level.SEVERE, "Websend is disabled. Restart the server to run commands.");
+        }else if (cmd.getName().equalsIgnoreCase("websend") || cmd.getName().equalsIgnoreCase("ws")) {
             URL url;
             try {
                 url = new URL(Main.getSettings().getURL());
             } catch (MalformedURLException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+               logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
                 return true;
             }
             if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender) {
@@ -179,7 +181,7 @@ public class Main extends JavaPlugin {
                                 try {
                                     url = new URL(Main.getSettings().getURL());
                                 } catch (MalformedURLException ex) {
-                                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, "Failed to construct URL from config.", ex);
+                                    logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
                                     return true;
                                 }
                             }
@@ -271,6 +273,10 @@ public class Main extends JavaPlugin {
         if (Main.getSettings() == null || Main.getSettings().isDebugMode()) {
             Main.getMainLogger().log(level, message, ex);
         }
+    }
+    
+    public static void logError(String message, Exception ex) {
+        Main.getMainLogger().log(Level.SEVERE, message, ex);
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
