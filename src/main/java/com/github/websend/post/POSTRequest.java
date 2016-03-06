@@ -8,11 +8,13 @@ import com.github.websend.Util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -84,6 +86,14 @@ public class POSTRequest {
         } else if (responseCode >= 400) {
             message = "HTTP request failed. (" + reason + ")";
             Main.getMainLogger().log(Level.SEVERE, message);
+            if(Main.getSettings().isDebugMode()){
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                try {
+                    String page = buffer.lines().collect(Collectors.joining("\n"));
+                    Main.getMainLogger().log(Level.SEVERE, "Server response: "+page);
+                }catch(UncheckedIOException ex){}
+                buffer.close();
+            }
             return;
         } else if (responseCode >= 300) {
             message = "The server responded to the request with a redirection message. Assuming request OK. (" + reason + ")";

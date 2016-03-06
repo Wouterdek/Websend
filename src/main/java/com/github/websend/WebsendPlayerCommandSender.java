@@ -1,12 +1,19 @@
 package com.github.websend;
 
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import org.bukkit.Achievement;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Statistic;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
@@ -564,21 +571,6 @@ public class WebsendPlayerCommandSender implements Player {
     @Override
     public java.util.List<org.bukkit.block.Block> getLastTwoTargetBlocks(java.util.HashSet<java.lang.Byte> param0, int param1) {
         return baseObject.getLastTwoTargetBlocks(param0, param1);
-    }
-
-    @Override
-    public org.bukkit.entity.Egg throwEgg() {
-        return baseObject.throwEgg();
-    }
-
-    @Override
-    public org.bukkit.entity.Snowball throwSnowball() {
-        return baseObject.throwSnowball();
-    }
-
-    @Override
-    public org.bukkit.entity.Arrow shootArrow() {
-        return baseObject.shootArrow();
     }
 
     @Override
@@ -1225,5 +1217,97 @@ public class WebsendPlayerCommandSender implements Player {
 
     public void sendSignChange(Location lctn, String[] strings) throws IllegalArgumentException {
         baseObject.sendSignChange(lctn, strings);
+    }
+
+    public Entity getSpectatorTarget() {
+        return baseObject.getSpectatorTarget();
+    }
+
+    public void setSpectatorTarget(Entity entity) {
+        baseObject.setSpectatorTarget(entity);
+    }
+
+    public void sendTitle(String string, String string1) {
+        baseObject.sendTitle(string, string1);
+    }
+
+    public void resetTitle() {
+        baseObject.resetTitle();
+    }
+
+    public void spawnParticle(Particle prtcl, Location lctn, int i) {
+        baseObject.spawnParticle(prtcl, lctn, i);
+    }
+
+    public void spawnParticle(Particle prtcl, double d, double d1, double d2, int i) {
+        baseObject.spawnParticle(prtcl, d, d1, d2, i);
+    }
+
+    public <T> void spawnParticle(Particle prtcl, Location lctn, int i, T t) {
+        baseObject.spawnParticle(prtcl, lctn, i, t);
+    }
+
+    public <T> void spawnParticle(Particle prtcl, double d, double d1, double d2, int i, T t) {
+        baseObject.spawnParticle(prtcl, d, d1, d2, i, t);
+    }
+
+    public void spawnParticle(Particle prtcl, Location lctn, int i, double d, double d1, double d2) {
+        baseObject.spawnParticle(prtcl, lctn, i, d, d1, d2);
+    }
+
+    public void spawnParticle(Particle prtcl, double d, double d1, double d2, int i, double d3, double d4, double d5) {
+        baseObject.spawnParticle(prtcl, d, d1, d2, i, d3, d4, d5);
+    }
+
+    public <T> void spawnParticle(Particle prtcl, Location lctn, int i, double d, double d1, double d2, T t) {
+        baseObject.spawnParticle(prtcl, lctn, i, d, d1, d2, t);
+    }
+
+    public <T> void spawnParticle(Particle prtcl, double d, double d1, double d2, int i, double d3, double d4, double d5, T t) {
+        baseObject.spawnParticle(prtcl, d, d1, d2, i, d3, d4, d5, t);
+    }
+
+    public void spawnParticle(Particle prtcl, Location lctn, int i, double d, double d1, double d2, double d3) {
+        baseObject.spawnParticle(prtcl, lctn, i, d, d1, d2, d3);
+    }
+
+    public void spawnParticle(Particle prtcl, double d, double d1, double d2, int i, double d3, double d4, double d5, double d6) {
+        baseObject.spawnParticle(prtcl, d, d1, d2, i, d3, d4, d5, d6);
+    }
+
+    public <T> void spawnParticle(Particle prtcl, Location lctn, int i, double d, double d1, double d2, double d3, T t) {
+        baseObject.spawnParticle(prtcl, lctn, i, d, d1, d2, d3, t);
+    }
+
+    public <T> void spawnParticle(Particle prtcl, double d, double d1, double d2, int i, double d3, double d4, double d5, double d6, T t) {
+        baseObject.spawnParticle(prtcl, d, d1, d2, i, d3, d4, d5, d6, t);
+    }
+
+    public InventoryView openMerchant(Villager vlgr, boolean bln) {
+        return baseObject.openMerchant(vlgr, bln);
+    }
+
+    public List<Block> getLineOfSight(Set<Material> set, int i) {
+        return baseObject.getLineOfSight(set, i);
+    }
+
+    public Block getTargetBlock(Set<Material> set, int i) {
+        return baseObject.getTargetBlock(set, i);
+    }
+
+    public List<Block> getLastTwoTargetBlocks(Set<Material> set, int i) {
+        return baseObject.getLastTwoTargetBlocks(set, i);
+    }
+
+    public AttributeInstance getAttribute(Attribute atrbt) {
+        return baseObject.getAttribute(atrbt);
+    }
+
+    public void setGlowing(boolean bln) {
+        baseObject.setGlowing(bln);
+    }
+
+    public boolean isGlowing() {
+        return baseObject.isGlowing();
     }
 }
