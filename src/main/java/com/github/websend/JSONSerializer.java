@@ -52,7 +52,8 @@ public abstract class JSONSerializer {
             player.put("IsOP", ply.isOp());
             if(serializeAllData){
                 player.put("CurrentItemIndex", ply.getInventory().getHeldItemSlot());
-                player.put("CurrentItemID", ply.getItemInHand().getTypeId());
+                player.put("MainHandItemID", ply.getInventory().getItemInMainHand().getType().name());
+                player.put("OffHandItemID", ply.getInventory().getItemInOffHand().getType().name());
                 JSONObject location = serializeLocation(ply.getLocation());
                 player.put("Location", location);
                 JSONArray inventory = serializeInventory(ply.getInventory());
@@ -93,7 +94,6 @@ public abstract class JSONSerializer {
     public JSONObject serializeItemStack(ItemStack itemStack) throws JSONException {
         JSONObject item = new JSONObject();
         {
-            item.put("Type", itemStack.getTypeId());
             item.put("TypeName", itemStack.getType().name());
             item.put("Amount", itemStack.getAmount());
             item.put("Durability", itemStack.getDurability());
@@ -106,6 +106,7 @@ public abstract class JSONSerializer {
             if (itemStack.getData().getData() != 0) {
                 item.put("Data", itemStack.getData().getData());
             }
+            
             JSONArray enchantments = new JSONArray();
             {
                 Iterator<Enchantment> enchIter = itemStack.getEnchantments().keySet().iterator();
@@ -150,7 +151,7 @@ public abstract class JSONSerializer {
                 result = serializeMetaRepairable((Repairable) meta);
             } else if (meta instanceof SkullMeta) {
                 result = serializeMetaSkull((SkullMeta) meta);
-            }else {
+            } else {
                 result = new JSONObject();
             }
         } catch (Exception ex) {
