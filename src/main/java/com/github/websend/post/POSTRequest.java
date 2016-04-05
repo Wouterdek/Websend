@@ -185,7 +185,8 @@ public class POSTRequest {
                 JSONArray onlinePlayers = new JSONArray();
                 {
                     for (Player cur : server.getOnlinePlayers()) {
-                        JSONObject curPlayer = JSONSerializer.getInstance().serializePlayer(cur, false);
+                        boolean extendedData = Main.getSettings().isExtendedPlayerDataEnabled();
+                        JSONObject curPlayer = JSONSerializer.getInstance().serializePlayer(cur, extendedData);
                         onlinePlayers.put(curPlayer);
                     }
                 }

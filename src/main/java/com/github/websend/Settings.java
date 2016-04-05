@@ -17,6 +17,7 @@ public class Settings {
     private boolean wrapCommandExecutor;
     private boolean sslEnabled = false;
     private String sslPassword = null;
+    private boolean extendedPlayerDataEnabled;
     
     public String getURL() {
         return URL;
@@ -114,6 +115,13 @@ public class Settings {
         this.sslEnabled = sslEnabled;
     }
 
+    public boolean isExtendedPlayerDataEnabled() {
+        return extendedPlayerDataEnabled;
+    }
+    
+    public void setExtendedPlayerDataEnabled(boolean enabled){
+        this.extendedPlayerDataEnabled = enabled;
+    }
     public String getSSLPassword() {
         return this.sslPassword;
     }

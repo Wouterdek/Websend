@@ -158,6 +158,13 @@ public class ConfigHandler {
             } else if (line.startsWith("SSL_PASS=")) {
                 String value = line.replaceFirst("SSL_PASS=", "");
                 settings.setSslPassword(value);
+            }  else if (line.startsWith("EXTENDED_PLAYER_DATA=")) {
+                String value = line.replaceFirst("EXTENDED_PLAYER_DATA=", "");
+                if (value.toLowerCase().trim().contains("true")) {
+                    settings.setExtendedPlayerDataEnabled(true);
+                } else {
+                    settings.setExtendedPlayerDataEnabled(false);
+                }
             } else {
                 Main.getMainLogger().log(Level.WARNING, "Error while parsing config file. Invalid line: \n" + line);
             }
