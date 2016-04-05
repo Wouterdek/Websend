@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -38,8 +39,9 @@ public class PacketParser {
     public static void parseDoCommandAsPlayer(DataInputStream in, DataOutputStream out) throws IOException {
         String command = readString(in);
         String playerStr = readString(in);
-        Player player = Main.getBukkitServer().getPlayerExact(playerStr);
-
+        
+        Player player = Util.findPlayer(playerStr);
+        
         if (player == null) {
             Main.logDebugInfo(Level.WARNING, "Can't execute command (" + command + ") as player: Player cannot be found (" + playerStr + ")");
             out.writeInt(0);
@@ -120,7 +122,7 @@ public class PacketParser {
     public static void parseWriteOutputToPlayer(DataInputStream in, DataOutputStream out) throws IOException {
         String message = readString(in);
         String playerStr = readString(in);
-        Player player = Main.getInstance().getServer().getPlayerExact(playerStr);
+        Player player = Util.findPlayer(playerStr);
         if (player != null) {
             out.writeInt(1);
             player.sendMessage(message);

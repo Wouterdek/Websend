@@ -2,6 +2,9 @@ package com.github.websend;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.UUID;
+import java.util.logging.Level;
+import org.bukkit.entity.Player;
 
 public class Util {
 
@@ -27,5 +30,25 @@ public class Util {
             Main.getMainLogger().info("Failed to hash password to " + Main.getSettings().getHashingAlgorithm());
             return "";
         }
+    }
+    
+    public static Player findPlayer(String playerStr){
+        Player player = null;
+        try{
+            UUID playerID = UUID.fromString(playerStr);
+            player = Main.getBukkitServer().getPlayer(playerID);
+        }catch(IllegalArgumentException ex){
+            if(Main.getSettings().isDebugMode()){
+                Main.logDebugInfo(Level.INFO, 
+                    "Could not find player with UUID '"+playerStr+"'. "
+                    + "Searching for a player with a matching name instead.");
+            }
+        }
+        
+        if(player == null){
+            player = Main.getBukkitServer().getPlayer(playerStr);
+        }
+        
+        return player;
     }
 }
