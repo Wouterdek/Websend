@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Server;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -167,7 +168,7 @@ public class Main extends JavaPlugin {
                logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
                 return true;
             }
-            if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender) {
+            if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender || sender instanceof BlockCommandSender) {
                 POSTRequest request = new POSTRequest(url, args, "@Console", false);
                 requestThreadPool.doRequest(request);
                 return true;
