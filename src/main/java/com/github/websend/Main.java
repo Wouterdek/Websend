@@ -166,7 +166,7 @@ public class Main extends JavaPlugin {
                 url = new URL(Main.getSettings().getURL());
             } catch (MalformedURLException ex) {
                logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
-                return true;
+               return true;
             }
             if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender || sender instanceof BlockCommandSender) {
                 POSTRequest request = new POSTRequest(url, args, "@Console", false);

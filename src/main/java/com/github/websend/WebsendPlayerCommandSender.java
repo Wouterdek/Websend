@@ -8,12 +8,14 @@ import org.bukkit.Achievement;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.MainHand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
@@ -1309,5 +1311,65 @@ public class WebsendPlayerCommandSender implements Player {
 
     public boolean isGlowing() {
         return baseObject.isGlowing();
+    }
+
+    public MainHand getMainHand() {
+        return baseObject.getMainHand();
+    }
+
+    public boolean isGliding() {
+        return baseObject.isGliding();
+    }
+
+    public void setGliding(boolean bln) {
+        baseObject.setGliding(bln);
+    }
+
+    public void setAI(boolean bln) {
+        baseObject.setAI(bln);
+    }
+
+    public boolean hasAI() {
+        return baseObject.hasAI();
+    }
+
+    public void setCollidable(boolean bln) {
+        baseObject.setCollidable(bln);
+    }
+
+    public boolean isCollidable() {
+        return baseObject.isCollidable();
+    }
+
+    public void setInvulnerable(boolean bln) {
+        baseObject.setInvulnerable(bln);
+    }
+
+    public boolean isInvulnerable() {
+        return baseObject.isInvulnerable();
+    }
+
+    public void stopSound(Sound sound) {
+        baseObject.stopSound(sound);
+    }
+
+    public void stopSound(String string) {
+        baseObject.stopSound(string);
+    }
+
+    public boolean isSilent() {
+        return baseObject.isSilent();
+    }
+
+    public void setSilent(boolean bln) {
+        baseObject.setSilent(bln);
+    }
+
+    public boolean hasGravity() {
+        return baseObject.hasGravity();
+    }
+
+    public void setGravity(boolean bln) {
+        baseObject.setGravity(bln);
     }
 }

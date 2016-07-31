@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -296,6 +297,24 @@ public abstract class JSONSerializer {
                     arrayOfEffects.put(cur.serialize());
                 }
                 metaObj.put("CustomEffects", arrayOfEffects);
+            }
+            
+            PotionData data = potionMeta.getBasePotionData();
+            if(data != null){
+                JSONObject potionTypeObj = new JSONObject();
+                {
+                    potionTypeObj.put("Name", data.getType().name());
+                    potionTypeObj.put("MaxLevel", data.getType().getMaxLevel());
+                    potionTypeObj.put("Extendable", data.getType().isExtendable());
+                    potionTypeObj.put("Instant", data.getType().isInstant());
+                    potionTypeObj.put("Upgradable", data.getType().isUpgradeable());
+                    potionTypeObj.put("EffectType", data.getType().getEffectType().getName());
+                    potionTypeObj.put("EffectDurationMod", data.getType().getEffectType().getDurationModifier());
+                    potionTypeObj.put("EffectInstant", data.getType().getEffectType().isInstant());
+                }
+                metaObj.put("Type", potionTypeObj);
+                metaObj.put("Extended", data.isExtended());
+                metaObj.put("Upgraded", data.isUpgraded());
             }
         }
         return metaObj;
