@@ -2,6 +2,8 @@ package com.github.websend;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -113,7 +115,11 @@ public class ConfigHandler {
                 }
             } else if (line.startsWith("URL=")) {
                 String value = line.replaceFirst("URL=", "");
-                settings.setURL(value);
+                try {
+                    settings.setURL(new URL(value));
+                } catch (MalformedURLException ex) {
+                    Main.getMainLogger().log(Level.SEVERE, "Invalid URL");
+                }
             } else if (line.startsWith("SALT=")) {
                 String value = line.replaceFirst("SALT=", "");
                 settings.setSalt(value);

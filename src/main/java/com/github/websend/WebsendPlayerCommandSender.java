@@ -17,6 +17,8 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.MainHand;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class WebsendPlayerCommandSender implements Player {
@@ -1371,5 +1373,9 @@ public class WebsendPlayerCommandSender implements Player {
 
     public void setGravity(boolean bln) {
         baseObject.setGravity(bln);
+    }
+
+    public PotionEffect getPotionEffect(PotionEffectType pet) {
+        return baseObject.getPotionEffect(pet);
     }
 }

@@ -53,6 +53,7 @@ public class Main extends JavaPlugin {
         } catch (IOException ex) {
             logger.info("Websend failed to read your configuration file.");
             logger.log(Level.SEVERE, null, ex);
+            this.getPluginLoader().disablePlugin(this);
             return;
         }
 
@@ -64,9 +65,8 @@ public class Main extends JavaPlugin {
             }
             TrustedHosts.load(trustedFile);
         } catch (IOException ex) {
-            Main.logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, "Failed to load trusted hosts file", ex);
         }
-
         
         //Setup SSL keystore
         if(settings.isSSLEnabled()){
@@ -133,26 +133,12 @@ public class Main extends JavaPlugin {
     }
 
     public static void doCommand(String[] args, Player player) {
-        URL url;
-        try {
-            url = new URL(Main.getSettings().getURL());
-        } catch (MalformedURLException ex) {
-            logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
-            return;
-        }
-        POSTRequest request = new POSTRequest(url, args, player, false);
+        POSTRequest request = new POSTRequest(Main.getSettings().getURL(), args, player, false);
         requestThreadPool.doRequest(request);
     }
 
     public static void doCommand(String[] args, String ply) {
-        URL url;
-        try {
-            url = new URL(Main.getSettings().getURL());
-        } catch (MalformedURLException ex) {
-            logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
-            return;
-        }
-        POSTRequest request = new POSTRequest(url, args, ply, false);
+        POSTRequest request = new POSTRequest(Main.getSettings().getURL(), args, ply, false);
         requestThreadPool.doRequest(request);
     }
 
@@ -161,13 +147,7 @@ public class Main extends JavaPlugin {
         if(!this.isEnabled()){
             logger.log(Level.SEVERE, "Websend is disabled. Restart the server to run commands.");
         }else if (cmd.getName().equalsIgnoreCase("websend") || cmd.getName().equalsIgnoreCase("ws")) {
-            URL url;
-            try {
-                url = new URL(Main.getSettings().getURL());
-            } catch (MalformedURLException ex) {
-               logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
-               return true;
-            }
+            URL url = Main.getSettings().getURL();
             if (sender instanceof ConsoleCommandSender || sender instanceof RemoteConsoleCommandSender || sender instanceof BlockCommandSender) {
                 POSTRequest request = new POSTRequest(url, args, "@Console", false);
                 requestThreadPool.doRequest(request);
@@ -179,12 +159,7 @@ public class Main extends JavaPlugin {
                     if (args.length > 0) {
                         if (args[0].contains("-wp:")) {
                             if (plsender.isOp()) {
-                                try {
-                                    url = new URL(Main.getSettings().getURL());
-                                } catch (MalformedURLException ex) {
-                                    logger.log(Level.SEVERE, "Failed to construct URL from config.", ex);
-                                    return true;
-                                }
+                                url = Main.getSettings().getURL();
                             }
                         }
                     }

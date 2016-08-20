@@ -1,6 +1,7 @@
 package com.github.websend;
 
 import java.net.InetAddress;
+import java.net.URL;
 
 public class Settings {
 
@@ -12,14 +13,14 @@ public class Settings {
     private boolean debugMode = false;
     private boolean gzipRequests = false;
     private boolean serverActive = false;
-    private String URL;
+    private URL URL;
     private InetAddress serverBindIP = null;
     private boolean wrapCommandExecutor;
     private boolean sslEnabled = false;
     private String sslPassword = null;
     private boolean extendedPlayerDataEnabled;
     
-    public String getURL() {
+    public URL getURL() {
         return URL;
     }
 
@@ -55,7 +56,7 @@ public class Settings {
         return serverBindIP;
     }
 
-    public void setURL(String URL) {
+    public void setURL(URL URL) {
         this.URL = URL;
     }
 
